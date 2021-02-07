@@ -1,3 +1,4 @@
+import cors from '@koa/cors'
 import { ApolloServer } from 'apollo-server-koa'
 import { Server } from 'http'
 import Knex from 'knex'
@@ -16,6 +17,14 @@ export class App {
   private readonly apollo: ApolloServer
   private server: Server
 
+  private corsOptions: cors.Options = {
+    origin: (ctx) =>
+      new RegExp('http://localhost:.*').test(ctx.header.origin)
+        ? ctx.header.origin
+        : false,
+    credentials: true,
+  }
+
   constructor() {
     this.apollo = new ApolloServer({
       schema,
@@ -32,6 +41,8 @@ export class App {
     })
 
     this.koa = new Koa()
+
+    this.koa.use(cors(this.corsOptions))
 
     const knex = Knex(knexFile)
 

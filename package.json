@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "lint": "eslint \"packages/*/src/**\"",
-    "start": "lerna run start -- --parallel"
+    "start:dev": "lerna run start:dev -- --parallel"
   },
   "husky": {
     "hooks": {
@@ -23,6 +23,7 @@
     "@habx/eslint-config-client": "^5.5.0",
     "@types/graphql": "^14.5.0",
     "@types/lodash": "^4.14.168",
+    "eslint-plugin-graphql": "^4.0.0",
     "husky": "^4.3.8",
     "lerna": "^3.22.1",
     "lint-staged": "^10.5.3",

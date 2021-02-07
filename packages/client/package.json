@@ -2,21 +2,26 @@
   "name": "expanse-manager-client",
   "version": "0.1.0",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "eject": "react-scripts eject"
+    "start:dev": "CI=false react-app-rewired start",
+    "build": "react-app-rewired build",
+    "eject": "react-scripts eject",
+    "build:types": "apollo codegen:generate --tagName=gql --addTypename=types --target=typescript --localSchemaFile=../../schema.graphql --includes=src/**/*.query.ts --globalTypesFile src/globalTypes/api.ts"
   },
   "dependencies": {
+    "@apollo/client": "^3.3.7",
+    "@habx/ui-core": "^5.16.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router": "^6.0.0-beta.0",
-    "react-router-dom": "^6.0.0-beta.0"
+    "react-router-dom": "^6.0.0-beta.0",
+    "styled-components": "^5.2.1"
   },
   "devDependencies": {
     "@types/jest": "^26.0.15",
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "@types/styled-components": "^5.1.7",
     "circular-dependency-plugin": "^5.2.2",
     "react-app-rewired": "^2.1.8",
     "react-scripts": "4.0.2"

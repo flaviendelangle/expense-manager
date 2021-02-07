@@ -6,6 +6,12 @@ const customConfig = require('./webpack.config')
 module.exports = (defaultConfig) => {
   let config = merge({}, defaultConfig, customConfig)
 
+  config.plugins.forEach((plugin) => {
+    if (plugin.options?.failOnError) {
+      plugin.options.failOnError = false
+    }
+  })
+
   config.plugins.push(
     new CircularDependencyPlugin({
       onDetected({ paths, compilation }) {
