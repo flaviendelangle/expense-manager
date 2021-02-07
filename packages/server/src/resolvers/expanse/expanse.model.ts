@@ -1,4 +1,5 @@
-import { Model, Transaction } from 'objection'
+import { DateTimeResolver } from 'graphql-scalars'
+import { Model, snakeCaseMappers, Transaction } from 'objection'
 import { Field, ObjectType, ID, InputType } from 'type-graphql'
 
 @ObjectType('Expanse')
@@ -15,11 +16,18 @@ export class ExpanseModel extends Model {
     return ExpanseModel.query(trx).where('id', payload.id).first()
   }
 
+  static get columnNameMappers() {
+    return snakeCaseMappers({ underscoreBeforeDigits: true })
+  }
+
   @Field((type) => ID)
   id: number | string
 
   @Field((type) => String, { nullable: true })
   description?: string
+
+  @Field((type) => DateTimeResolver)
+  createdAt: Date
 }
 
 @InputType('UpsertExpansePayload')

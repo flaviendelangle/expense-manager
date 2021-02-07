@@ -1,4 +1,14 @@
-import { Query, Resolver, Ctx, Arg, ID, Mutation } from 'type-graphql'
+import { DateTimeResolver } from 'graphql-scalars'
+import {
+  Query,
+  Resolver,
+  Ctx,
+  Arg,
+  ID,
+  Mutation,
+  FieldResolver,
+  Root,
+} from 'type-graphql'
 
 import { RequestContext } from '../../globalTypes'
 
@@ -10,7 +20,7 @@ export class ExpanseResolver {
   async expanses(
     @Ctx()
     ctx: RequestContext
-  ): Promise<ExpanseModel[]> {
+  ) {
     return ExpanseModel.query(ctx.trx).context({ ctx })
   }
 
@@ -45,5 +55,15 @@ export class ExpanseResolver {
       })
       .first()
       .context({ ctx })
+  }
+
+  @FieldResolver((type) => DateTimeResolver)
+  createdAt(@Root() model: ExpanseModel, @Ctx() ctx: RequestContext) {
+    return new Date(model.createdAt)
+  }
+
+  @FieldResolver((type) => DateTimeResolver)
+  updatedAt(@Root() model: ExpanseModel, @Ctx() ctx: RequestContext) {
+    return new Date(model.createdAt)
   }
 }
