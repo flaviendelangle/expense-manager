@@ -2,13 +2,13 @@ import * as React from 'react'
 
 import { NavBar } from '../NavBar'
 
-import { PageContainer, PageContent } from './Page.style'
+import { PageContent } from './Page.style'
 
 export const Page: React.FunctionComponent = ({ children }) => (
-  <PageContainer backgroundColor="#FFFFFF">
+  <React.Fragment>
     <NavBar />
     <React.Suspense fallback={null}>
       <PageContent>{children}</PageContent>
     </React.Suspense>
-  </PageContainer>
+  </React.Fragment>
 )

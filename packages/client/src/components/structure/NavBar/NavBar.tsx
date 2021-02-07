@@ -1,7 +1,26 @@
 import * as React from 'react'
 
-import { NavBar as BaseNavBar, palette } from '@habx/ui-core'
+import { Icon, NavBar as BaseNavBar, NavBarItem, palette } from '@habx/ui-core'
 
-export const NavBar: React.VoidFunctionComponent = () => (
-  <BaseNavBar backgroundColor={palette.purpleDawn[900]}></BaseNavBar>
-)
+import { useThemePreset } from '@hooks/useThemePreset'
+
+export const NavBar: React.VoidFunctionComponent = () => {
+  const [themePreset, setThemePreset] = useThemePreset()
+
+  return (
+    <BaseNavBar backgroundColor={palette.purpleDawn[900]} title="Mes dépenses">
+      <NavBarItem
+        bottom
+        onClick={() =>
+          setThemePreset(themePreset === 'dark' ? 'light' : 'dark')
+        }
+        label={themePreset === 'dark' ? 'Light mode' : 'Dark mode'}
+        icon={
+          <Icon
+            icon={themePreset === 'dark' ? 'magicstick-outline' : 'magicstick'}
+          />
+        }
+      />
+    </BaseNavBar>
+  )
+}
