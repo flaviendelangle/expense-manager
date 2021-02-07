@@ -2,12 +2,17 @@
   "name": "expanse-manager-server",
   "version": "0.1.0",
   "scripts": {
-    "start:dev": "nodemon --watch 'src/**/*' -e ts,tsx,json --exec ts-node src/index.ts"
+    "start:dev": "nodemon --watch 'src/**/*' -e ts,tsx,json --exec ts-node src/index.ts",
+    "migrate:dev": "DEBUG=knex:* knex migrate:latest --knexfile knexfile.ts"
   },
   "dependencies": {
     "apollo-server-koa": "^2.19.2",
+    "class-validator": "^0.13.1",
+    "knex": "^0.21.17",
     "koa": "^2.13.1",
+    "objection": "^2.2.14",
     "reflect-metadata": "^0.1.13",
+    "sqlite3": "^5.0.1",
     "type-graphql": "^1.1.1"
   },
   "devDependencies": {

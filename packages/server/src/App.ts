@@ -1,6 +1,10 @@
 import { ApolloServer } from 'apollo-server-koa'
 import { Server } from 'http'
+import Knex from 'knex'
 import Koa from 'koa'
+import { Model } from 'objection'
+
+import knexFile from '../knexfile'
 
 import { schema } from './middlewares/graphql'
 
@@ -29,6 +33,10 @@ export class App {
 
     this.koa = new Koa()
 
+    const knex = Knex(knexFile)
+
+    Model.knex(knex)
+
     this.apollo.applyMiddleware({ app: this.koa })
 
     this.server = this.koa.listen({ port: HTTP_PORT }, () => {
@@ -36,4 +44,6 @@ export class App {
       console.log(`GraphQL Server ready at ${PLAYGROUND_URL}`)
     })
   }
+
+  async test() {}
 }
