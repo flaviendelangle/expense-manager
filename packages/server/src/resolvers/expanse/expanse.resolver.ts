@@ -1,4 +1,5 @@
 import { DateTimeResolver } from 'graphql-scalars'
+import { pick } from 'lodash'
 import {
   Query,
   Resolver,
@@ -11,6 +12,8 @@ import {
 } from 'type-graphql'
 
 import { RequestContext } from '../../globalTypes'
+import { validateNeededArgs } from '../../utils/validateNeededArgs'
+import { ExpanseCategoryModel } from '../expanseCategory/expanseCategory.model'
 
 import { ExpanseModel, UpsertExpansePayload } from './expanse.model'
 
@@ -43,11 +46,22 @@ export class ExpanseResolver {
   ) {
     let existing: ExpanseModel | null = null
     if (payload.id) {
-      existing = await ExpanseModel.getReference(payload, ctx.trx)
+      existing = await ExpanseModel.getReference(payload.id, ctx.trx)
+    } else {
+      validateNeededArgs(payload, ['category'])
     }
 
+    const cleanPayload = {
+      ...payload,
+      ...(!!payload.category && { category: { id: payload.category } }),
+    }
+
+    const toUpsert = existing
+      ? { id: existing.id, ...pick(cleanPayload, ExpanseModel.UPDATE_FIELDS) }
+      : pick(cleanPayload, ExpanseModel.INSERT_FIELDS)
+
     return ExpanseModel.query(ctx.trx)
-      .upsertGraphAndFetch(payload, {
+      .upsertGraphAndFetch(toUpsert, {
         insertMissing: true,
         relate: true,
         unrelate: true,
@@ -65,5 +79,14 @@ export class ExpanseResolver {
   @FieldResolver((type) => DateTimeResolver)
   updatedAt(@Root() model: ExpanseModel, @Ctx() ctx: RequestContext) {
     return new Date(model.createdAt)
+  }
+
+  @FieldResolver((type) => ExpanseCategoryModel)
+  category(@Root() model: ExpanseModel, @Ctx() ctx: RequestContext) {
+    return ExpanseCategoryModel.query(ctx.trx)
+      .joinRelated('expanses')
+      .where('expanses.id', model.id)
+      .first()
+      .context({ ctx })
   }
 }

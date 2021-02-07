@@ -22,8 +22,8 @@ export const up = async (knex: Knex) => {
   await knex.schema.createTable(TABLES.EXPANSES, (t) => {
     t.increments()
 
-    t.integer('categories')
-    t.foreign('categories').references(`${TABLES.EXPANSE_CATEGORIES}.id`)
+    t.integer('category')
+    t.foreign('category').references(`${TABLES.EXPANSE_CATEGORIES}.id`)
 
     t.string('description')
 

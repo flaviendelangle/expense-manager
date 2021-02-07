@@ -2,12 +2,10 @@ import { DateTimeResolver } from 'graphql-scalars'
 import { Model, snakeCaseMappers, Transaction } from 'objection'
 import { Field, ObjectType, ID, InputType } from 'type-graphql'
 
-import { ExpanseCategoryModel } from '../expanseCategory/expanseCategory.model'
-
-@ObjectType('Expanse')
-export class ExpanseModel extends Model {
+@ObjectType('ExpanseCategory')
+export class ExpanseCategoryModel extends Model {
   static get tableName() {
-    return 'expanses'
+    return 'expanse_categories'
   }
 
   static get relationMappings() {
@@ -15,38 +13,47 @@ export class ExpanseModel extends Model {
   }
 
   static async getReference(id: string | number, trx?: Transaction) {
-    return ExpanseModel.query(trx).where('id', id).first()
+    return ExpanseCategoryModel.query(trx).where('id', id).first()
   }
 
   static get columnNameMappers() {
     return snakeCaseMappers({ underscoreBeforeDigits: true })
   }
 
-  static readonly INSERT_FIELDS: (keyof ExpanseModel)[] = ['description']
+  static readonly INSERT_FIELDS: (keyof ExpanseCategoryModel)[] = [
+    'description',
+    'name',
+  ]
 
-  static readonly UPDATE_FIELDS: (keyof ExpanseModel)[] = ['description']
+  static readonly UPDATE_FIELDS: (keyof ExpanseCategoryModel)[] = [
+    'description',
+    'name',
+  ]
 
   @Field((type) => ID)
   id: number | string
 
+  @Field((type) => String)
+  name: string
+
   @Field((type) => String, { nullable: true })
   description?: string
 
+  @Field((type) => DateTimeResolver)
   createdAt: Date
 
-  updatedAt: Date
-
-  category: ExpanseCategoryModel
+  @Field((type) => DateTimeResolver)
+  updateAt: Date
 }
 
-@InputType('UpsertExpansePayload')
-export class UpsertExpansePayload {
+@InputType('UpsertExpanseCategoryPayload')
+export class UpsertExpanseCategoryPayload {
   @Field((type) => String, { nullable: true })
   id: number | string
 
   @Field((type) => String, { nullable: true })
-  description?: string
+  name: string
 
-  @Field((type) => ID, { nullable: true })
-  category?: string | number
+  @Field((type) => String, { nullable: true })
+  description?: string
 }
