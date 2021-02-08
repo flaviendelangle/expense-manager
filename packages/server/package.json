@@ -1,5 +1,5 @@
 {
-  "name": "expanse-manager-server",
+  "name": "expense-manager-server",
   "version": "0.1.0",
   "scripts": {
     "start:dev": "nodemon --watch 'src/**/*' -e ts,tsx,json --exec ts-node src/index.ts",

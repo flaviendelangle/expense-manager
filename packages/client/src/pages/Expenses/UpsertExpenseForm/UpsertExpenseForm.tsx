@@ -58,6 +58,11 @@ export const UpsertExpenseForm: React.VoidFunctionComponent<UpsertExpenseFormPro
           <SelectExpenseCategory name="categoryId" label="Catégorie" required />
           <TextInput name="description" label="Description" />
           <NumberInput name="value" label="Montant" required />
+          <TextInput
+            name="spentAt"
+            label="Date de l'achat (à améliorer)"
+            required
+          />
           <ActionBar>
             <Button ghost error onClick={onClose}>
               Annuler

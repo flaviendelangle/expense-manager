@@ -2,7 +2,7 @@
   "extends": ["@habx/client/typescript"],
   "overrides": [
     {
-      "files": ["packages/server/src/resolvers/*/**.ts"],
+      "files": ["packages/server/src/resolvers/**/**.ts", "packages/server/src/models/**/**.ts"],
       "rules": {
         "@typescript-eslint/no-unused-vars": 0
       }

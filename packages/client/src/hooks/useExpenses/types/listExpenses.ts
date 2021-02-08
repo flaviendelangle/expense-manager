@@ -7,10 +7,17 @@
 // GraphQL query operation: listExpenses
 // ====================================================
 
+export interface listExpenses_expenses_category_categoryGroup {
+  __typename: "ExpenseCategoryGroup";
+  id: string;
+  name: string;
+}
+
 export interface listExpenses_expenses_category {
   __typename: "ExpenseCategory";
   id: string;
   name: string;
+  categoryGroup: listExpenses_expenses_category_categoryGroup;
 }
 
 export interface listExpenses_expenses {
@@ -19,6 +26,7 @@ export interface listExpenses_expenses {
   description: string | null;
   createdAt: any;
   value: number;
+  spentAt: any;
   category: listExpenses_expenses_category;
 }
 

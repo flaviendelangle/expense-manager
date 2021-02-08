@@ -1,12 +1,13 @@
 import * as Knex from 'knex'
 
 const TABLES = {
-  EXPANSE_CATEGORIES: 'expanse_categories',
-  EXPANSES: 'expanses',
+  EXPENSE_CATEGORY_GROUPS: 'expense_category_groups',
+  EXPENSE_CATEGORIES: 'expense_categories',
+  EXPENSES: 'expenses',
 }
 
 export const up = async (knex: Knex) => {
-  await knex.schema.createTable(TABLES.EXPANSE_CATEGORIES, (t) => {
+  await knex.schema.createTable(TABLES.EXPENSE_CATEGORY_GROUPS, (t) => {
     t.increments()
 
     t.string('name').notNullable()
@@ -19,11 +20,29 @@ export const up = async (knex: Knex) => {
     t.unique(['name'])
   })
 
-  await knex.schema.createTable(TABLES.EXPANSES, (t) => {
+  await knex.schema.createTable(TABLES.EXPENSE_CATEGORIES, (t) => {
+    t.increments()
+
+    t.string('name').notNullable()
+
+    t.integer('category_group_id')
+    t.foreign('category_group_id').references(
+      `${TABLES.EXPENSE_CATEGORY_GROUPS}.id`
+    )
+
+    t.string('description')
+
+    t.timestamp('created_at').notNullable().defaultTo(knex.fn.now())
+    t.timestamp('updated_at').notNullable().defaultTo(knex.fn.now())
+
+    t.unique(['category_group_id', 'name'])
+  })
+
+  await knex.schema.createTable(TABLES.EXPENSES, (t) => {
     t.increments()
 
     t.integer('category_id')
-    t.foreign('category_id').references(`${TABLES.EXPANSE_CATEGORIES}.id`)
+    t.foreign('category_id').references(`${TABLES.EXPENSE_CATEGORIES}.id`)
 
     t.float('value').notNullable()
 
@@ -31,6 +50,7 @@ export const up = async (knex: Knex) => {
 
     t.timestamp('created_at').notNullable().defaultTo(knex.fn.now())
     t.timestamp('updated_at').notNullable().defaultTo(knex.fn.now())
+    t.timestamp('spent_at').notNullable()
   })
 }
 

@@ -31,7 +31,7 @@ export const ExpensesGraphs: React.VoidFunctionComponent<ExpensesGraphProps> = (
       if (!temp[expense.category.id]) {
         temp[expense.category.id] = {
           id: expense.category.id,
-          label: expense.category.name,
+          label: `${expense.category.categoryGroup.name} - ${expense.category.name}`,
           value: 0,
         }
       }
@@ -43,7 +43,7 @@ export const ExpensesGraphs: React.VoidFunctionComponent<ExpensesGraphProps> = (
   }, [data])
 
   return (
-    <ExpensesGraphsContainer>
+    <ExpensesGraphsContainer data-testid={2}>
       <ExpenseGraphTitle type="section">
         Répartition des dépenses par catégorie
       </ExpenseGraphTitle>

@@ -11,6 +11,7 @@ export interface UpsertExpensePayload {
   categoryId?: string | null;
   description?: string | null;
   id?: string | null;
+  spentAt?: any | null;
   value?: number | null;
 }
 

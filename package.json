@@ -1,5 +1,5 @@
 {
-  "name": "expanse-manager",
+  "name": "expense-manager",
   "private": true,
   "scripts": {
     "lint": "eslint \"packages/*/src/**\"",

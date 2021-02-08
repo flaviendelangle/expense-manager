@@ -1,4 +1,4 @@
-import { DateTimeResolver } from 'graphql-scalars'
+import { DateTimeResolver, GraphQLDateTime } from 'graphql-scalars'
 import { snakeCaseMappers, Transaction } from 'objection'
 import { Field, ObjectType, ID, InputType } from 'type-graphql'
 
@@ -27,12 +27,14 @@ export class ExpenseModel extends BaseModel {
     'description',
     'categoryId',
     'value',
+    'spentAt',
   ]
 
   static readonly UPDATE_FIELDS: (keyof ExpenseModel)[] = [
     'description',
     'categoryId',
     'value',
+    'spentAt',
   ]
 
   @Field((type) => String, { nullable: true })
@@ -46,6 +48,9 @@ export class ExpenseModel extends BaseModel {
 
   @Field((type) => Number)
   value: number
+
+  @Field((type) => DateTimeResolver)
+  spentAt: Date
 }
 
 @InputType('UpsertExpensePayload')
@@ -61,4 +66,7 @@ export class UpsertExpensePayload {
 
   @Field((type) => Number, { nullable: true })
   value?: number
+
+  @Field((type) => GraphQLDateTime, { nullable: true })
+  spentAt?: Date
 }

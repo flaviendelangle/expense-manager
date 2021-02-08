@@ -2,12 +2,11 @@ import { DateTimeResolver } from 'graphql-scalars'
 import { Resolver, Ctx, FieldResolver, Root } from 'type-graphql'
 
 import { RequestContext } from '../../globalTypes'
-import { ExpenseModel } from '../../models/expense'
 import { ExpenseCategoryModel } from '../../models/expenseCategory'
 import { ExpenseCategoryGroupModel } from '../../models/expenseCategoryGroup'
 
-@Resolver(ExpenseCategoryModel)
-export class ExpenseCategoryFieldsResolver {
+@Resolver(ExpenseCategoryGroupModel)
+export class ExpenseCategoryGroupResolver {
   @FieldResolver((type) => DateTimeResolver)
   createdAt(@Root() model: ExpenseCategoryModel, @Ctx() ctx: RequestContext) {
     return new Date(model.createdAt)
@@ -18,16 +17,11 @@ export class ExpenseCategoryFieldsResolver {
     return new Date(model.createdAt)
   }
 
-  @FieldResolver((type) => [ExpenseModel!]!)
-  expenses(@Root() model: ExpenseCategoryModel, @Ctx() ctx: RequestContext) {
-    return ExpenseModel.query(ctx.trx).where('category_id', model.id)
-  }
-
-  @FieldResolver((type) => ExpenseCategoryGroupModel)
-  categoryGroup(
-    @Root() model: ExpenseCategoryModel,
-    @Ctx() ctx: RequestContext
-  ) {
-    return ctx.loaders.expenseCategoryGroup.load(model.categoryGroupId)
+  @FieldResolver((type) => [ExpenseCategoryGroupModel!])
+  categories(@Root() model: ExpenseCategoryModel, @Ctx() ctx: RequestContext) {
+    return ExpenseCategoryModel.query(ctx.trx).where(
+      'category_group_id',
+      model.id
+    )
   }
 }

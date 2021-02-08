@@ -3,6 +3,7 @@ import { Resolver, Ctx, Arg, Mutation } from 'type-graphql'
 
 import { RequestContext } from '../../globalTypes'
 import { ExpenseModel, UpsertExpensePayload } from '../../models/expense'
+import { ApolloResourceNotFound } from '../../utils/errors'
 import { validateNeededArgs } from '../../utils/validateNeededArgs'
 
 @Resolver(ExpenseModel)
@@ -17,8 +18,14 @@ export class ExpenseMutationResolver {
     let existing: ExpenseModel | null = null
     if (payload.id) {
       existing = await ExpenseModel.getReference(payload.id, ctx.trx)
-    } else {
-      validateNeededArgs(payload, ['categoryId', 'value'])
+
+      if (!existing) {
+        throw new ApolloResourceNotFound({ payload })
+      }
+    }
+
+    if (!existing) {
+      validateNeededArgs(payload, ['categoryId', 'value', 'spentAt'])
     }
 
     const toUpsert = existing

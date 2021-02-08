@@ -9,10 +9,17 @@ import { UpsertExpensePayload } from "./../../../../globalTypes/api";
 // GraphQL mutation operation: upsertExpenseForm
 // ====================================================
 
+export interface upsertExpenseForm_upsertExpense_category_categoryGroup {
+  __typename: "ExpenseCategoryGroup";
+  id: string;
+  name: string;
+}
+
 export interface upsertExpenseForm_upsertExpense_category {
   __typename: "ExpenseCategory";
   id: string;
   name: string;
+  categoryGroup: upsertExpenseForm_upsertExpense_category_categoryGroup;
 }
 
 export interface upsertExpenseForm_upsertExpense {
@@ -21,6 +28,7 @@ export interface upsertExpenseForm_upsertExpense {
   description: string | null;
   createdAt: any;
   value: number;
+  spentAt: any;
   category: upsertExpenseForm_upsertExpense_category;
 }
 

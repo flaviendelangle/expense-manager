@@ -75,6 +75,11 @@ export class ExpenseFieldsResolver {
     return new Date(model.createdAt)
   }
 
+  @FieldResolver((type) => DateTimeResolver)
+  spentAt(@Root() model: ExpenseModel, @Ctx() ctx: RequestContext) {
+    return new Date(model.spentAt)
+  }
+
   @FieldResolver((type) => ExpenseCategoryModel)
   category(@Root() model: ExpenseModel, @Ctx() ctx: RequestContext) {
     return ctx.loaders.expenseCategory.load(model.categoryId)

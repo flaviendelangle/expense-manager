@@ -6,6 +6,7 @@ import {
   ExpenseCategoryModel,
   UpsertExpenseCategoryPayload,
 } from '../../models/expenseCategory'
+import { ApolloResourceNotFound } from '../../utils/errors'
 import { validateNeededArgs } from '../../utils/validateNeededArgs'
 
 @Resolver(ExpenseCategoryModel)
@@ -20,8 +21,14 @@ export class ExpenseCategoryMutationResolver {
     let existing: ExpenseCategoryModel | null = null
     if (payload.id) {
       existing = await ExpenseCategoryModel.getReference(payload.id, ctx.trx)
-    } else {
-      validateNeededArgs(payload, ['name'])
+
+      if (!existing) {
+        throw new ApolloResourceNotFound({ payload })
+      }
+    }
+
+    if (!existing) {
+      validateNeededArgs(payload, ['name', 'categoryGroupId'])
     }
 
     const toUpsert = existing

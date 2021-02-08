@@ -11,7 +11,10 @@ export const validateNeededArgs = <Args extends {}>(
     if (isUndefined(get(args, neededArg))) {
       missingArgs.push(neededArg)
     }
-    if (typeof args[neededArg] === 'object') {
+    if (
+      typeof args[neededArg] === 'object' &&
+      !(args[neededArg] instanceof Date)
+    ) {
       if (isEmpty(args[neededArg])) missingArgs.push(neededArg)
     }
 

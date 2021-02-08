@@ -1,4 +1,4 @@
 export {
-  ExpanseCategoryModel,
-  UpsertExpanseCategoryPayload,
+  ExpenseCategoryModel,
+  UpsertExpenseCategoryPayload,
 } from './expenseCategory.model'

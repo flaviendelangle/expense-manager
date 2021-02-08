@@ -1,1 +1,1 @@
-export { ExpanseModel, UpsertExpansePayload } from './expense.model'
+export { ExpenseModel, UpsertExpensePayload } from './expense.model'

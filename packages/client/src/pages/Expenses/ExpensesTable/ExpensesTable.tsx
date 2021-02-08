@@ -16,19 +16,26 @@ import { ExpensesTableContainer } from './ExpensesTable.style'
 const COLUMNS: Column<ExpenseBasicInformation>[] = [
   {
     Header: 'Date',
-    accessor: 'createdAt',
+    accessor: 'spentAt',
     Cell: (({ cell }) =>
       format(new Date(cell.value), 'yyyy-MM-dd')) as Renderer<
-      CellProps<any, string>
+      CellProps<ExpenseBasicInformation, string>
     >,
   },
   {
     Header: 'Catégorie',
-    accessor: (el) => el.category.name,
+    accessor: (el) => el.category,
+    Cell: (({ cell }) =>
+      `${cell.value.categoryGroup.name} - ${cell.value.name}`) as Renderer<
+      CellProps<ExpenseBasicInformation, ExpenseBasicInformation['category']>
+    >,
   },
   {
     Header: 'Montant',
     accessor: 'value',
+    Cell: (({ cell }) => `${cell.value}€`) as Renderer<
+      CellProps<ExpenseBasicInformation, number>
+    >,
   },
   {
     Header: 'Description',
@@ -60,7 +67,7 @@ export const ExpensesTable: React.VoidFunctionComponent<ExpensesTableProps> = ({
     }
 
     return {
-      ...pick(selectedExpense, ['description', 'value', 'id']),
+      ...pick(selectedExpense, ['description', 'value', 'id', 'spentAt']),
       categoryId: selectedExpense.category.id,
     }
   }, [selectedExpense])

@@ -1,3 +1,4 @@
+import { orderBy } from 'lodash'
 import * as React from 'react'
 
 import { Select, SelectProps } from '@habx/ui-core'
@@ -11,10 +12,13 @@ export const SelectExpenseCategory: React.FunctionComponent<
 
   const options = React.useMemo(
     () =>
-      (categories.data ?? []).map((category) => ({
-        label: category.name,
-        value: category.id,
-      })),
+      orderBy(
+        (categories.data ?? []).map((category) => ({
+          label: `${category.categoryGroup.name} - ${category.name}`,
+          value: category.id,
+        })),
+        (option) => option.label
+      ),
     [categories.data]
   )
 
