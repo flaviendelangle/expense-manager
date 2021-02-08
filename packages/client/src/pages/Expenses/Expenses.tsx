@@ -14,7 +14,7 @@ import {
 import { useExpenses } from '@hooks/useExpenses'
 
 import { ExpensesActions } from './Expenses.style'
-import { ExpensesGraph } from './ExpensesGraph'
+import { ExpensesGraphs } from './ExpensesGraphs'
 import { ExpensesTable } from './ExpensesTable'
 import { UpsertExpenseForm } from './UpsertExpenseForm'
 
@@ -76,7 +76,10 @@ export const Expenses: React.VoidFunctionComponent = () => {
             <ExpensesTable data={expenses.data} loading={expenses.loading} />
           }
         />
-        <Route path="/stats" element={<ExpensesGraph data={expenses.data} />} />
+        <Route
+          path="/stats"
+          element={<ExpensesGraphs data={expenses.data} />}
+        />
         <Navigate to="/expenses/table" />
       </Routes>
     </React.Fragment>
