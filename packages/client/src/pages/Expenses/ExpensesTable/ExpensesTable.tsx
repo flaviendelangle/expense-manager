@@ -91,6 +91,7 @@ export const ExpensesTable: React.VoidFunctionComponent<ExpensesTableProps> = ({
         value={editExpensePayload}
         open={!!editExpensePayload}
         onClose={() => setSelectedExpense(null)}
+        persistent
       >
         {(modal) => (
           <UpsertExpenseForm
