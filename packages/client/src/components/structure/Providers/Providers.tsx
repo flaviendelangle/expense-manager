@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { Provider as DesignSystemProvider, ThemeProvider } from '@habx/ui-core'
 
 import { ThemePresetProvider } from '@hooks/useThemePreset'
+import { Provider as IntlProvider } from '@hooks/useTranslate'
 import { buildApolloClient } from '@lib/api'
 
 const apolloClient = buildApolloClient()
@@ -19,15 +20,17 @@ export const StyledThemeProvider = styled(ThemeProvider)`
 `
 
 export const Providers: React.FunctionComponent = ({ children }) => (
-  <ThemePresetProvider>
-    {(preset) => (
-      <StyledThemeProvider preset={preset}>
-        <DesignSystemProvider>
-          <ApolloProvider client={apolloClient}>
-            <BrowserRouter>{children}</BrowserRouter>
-          </ApolloProvider>
-        </DesignSystemProvider>
-      </StyledThemeProvider>
-    )}
-  </ThemePresetProvider>
+  <IntlProvider>
+    <ThemePresetProvider>
+      {(preset) => (
+        <StyledThemeProvider preset={preset}>
+          <DesignSystemProvider>
+            <ApolloProvider client={apolloClient}>
+              <BrowserRouter>{children}</BrowserRouter>
+            </ApolloProvider>
+          </DesignSystemProvider>
+        </StyledThemeProvider>
+      )}
+    </ThemePresetProvider>
+  </IntlProvider>
 )

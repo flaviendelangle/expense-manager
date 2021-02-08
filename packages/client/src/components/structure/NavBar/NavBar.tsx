@@ -2,6 +2,8 @@ import * as React from 'react'
 
 import { Icon, NavBar as BaseNavBar, NavBarItem, palette } from '@habx/ui-core'
 
+import { NavBarLink } from '@components/atoms/NavBarLink'
+
 import { useThemePreset } from '@hooks/useThemePreset'
 
 export const NavBar: React.VoidFunctionComponent = () => {
@@ -9,6 +11,7 @@ export const NavBar: React.VoidFunctionComponent = () => {
 
   return (
     <BaseNavBar backgroundColor={palette.purpleDawn[900]} title="Mes dépenses">
+      <NavBarLink icon={<Icon icon="list" />} label="Dépenses" to="/expenses" />
       <NavBarItem
         bottom
         onClick={() =>

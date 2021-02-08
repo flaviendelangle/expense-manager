@@ -2,10 +2,10 @@ import * as React from 'react'
 
 import { Breadcrumb, BreadcrumbItem, HeaderBar, Text } from '@habx/ui-core'
 
-import { useExpanses } from '@hooks/useExpanses'
+import { useExpenses } from '@hooks/useExpenses'
 
 export const Home: React.FunctionComponent = () => {
-  const expanses = useExpanses()
+  const expenses = useExpenses()
 
   return (
     <React.Fragment>
@@ -15,9 +15,9 @@ export const Home: React.FunctionComponent = () => {
         </Breadcrumb>
       </HeaderBar>
       <div>
-        {!expanses.loading && (
+        {!expenses.loading && (
           <Text>
-            {expanses.data.length} dépense{expanses.data.length > 1 ? 's' : ''}
+            {expenses.data.length} dépense{expenses.data.length > 1 ? 's' : ''}
           </Text>
         )}
       </div>
