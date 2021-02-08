@@ -1,11 +1,12 @@
 import { DateTimeResolver } from 'graphql-scalars'
-import { Model, snakeCaseMappers, Transaction } from 'objection'
+import { snakeCaseMappers, Transaction } from 'objection'
 import { Field, ObjectType, ID, InputType } from 'type-graphql'
 
-import { ExpanseCategoryModel } from '../expanseCategory/expanseCategory.model'
+import { BaseModel } from '../BaseModel'
+import { ExpanseCategoryModel } from '../expanseCategory'
 
 @ObjectType('Expanse')
-export class ExpanseModel extends Model {
+export class ExpanseModel extends BaseModel {
   static get tableName() {
     return 'expanses'
   }
@@ -22,31 +23,42 @@ export class ExpanseModel extends Model {
     return snakeCaseMappers({ underscoreBeforeDigits: true })
   }
 
-  static readonly INSERT_FIELDS: (keyof ExpanseModel)[] = ['description']
+  static readonly INSERT_FIELDS: (keyof ExpanseModel)[] = [
+    'description',
+    'categoryId',
+    'value',
+  ]
 
-  static readonly UPDATE_FIELDS: (keyof ExpanseModel)[] = ['description']
-
-  @Field((type) => ID)
-  id: number | string
+  static readonly UPDATE_FIELDS: (keyof ExpanseModel)[] = [
+    'description',
+    'categoryId',
+    'value',
+  ]
 
   @Field((type) => String, { nullable: true })
   description?: string
 
-  createdAt: Date
+  @Field((type) => ID)
+  categoryId: string | number
 
-  updatedAt: Date
-
+  @Field((type) => ExpanseCategoryModel)
   category: ExpanseCategoryModel
+
+  @Field((type) => Number)
+  value: number
 }
 
 @InputType('UpsertExpansePayload')
 export class UpsertExpansePayload {
   @Field((type) => String, { nullable: true })
-  id: number | string
+  id?: number | string
 
   @Field((type) => String, { nullable: true })
   description?: string
 
   @Field((type) => ID, { nullable: true })
-  category?: string | number
+  categoryId?: string | number
+
+  @Field((type) => Number, { nullable: true })
+  value?: number
 }

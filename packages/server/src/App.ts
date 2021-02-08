@@ -7,7 +7,9 @@ import { Model } from 'objection'
 
 import knexFile from '../knexfile'
 
+import { RequestContext } from './globalTypes'
 import { schema } from './middlewares/graphql'
+import { DataLoaderService } from './utils/DataLoaderService'
 
 const HTTP_PORT = 3001
 const PLAYGROUND_URL = `http://localhost:${HTTP_PORT}/graphql`
@@ -37,6 +39,13 @@ export class App {
           'request.credentials': 'same-origin',
         },
         endpoint: '/graphql',
+      },
+      context: () => {
+        const c: RequestContext = {}
+
+        c.loaders = Object.freeze(new DataLoaderService(c))
+
+        return c
       },
     })
 

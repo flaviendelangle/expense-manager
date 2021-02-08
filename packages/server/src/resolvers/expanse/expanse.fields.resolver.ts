@@ -12,13 +12,12 @@ import {
 } from 'type-graphql'
 
 import { RequestContext } from '../../globalTypes'
+import { ExpanseModel, UpsertExpansePayload } from '../../models/expanse'
+import { ExpanseCategoryModel } from '../../models/expanseCategory'
 import { validateNeededArgs } from '../../utils/validateNeededArgs'
-import { ExpanseCategoryModel } from '../expanseCategory/expanseCategory.model'
-
-import { ExpanseModel, UpsertExpansePayload } from './expanse.model'
 
 @Resolver(ExpanseModel)
-export class ExpanseResolver {
+export class ExpanseFieldsResolver {
   @Query((returns) => [ExpanseModel!])
   async expanses(
     @Ctx()
@@ -48,17 +47,12 @@ export class ExpanseResolver {
     if (payload.id) {
       existing = await ExpanseModel.getReference(payload.id, ctx.trx)
     } else {
-      validateNeededArgs(payload, ['category'])
-    }
-
-    const cleanPayload = {
-      ...payload,
-      ...(!!payload.category && { category: { id: payload.category } }),
+      validateNeededArgs(payload, ['categoryId', 'value'])
     }
 
     const toUpsert = existing
-      ? { id: existing.id, ...pick(cleanPayload, ExpanseModel.UPDATE_FIELDS) }
-      : pick(cleanPayload, ExpanseModel.INSERT_FIELDS)
+      ? { id: existing.id, ...pick(payload, ExpanseModel.UPDATE_FIELDS) }
+      : pick(payload, ExpanseModel.INSERT_FIELDS)
 
     return ExpanseModel.query(ctx.trx)
       .upsertGraphAndFetch(toUpsert, {
@@ -83,10 +77,6 @@ export class ExpanseResolver {
 
   @FieldResolver((type) => ExpanseCategoryModel)
   category(@Root() model: ExpanseModel, @Ctx() ctx: RequestContext) {
-    return ExpanseCategoryModel.query(ctx.trx)
-      .joinRelated('expanses')
-      .where('expanses.id', model.id)
-      .first()
-      .context({ ctx })
+    return ctx.loaders.expanseCategory.load(model.categoryId)
   }
 }

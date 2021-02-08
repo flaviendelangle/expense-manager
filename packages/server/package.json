@@ -10,6 +10,7 @@
     "apollo-server-core": "^2.19.2",
     "apollo-server-koa": "^2.19.2",
     "class-validator": "^0.13.1",
+    "dataloader": "^2.0.0",
     "graphql-scalars": "^1.7.0",
     "knex": "^0.21.17",
     "koa": "^2.13.1",

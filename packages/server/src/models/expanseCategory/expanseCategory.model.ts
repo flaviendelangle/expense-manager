@@ -1,9 +1,10 @@
-import { DateTimeResolver } from 'graphql-scalars'
-import { Model, snakeCaseMappers, Transaction } from 'objection'
-import { Field, ObjectType, ID, InputType } from 'type-graphql'
+import { Transaction } from 'objection'
+import { Field, ObjectType, InputType } from 'type-graphql'
+
+import { BaseModel } from '../BaseModel'
 
 @ObjectType('ExpanseCategory')
-export class ExpanseCategoryModel extends Model {
+export class ExpanseCategoryModel extends BaseModel {
   static get tableName() {
     return 'expanse_categories'
   }
@@ -16,10 +17,6 @@ export class ExpanseCategoryModel extends Model {
     return ExpanseCategoryModel.query(trx).where('id', id).first()
   }
 
-  static get columnNameMappers() {
-    return snakeCaseMappers({ underscoreBeforeDigits: true })
-  }
-
   static readonly INSERT_FIELDS: (keyof ExpanseCategoryModel)[] = [
     'description',
     'name',
@@ -30,20 +27,11 @@ export class ExpanseCategoryModel extends Model {
     'name',
   ]
 
-  @Field((type) => ID)
-  id: number | string
-
   @Field((type) => String)
   name: string
 
   @Field((type) => String, { nullable: true })
   description?: string
-
-  @Field((type) => DateTimeResolver)
-  createdAt: Date
-
-  @Field((type) => DateTimeResolver)
-  updateAt: Date
 }
 
 @InputType('UpsertExpanseCategoryPayload')
