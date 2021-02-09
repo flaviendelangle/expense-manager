@@ -59,3 +59,5 @@ cypress/videos/
 mochawesome-report/
 
 packages/server/local
+packages/server/data/db.db3
+packages/server/data/*
