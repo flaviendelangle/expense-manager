@@ -1,8 +1,13 @@
 import { DateTimeResolver } from 'graphql-scalars'
-import { Model, snakeCaseMappers } from 'objection'
+import { Model, QueryBuilder, snakeCaseMappers } from 'objection'
 import { Field, ID, ObjectType } from 'type-graphql'
 
-import { RequestContext } from '../globalTypes'
+import { RequestContext } from '../../globalTypes'
+import {
+  OrderOptions,
+  Paginated,
+  PaginationOptions,
+} from '../../utils/PaginatedClass'
 
 @ObjectType('BaseModel')
 export class BaseModel extends Model {
@@ -30,6 +35,38 @@ export class BaseModel extends Model {
     return values.map((val) =>
       rows.find((row) => String(row[key]) === String(val))
     )
+  }
+
+  static async parseOrder<M extends typeof BaseModel>(
+    this: M,
+    query: QueryBuilder<InstanceType<M>>,
+    order: OrderOptions
+  ) {
+    if (order && order.field && order.direction)
+      query.orderBy(order.field, order.direction)
+  }
+
+  static async paginate<M extends typeof BaseModel>(
+    this: M,
+    query: QueryBuilder<InstanceType<M>>,
+    paginate?: PaginationOptions
+  ): Promise<Paginated<InstanceType<M>>> {
+    const countQuery = query.clone()
+
+    countQuery.clearOrder()
+
+    if (paginate) {
+      query.offset(paginate.offset)
+      query.limit(paginate.limit)
+    }
+
+    const nodes = await query
+
+    const { total } = ((await countQuery
+      .count(`${this.tableName}.id`, { as: 'total' })
+      .first()) as unknown) as { total: number }
+
+    return { nodes, total }
   }
 
   @Field((type) => ID)

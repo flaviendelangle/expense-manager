@@ -1,4 +1,11 @@
 export {
   ExpenseCategoryGroupModel,
+  PaginatedExpenseCategoryGroup,
+} from './expenseCategoryGroup.model'
+
+export {
   UpsertExpenseCategoryGroupPayload,
-} from './expenseCategory.model'
+  ExpenseCategoryGroupFilters,
+} from './expenseCategoryGroup.types'
+
+export { ExpenseCategoryGroupParseFilters } from './expenseCategoryGroup.parseFilters'

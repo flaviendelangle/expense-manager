@@ -21,8 +21,10 @@ export const expenseBasicInformationFragment = gql`
 export const listExpensesQuery = gql`
   query listExpenses {
     expenses {
-      id
-      ...ExpenseBasicInformation
+      nodes {
+        id
+        ...ExpenseBasicInformation
+      }
     }
   }
 

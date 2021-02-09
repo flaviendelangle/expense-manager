@@ -1,8 +1,9 @@
-import { DateTimeResolver, GraphQLDateTime } from 'graphql-scalars'
+import { DateTimeResolver } from 'graphql-scalars'
 import { snakeCaseMappers, Transaction } from 'objection'
-import { Field, ObjectType, ID, InputType } from 'type-graphql'
+import { Field, ObjectType, ID } from 'type-graphql'
 
-import { BaseModel } from '../BaseModel'
+import { PaginatedClass } from '../../utils/PaginatedClass'
+import { BaseModel } from '../base/BaseModel'
 import { ExpenseCategoryModel } from '../expenseCategory'
 
 @ObjectType('Expense')
@@ -53,20 +54,5 @@ export class ExpenseModel extends BaseModel {
   spentAt: Date
 }
 
-@InputType('UpsertExpensePayload')
-export class UpsertExpensePayload {
-  @Field((type) => String, { nullable: true })
-  id?: number | string
-
-  @Field((type) => String, { nullable: true })
-  description?: string
-
-  @Field((type) => ID, { nullable: true })
-  categoryId?: string | number
-
-  @Field((type) => Number, { nullable: true })
-  value?: number
-
-  @Field((type) => GraphQLDateTime, { nullable: true })
-  spentAt?: Date
-}
+@ObjectType('PaginatedExpense')
+export class PaginatedExpense extends PaginatedClass(ExpenseModel) {}

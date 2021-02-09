@@ -2,11 +2,11 @@ import { useQuery } from '@apollo/client'
 
 import {
   listExpenseCategories,
-  listExpenseCategories_expenseCategories,
+  listExpenseCategories_expenseCategories_nodes,
 } from './types/listExpenseCategories'
 import { listExpenseCategoriesQuery } from './useExpenseCategories.query'
 
-const NO_DATA: listExpenseCategories_expenseCategories[] = []
+const NO_DATA: listExpenseCategories_expenseCategories_nodes[] = []
 
 export const useExpenseCategories = () => {
   const response = useQuery<listExpenseCategories, {}>(
@@ -15,6 +15,6 @@ export const useExpenseCategories = () => {
 
   return {
     ...response,
-    data: response.data?.expenseCategories ?? NO_DATA,
+    data: response.data?.expenseCategories.nodes ?? NO_DATA,
   }
 }

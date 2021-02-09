@@ -1,9 +1,9 @@
 import { ApolloCache, useQuery } from '@apollo/client'
 
-import { listExpenses, listExpenses_expenses } from './types/listExpenses'
+import { listExpenses, listExpenses_expenses_nodes } from './types/listExpenses'
 import { listExpensesQuery } from './useExpenses.query'
 
-export type ExpenseBasicInformation = listExpenses_expenses
+export type ExpenseBasicInformation = listExpenses_expenses_nodes
 
 const NO_DATA: ExpenseBasicInformation[] = []
 
@@ -12,7 +12,7 @@ export const useExpenses = () => {
 
   return {
     ...response,
-    data: response.data?.expenses ?? NO_DATA,
+    data: response.data?.expenses.nodes ?? NO_DATA,
   }
 }
 
@@ -28,7 +28,10 @@ export const addExpenseToCache = (
     cache.writeQuery<listExpenses>({
       query: listExpensesQuery,
       data: {
-        expenses: [...existingExpenses.expenses, newItem],
+        expenses: {
+          __typename: 'PaginatedExpense',
+          nodes: [...existingExpenses.expenses.nodes, newItem],
+        },
       },
     })
   }

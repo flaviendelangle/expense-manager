@@ -1,7 +1,8 @@
 import { Transaction } from 'objection'
-import { Field, ObjectType, InputType, ID } from 'type-graphql'
+import { Field, ObjectType, ID } from 'type-graphql'
 
-import { BaseModel } from '../BaseModel'
+import { PaginatedClass } from '../../utils/PaginatedClass'
+import { BaseModel } from '../base/BaseModel'
 
 @ObjectType('ExpenseCategory')
 export class ExpenseCategoryModel extends BaseModel {
@@ -39,17 +40,7 @@ export class ExpenseCategoryModel extends BaseModel {
   categoryGroupId: string | number
 }
 
-@InputType('UpsertExpenseCategoryPayload')
-export class UpsertExpenseCategoryPayload {
-  @Field((type) => String, { nullable: true })
-  id: number | string
-
-  @Field((type) => String, { nullable: true })
-  name: string
-
-  @Field((type) => String, { nullable: true })
-  description?: string
-
-  @Field((type) => ID, { nullable: true })
-  categoryGroupId?: string | number
-}
+@ObjectType('PaginatedExpenseCategory')
+export class PaginatedExpenseCategory extends PaginatedClass(
+  ExpenseCategoryModel
+) {}
