@@ -55,7 +55,12 @@ export const UpsertExpenseForm: React.VoidFunctionComponent<UpsertExpenseFormPro
       initialValues={initialValues}
       render={({ handleSubmit, pristine, hasValidationErrors, submitting }) => (
         <form onSubmit={handleSubmit}>
-          <SelectExpenseCategory name="categoryId" label="Catégorie" required />
+          <SelectExpenseCategory
+            filterable
+            name="categoryId"
+            label="Catégorie"
+            required
+          />
           <TextInput name="description" label="Description" />
           <NumberInput name="value" label="Montant" required />
           <TextInput

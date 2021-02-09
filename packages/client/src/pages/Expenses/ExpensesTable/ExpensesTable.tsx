@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
 import { pick } from 'lodash'
 import * as React from 'react'
-import { Renderer } from 'react-table'
+import { Renderer, useSortBy } from 'react-table'
 
 import { Modal } from '@habx/ui-core'
 import { CellProps, Column, Row, Table, useTable } from '@habx/ui-table'
@@ -24,6 +24,7 @@ const COLUMNS: Column<ExpenseBasicInformation>[] = [
   },
   {
     Header: 'Catégorie',
+    id: 'category',
     accessor: (el) => el.category,
     Cell: (({ cell }) =>
       `${cell.value.categoryGroup.name} - ${cell.value.name}`) as Renderer<
@@ -56,10 +57,16 @@ export const ExpensesTable: React.VoidFunctionComponent<ExpensesTableProps> = ({
     setSelectedExpense,
   ] = React.useState<ExpenseBasicInformation | null>(null)
 
-  const tableInstance = useTable({
-    data,
-    columns: COLUMNS,
-  })
+  const tableInstance = useTable(
+    {
+      data,
+      columns: COLUMNS,
+      initialState: {
+        sortBy: [{ id: 'spentAt' }],
+      },
+    },
+    useSortBy
+  )
 
   const editExpensePayload = React.useMemo<UpsertExpensePayload | null>(() => {
     if (!selectedExpense) {

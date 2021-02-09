@@ -57,3 +57,5 @@ cypress/screenshots/
 cypress/reports/
 cypress/videos/
 mochawesome-report/
+
+packages/server/local
