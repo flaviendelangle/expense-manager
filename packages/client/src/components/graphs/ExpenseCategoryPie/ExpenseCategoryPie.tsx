@@ -1,18 +1,16 @@
 import { MouseEventHandler, ResponsivePie } from '@nivo/pie'
 import * as React from 'react'
 
-import { stringifyColor, useThemeVariant } from '@habx/ui-core'
-
 import { ExpenseBasicInformation } from '@hooks/useExpenses'
-
-import { ExpenseGraph } from './ExpensesGraphs.style'
+import { useNivoCustomization } from '@hooks/useNivoCustomization'
 
 type PieDataLine = { id: string; label: string; value: number }
 
-export const CategoryPie: React.VoidFunctionComponent<CategoryPieProps> = ({
+export const ExpenseCategoryPie: React.VoidFunctionComponent<CategoryPieProps> = ({
   data,
 }) => {
-  const theme = useThemeVariant()
+  const nivoCustomization = useNivoCustomization()
+
   const [selectedCategoryGroupId, setSelectedCategoryGroupId] = React.useState<
     string | null
   >(null)
@@ -66,20 +64,18 @@ export const CategoryPie: React.VoidFunctionComponent<CategoryPieProps> = ({
   )
 
   return (
-    <ExpenseGraph style={{ height: 450 }}>
-      <ResponsivePie<PieDataLine>
-        data={pieData}
-        margin={{ top: 40, right: 80, bottom: 0, left: 80 }}
-        sortByValue
-        innerRadius={0.5}
-        cornerRadius={3}
-        padAngle={1}
-        radialLabel={(d) => `${d.data.label} (${d.formattedValue})`}
-        radialLabelsTextColor={stringifyColor(theme.typography.colors.text)}
-        valueFormat={(value) => `${Math.floor(value)}€`}
-        onClick={handleCategoryClick}
-      />
-    </ExpenseGraph>
+    <ResponsivePie<PieDataLine>
+      data={pieData}
+      margin={{ top: 24, right: 72, bottom: 0, left: 72 }}
+      sortByValue
+      innerRadius={0.5}
+      cornerRadius={3}
+      padAngle={1}
+      radialLabel={(d) => `${d.data.label} (${d.formattedValue})`}
+      valueFormat={(value) => `${Math.floor(value)}€`}
+      onClick={handleCategoryClick}
+      {...nivoCustomization}
+    />
   )
 }
 

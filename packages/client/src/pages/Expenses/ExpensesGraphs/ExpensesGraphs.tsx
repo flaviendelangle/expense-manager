@@ -1,10 +1,10 @@
-import { ResponsiveBar } from '@nivo/bar'
-import { startOfDay } from 'date-fns'
 import * as React from 'react'
+
+import { ExpenseCategoryPie } from '@components/graphs/ExpenseCategoryPie'
+import { ExpenseTimeline } from '@components/graphs/ExpenseTimeline'
 
 import { ExpenseBasicInformation } from '@hooks/useExpenses'
 
-import { CategoryPie } from './CategoryPie'
 import {
   ExpensesGraphsContainer,
   ExpenseGraphTitle,
@@ -18,19 +18,14 @@ export const ExpensesGraphs: React.VoidFunctionComponent<ExpensesGraphProps> = (
     <ExpenseGraphTitle type="section">
       Répartition des dépenses par catégorie
     </ExpenseGraphTitle>
-    <CategoryPie data={data} />
+    <ExpenseGraph style={{ height: 480 }}>
+      <ExpenseCategoryPie data={data} />
+    </ExpenseGraph>
     <ExpenseGraphTitle type="section">
       Répartition des dépenses dans le temps
     </ExpenseGraphTitle>
-    <ExpenseGraph style={{ height: 300 }}>
-      <ResponsiveBar
-        data={data}
-        indexBy={(el) =>
-          startOfDay(
-            new Date(((el as any) as ExpenseBasicInformation).spentAt)
-          ).getTime()
-        }
-      />
+    <ExpenseGraph style={{ height: 480 }}>
+      <ExpenseTimeline data={data} />
     </ExpenseGraph>
   </ExpensesGraphsContainer>
 )

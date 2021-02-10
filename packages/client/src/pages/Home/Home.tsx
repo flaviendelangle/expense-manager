@@ -1,8 +1,19 @@
 import * as React from 'react'
 
-import { Breadcrumb, BreadcrumbItem, HeaderBar, Text } from '@habx/ui-core'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  Card,
+  HeaderBar,
+  Title,
+} from '@habx/ui-core'
+
+import { ExpenseCategoryPie } from '@components/graphs/ExpenseCategoryPie'
+import { ExpenseTimeline } from '@components/graphs/ExpenseTimeline'
 
 import { useExpenses } from '@hooks/useExpenses'
+
+import { HomeContent, HomeCardContent } from './Home.style'
 
 export const Home: React.FunctionComponent = () => {
   const expenses = useExpenses()
@@ -14,13 +25,28 @@ export const Home: React.FunctionComponent = () => {
           <BreadcrumbItem>Gestionnaire de dépenses</BreadcrumbItem>
         </Breadcrumb>
       </HeaderBar>
-      <div>
+      <HomeContent>
         {!expenses.loading && (
-          <Text>
-            {expenses.data.length} dépense{expenses.data.length > 1 ? 's' : ''}
-          </Text>
+          <React.Fragment>
+            <Card spacing="regular-horizontal-only">
+              <HeaderBar sticky={false}>
+                <Title type="regular">Dépenses de la semaine</Title>
+              </HeaderBar>
+              <HomeCardContent>
+                <ExpenseCategoryPie data={expenses.data} />
+              </HomeCardContent>
+            </Card>
+            <Card spacing="regular-horizontal-only">
+              <HeaderBar sticky={false}>
+                <Title type="regular">Dépenses de la semaine</Title>
+              </HeaderBar>
+              <HomeCardContent>
+                <ExpenseTimeline data={expenses.data} />
+              </HomeCardContent>
+            </Card>
+          </React.Fragment>
         )}
-      </div>
+      </HomeContent>
     </React.Fragment>
   )
 }
