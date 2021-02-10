@@ -36,35 +36,6 @@ export class ExpenseFieldsResolver {
     return ExpenseModel.query(ctx.trx).where('id', id).first()
   }
 
-  @Mutation((returns) => ExpenseModel)
-  async upsertExpense(
-    @Ctx()
-    ctx: RequestContext,
-    @Arg('payload', (type) => UpsertExpensePayload)
-    payload: UpsertExpensePayload
-  ) {
-    let existing: ExpenseModel | null = null
-    if (payload.id) {
-      existing = await ExpenseModel.getReference(payload.id, ctx.trx)
-    } else {
-      validateNeededArgs(payload, ['categoryId', 'value'])
-    }
-
-    const toUpsert = existing
-      ? { id: existing.id, ...pick(payload, ExpenseModel.UPDATE_FIELDS) }
-      : pick(payload, ExpenseModel.INSERT_FIELDS)
-
-    return ExpenseModel.query(ctx.trx)
-      .upsertGraphAndFetch(toUpsert, {
-        insertMissing: true,
-        relate: true,
-        unrelate: true,
-        noDelete: true,
-      })
-      .first()
-      .context({ ctx })
-  }
-
   @FieldResolver((type) => DateTimeResolver)
   createdAt(@Root() model: ExpenseModel, @Ctx() ctx: RequestContext) {
     return new Date(model.createdAt)

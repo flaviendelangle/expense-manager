@@ -1,11 +1,11 @@
 import { filter, ParseFilters } from '../base/ParseFilters'
 
-import { ExpenseModel } from './expense.model'
-import { ExpenseFilters } from './expense.types'
+import { EarningModel } from './earning.model'
+import { EarningFilters } from './earning.types'
 
-export class ExpenseParseFilters extends ParseFilters<
-  ExpenseModel,
-  ExpenseFilters
+export class EarningParseFilters extends ParseFilters<
+  EarningModel,
+  EarningFilters
 > {
   @filter
   ids() {

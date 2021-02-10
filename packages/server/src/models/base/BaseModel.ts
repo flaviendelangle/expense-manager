@@ -1,5 +1,5 @@
 import { DateTimeResolver } from 'graphql-scalars'
-import { Model, QueryBuilder, snakeCaseMappers } from 'objection'
+import { Model, QueryBuilder } from 'objection'
 import { Field, ID, ObjectType } from 'type-graphql'
 
 import { RequestContext } from '../../globalTypes'
@@ -11,10 +11,6 @@ import {
 
 @ObjectType('BaseModel')
 export class BaseModel extends Model {
-  static get columnNameMappers() {
-    return snakeCaseMappers({ underscoreBeforeDigits: true })
-  }
-
   static async findByIds<M extends BaseModel>(
     ctx: RequestContext = {},
     ids: number[]

@@ -20,7 +20,7 @@ export class ExpenseCategoryFieldsResolver {
 
   @FieldResolver((type) => [ExpenseModel!]!)
   expenses(@Root() model: ExpenseCategoryModel, @Ctx() ctx: RequestContext) {
-    return ExpenseModel.query(ctx.trx).where('category_id', model.id)
+    return ExpenseModel.query(ctx.trx).where('categoryId', model.id)
   }
 
   @FieldResolver((type) => ExpenseCategoryGroupModel)

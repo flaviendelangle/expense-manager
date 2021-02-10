@@ -4,6 +4,8 @@ const TABLES = {
   EXPENSE_CATEGORY_GROUPS: 'expense_category_groups',
   EXPENSE_CATEGORIES: 'expense_categories',
   EXPENSES: 'expenses',
+  EARNING_CATEGORIES: 'earning_categories',
+  EARNINGS: 'earnings',
 }
 
 export const up = async (knex: Knex) => {
@@ -51,6 +53,34 @@ export const up = async (knex: Knex) => {
     t.timestamp('created_at').notNullable().defaultTo(knex.fn.now())
     t.timestamp('updated_at').notNullable().defaultTo(knex.fn.now())
     t.timestamp('spent_at').notNullable()
+  })
+
+  await knex.schema.createTable(TABLES.EARNING_CATEGORIES, (t) => {
+    t.increments()
+
+    t.string('name').notNullable()
+
+    t.string('description')
+
+    t.timestamp('created_at').notNullable().defaultTo(knex.fn.now())
+    t.timestamp('updated_at').notNullable().defaultTo(knex.fn.now())
+
+    t.unique(['name'])
+  })
+
+  await knex.schema.createTable(TABLES.EARNINGS, (t) => {
+    t.increments()
+
+    t.integer('category_id')
+    t.foreign('category_id').references(`${TABLES.EARNING_CATEGORIES}.id`)
+
+    t.float('value').notNullable()
+
+    t.string('description')
+
+    t.timestamp('created_at').notNullable().defaultTo(knex.fn.now())
+    t.timestamp('updated_at').notNullable().defaultTo(knex.fn.now())
+    t.timestamp('earned_at').notNullable()
   })
 }
 

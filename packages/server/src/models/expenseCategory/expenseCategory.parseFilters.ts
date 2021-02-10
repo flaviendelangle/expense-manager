@@ -21,7 +21,7 @@ export class ExpenseCategoryParseFilters extends ParseFilters<
     const categoryGroupIds = this.filters?.categoryGroupIds
 
     if (categoryGroupIds) {
-      this.query.whereIn('category_group_id', categoryGroupIds)
+      this.query.whereIn('categoryGroupId', categoryGroupIds)
     }
   }
 }
