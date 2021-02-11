@@ -1,8 +1,13 @@
+import { pick } from 'lodash'
 import { Transaction } from 'objection'
 import { Field, ObjectType } from 'type-graphql'
 
+import { ApolloResourceNotFound } from '../../utils/errors'
 import { PaginatedClass } from '../../utils/PaginatedClass'
+import { validateNeededArgs } from '../../utils/validateNeededArgs'
 import { BaseModel } from '../base/BaseModel'
+
+import { UpsertExpenseCategoryGroupPayload } from './expenseCategoryGroup.types'
 
 @ObjectType('ExpenseCategoryGroup')
 export class ExpenseCategoryGroupModel extends BaseModel {
@@ -14,8 +19,37 @@ export class ExpenseCategoryGroupModel extends BaseModel {
     return {}
   }
 
-  static async getReference(id: string | number, trx?: Transaction) {
+  static getReference(id: string | number, trx?: Transaction) {
     return ExpenseCategoryGroupModel.query(trx).where('id', id).first()
+  }
+
+  static async upsertReference(
+    payload: UpsertExpenseCategoryGroupPayload,
+    trx?: Transaction
+  ) {
+    if (payload.id) {
+      const existing = await ExpenseCategoryGroupModel.getReference(
+        payload.id,
+        trx
+      )
+
+      if (!existing) {
+        throw new ApolloResourceNotFound({ payload })
+      }
+
+      return ExpenseCategoryGroupModel.query(trx)
+        .updateAndFetchById(
+          payload.id,
+          pick(payload, ExpenseCategoryGroupModel.UPDATE_FIELDS)
+        )
+        .first()
+    } else {
+      validateNeededArgs(payload, ['name'])
+
+      return ExpenseCategoryGroupModel.query(trx).insertAndFetch(
+        pick(payload, ExpenseCategoryGroupModel.INSERT_FIELDS)
+      )
+    }
   }
 
   static readonly INSERT_FIELDS: (keyof ExpenseCategoryGroupModel)[] = [

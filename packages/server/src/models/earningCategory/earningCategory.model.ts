@@ -1,8 +1,13 @@
+import { pick } from 'lodash'
 import { Transaction } from 'objection'
-import { Field, ObjectType, ID } from 'type-graphql'
+import { Field, ObjectType } from 'type-graphql'
 
+import { ApolloResourceNotFound } from '../../utils/errors'
 import { PaginatedClass } from '../../utils/PaginatedClass'
+import { validateNeededArgs } from '../../utils/validateNeededArgs'
 import { BaseModel } from '../base/BaseModel'
+
+import { UpsertEarningCategoryPayload } from './earningCategory.types'
 
 @ObjectType('EarningCategory')
 export class EarningCategoryModel extends BaseModel {
@@ -14,8 +19,34 @@ export class EarningCategoryModel extends BaseModel {
     return {}
   }
 
-  static async getReference(id: string | number, trx?: Transaction) {
+  static getReference(id: string | number, trx?: Transaction) {
     return EarningCategoryModel.query(trx).where('id', id).first()
+  }
+
+  static async upsertReference(
+    payload: UpsertEarningCategoryPayload,
+    trx?: Transaction
+  ) {
+    if (payload.id) {
+      const existing = await EarningCategoryModel.getReference(payload.id, trx)
+
+      if (!existing) {
+        throw new ApolloResourceNotFound({ payload })
+      }
+
+      return EarningCategoryModel.query(trx)
+        .updateAndFetchById(
+          payload.id,
+          pick(payload, EarningCategoryModel.UPDATE_FIELDS)
+        )
+        .first()
+    } else {
+      validateNeededArgs(payload, ['name'])
+
+      return EarningCategoryModel.query(trx)
+        .insertAndFetch(pick(payload, EarningCategoryModel.INSERT_FIELDS))
+        .first()
+    }
   }
 
   static readonly INSERT_FIELDS: (keyof EarningCategoryModel)[] = [

@@ -3,10 +3,10 @@ import { Field, ID, InputType } from 'type-graphql'
 @InputType('UpsertExpenseCategoryGroupPayload')
 export class UpsertExpenseCategoryGroupPayload {
   @Field((type) => String, { nullable: true })
-  id: number | string
+  id?: number | string
 
   @Field((type) => String, { nullable: true })
-  name: string
+  name?: string
 
   @Field((type) => String, { nullable: true })
   description?: string

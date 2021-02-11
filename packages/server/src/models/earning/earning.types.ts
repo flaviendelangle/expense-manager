@@ -3,7 +3,7 @@ import { Field, ID, InputType } from 'type-graphql'
 
 @InputType('UpsertEarningPayload')
 export class UpsertEarningPayload {
-  @Field((type) => String, { nullable: true })
+  @Field((type) => ID, { nullable: true })
   id?: number | string
 
   @Field((type) => String, { nullable: true })
@@ -16,7 +16,7 @@ export class UpsertEarningPayload {
   value?: number
 
   @Field((type) => GraphQLDateTime, { nullable: true })
-  spentAt?: Date
+  earnedAt?: string
 }
 
 @InputType('EarningFilters')

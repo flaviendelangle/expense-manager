@@ -15,7 +15,7 @@ export class ExpenseCategoryFieldsResolver {
 
   @FieldResolver((type) => DateTimeResolver)
   updatedAt(@Root() model: ExpenseCategoryModel, @Ctx() ctx: RequestContext) {
-    return new Date(model.createdAt)
+    return new Date(model.updatedAt)
   }
 
   @FieldResolver((type) => [ExpenseModel!]!)

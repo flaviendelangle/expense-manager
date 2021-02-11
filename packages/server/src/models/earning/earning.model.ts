@@ -1,10 +1,15 @@
 import { DateTimeResolver } from 'graphql-scalars'
-import { snakeCaseMappers, Transaction } from 'objection'
+import { pick } from 'lodash'
+import { Transaction } from 'objection'
 import { Field, ObjectType, ID } from 'type-graphql'
 
+import { ApolloResourceNotFound } from '../../utils/errors'
 import { PaginatedClass } from '../../utils/PaginatedClass'
+import { validateNeededArgs } from '../../utils/validateNeededArgs'
 import { BaseModel } from '../base/BaseModel'
 import { EarningCategoryModel } from '../earningCategory'
+
+import { UpsertEarningPayload } from './earning.types'
 
 @ObjectType('Earning')
 export class EarningModel extends BaseModel {
@@ -16,26 +21,48 @@ export class EarningModel extends BaseModel {
     return {}
   }
 
-  static async getReference(id: string | number, trx?: Transaction) {
+  static getReference(id: string | number, trx?: Transaction) {
     return EarningModel.query(trx).where('id', id).first()
   }
 
-  static get columnNameMappers() {
-    return snakeCaseMappers({ underscoreBeforeDigits: true })
+  static async upsertReference(
+    payload: UpsertEarningPayload,
+    trx?: Transaction
+  ) {
+    if (payload.id) {
+      const existing = await EarningModel.getReference(payload.id, trx)
+
+      if (!existing) {
+        throw new ApolloResourceNotFound({ payload })
+      }
+
+      return EarningModel.query(trx)
+        .updateAndFetchById(
+          payload.id,
+          pick(payload, EarningModel.UPDATE_FIELDS)
+        )
+        .first()
+    } else {
+      validateNeededArgs(payload, ['categoryId', 'value', 'earnedAt'])
+
+      return EarningModel.query(trx)
+        .insertAndFetch(pick(payload, EarningModel.INSERT_FIELDS))
+        .first()
+    }
   }
 
   static readonly INSERT_FIELDS: (keyof EarningModel)[] = [
     'description',
     'categoryId',
     'value',
-    'spentAt',
+    'earnedAt',
   ]
 
   static readonly UPDATE_FIELDS: (keyof EarningModel)[] = [
     'description',
     'categoryId',
     'value',
-    'spentAt',
+    'earnedAt',
   ]
 
   @Field((type) => String, { nullable: true })
@@ -51,7 +78,7 @@ export class EarningModel extends BaseModel {
   value: number
 
   @Field((type) => DateTimeResolver)
-  spentAt: Date
+  earnedAt: string
 }
 
 @ObjectType('PaginatedEarning')

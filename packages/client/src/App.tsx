@@ -10,7 +10,7 @@ import { Expenses } from '@pages/Expenses'
 import { Home } from '@pages/Home'
 import { GlobalStyle } from '@style/global'
 
-export const App: React.FunctionComponent = () => (
+export const App: React.VoidFunctionComponent = () => (
   <Providers>
     <Page>
       <Routes>

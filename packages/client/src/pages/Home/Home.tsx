@@ -15,7 +15,7 @@ import { useExpenses } from '@hooks/useExpenses'
 
 import { HomeContent, HomeCardContent } from './Home.style'
 
-export const Home: React.FunctionComponent = () => {
+export const Home: React.VoidFunctionComponent = () => {
   const expenses = useExpenses()
 
   return (

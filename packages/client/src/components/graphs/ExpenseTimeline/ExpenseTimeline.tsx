@@ -1,14 +1,90 @@
 import { ResponsiveLine } from '@nivo/line'
-import { eachDayOfInterval, format, startOfDay, startOfMonth } from 'date-fns'
+import {
+  eachDayOfInterval,
+  eachWeekOfInterval,
+  eachMonthOfInterval,
+  format,
+  startOfDay,
+  startOfMonth,
+  differenceInCalendarDays,
+} from 'date-fns'
 import { orderBy, uniqBy, sumBy } from 'lodash'
 import * as React from 'react'
 
 import { ExpenseBasicInformation } from '@hooks/useExpenses'
 import { useNivoCustomization } from '@hooks/useNivoCustomization'
 
+type Precision = {
+  axis: {
+    format: string
+    tickValues: string
+  }
+  intervalBuilder: (interval: Interval) => Date[]
+}
+
+enum TimelinePrecision {
+  OneDay,
+  OneWeek,
+  OneMonth,
+}
+
+const PRECISIONS_CONFIG: Record<TimelinePrecision, Precision> = {
+  [TimelinePrecision.OneDay]: {
+    axis: {
+      format: '%b %d',
+      tickValues: 'every 1 day',
+    },
+    intervalBuilder: eachDayOfInterval,
+  },
+  [TimelinePrecision.OneWeek]: {
+    axis: {
+      format: '%d/%m',
+      tickValues: 'every 1 week',
+    },
+    intervalBuilder: eachWeekOfInterval,
+  },
+  [TimelinePrecision.OneMonth]: {
+    axis: {
+      format: '%m/%y',
+      tickValues: 'every 1 month',
+    },
+    intervalBuilder: eachMonthOfInterval,
+  },
+}
+
 export const ExpenseTimeline: React.VoidFunctionComponent<ExpenseTimelineProps> = ({
   data,
 }) => {
+  const { orderedData, startDate, endDate } = React.useMemo(() => {
+    const tempOrderedData = orderBy(data, (el) =>
+      new Date(el.spentAt).getTime()
+    )
+
+    return {
+      orderedData: tempOrderedData,
+      startDate: startOfMonth(new Date(tempOrderedData[0].spentAt)),
+      endDate: startOfDay(
+        new Date(tempOrderedData[tempOrderedData.length - 1].spentAt)
+      ),
+    }
+  }, [data])
+
+  const precision = React.useMemo(() => {
+    const timeLengthInDays = differenceInCalendarDays(endDate, startDate)
+
+    if (timeLengthInDays < 30) {
+      return TimelinePrecision.OneDay
+    }
+
+    if (timeLengthInDays < 365) {
+      return TimelinePrecision.OneWeek
+    }
+
+    return TimelinePrecision.OneMonth
+  }, [endDate, startDate])
+
+  const precisionConfig = PRECISIONS_CONFIG[precision]
+
   const nivoCustomization = useNivoCustomization()
 
   const max = React.useMemo(
@@ -21,14 +97,7 @@ export const ExpenseTimeline: React.VoidFunctionComponent<ExpenseTimelineProps> 
       return []
     }
 
-    const orderedData = orderBy(data, (el) => new Date(el.spentAt).getTime())
-
-    const startDate = startOfMonth(new Date(orderedData[0].spentAt))
-    const endDate = startOfDay(
-      new Date(orderedData[orderedData.length - 1].spentAt)
-    )
-
-    const days = eachDayOfInterval({
+    const snapshotDates = precisionConfig.intervalBuilder({
       start: startDate,
       end: endDate,
     })
@@ -38,7 +107,10 @@ export const ExpenseTimeline: React.VoidFunctionComponent<ExpenseTimelineProps> 
       (group) => group.id
     ).map((group) => ({
       id: group.name,
-      data: days.map((day) => ({ x: format(day, 'yyyy-MM-dd'), y: 0 })),
+      data: snapshotDates.map((snapshotDate) => ({
+        x: format(snapshotDate, 'yyyy-MM-dd'),
+        y: 0,
+      })),
     }))
 
     for (const expense of orderedData) {
@@ -46,10 +118,12 @@ export const ExpenseTimeline: React.VoidFunctionComponent<ExpenseTimelineProps> 
         (group) => group.id === expense.category.categoryGroup.name
       )
 
-      const expenseDay = new Date(expense.spentAt).getDate()
+      const expenseDate = new Date(expense.spentAt)
 
-      for (let i = expenseDay; i < days.length; i++) {
+      let i = snapshotDates.length - 1
+      while (snapshotDates[i] > expenseDate) {
         categoryGroups[expenseCategoryGroupIndex].data[i].y += expense.value
+        i--
       }
     }
 
@@ -57,7 +131,7 @@ export const ExpenseTimeline: React.VoidFunctionComponent<ExpenseTimelineProps> 
       categoryGroups,
       (group) => group.data[group.data.length - 1].y
     )
-  }, [data])
+  }, [data, endDate, orderedData, precisionConfig, startDate])
 
   return (
     <ResponsiveLine
@@ -81,8 +155,7 @@ export const ExpenseTimeline: React.VoidFunctionComponent<ExpenseTimelineProps> 
         legendOffset: 12,
       }}
       axisBottom={{
-        format: '%b %d',
-        tickValues: 'every 2 days',
+        ...precisionConfig.axis,
         legend: 'time scale',
         legendOffset: -12,
       }}

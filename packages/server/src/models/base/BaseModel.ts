@@ -69,14 +69,14 @@ export class BaseModel extends Model {
   id: number | string
 
   @Field((type) => DateTimeResolver)
-  createdAt: Date
+  createdAt: string
 
   @Field((type) => DateTimeResolver)
-  updatedAt: Date
+  updatedAt: string
 
   async $beforeUpdate(opts, queryContext) {
     super.$beforeUpdate(opts, queryContext)
 
-    this.updatedAt = new Date()
+    this.updatedAt = new Date().toISOString()
   }
 }

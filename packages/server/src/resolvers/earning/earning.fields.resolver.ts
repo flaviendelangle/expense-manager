@@ -43,12 +43,12 @@ export class EarningFieldsResolver {
 
   @FieldResolver((type) => DateTimeResolver)
   updatedAt(@Root() model: EarningModel, @Ctx() ctx: RequestContext) {
-    return new Date(model.createdAt)
+    return new Date(model.updatedAt)
   }
 
   @FieldResolver((type) => DateTimeResolver)
-  spentAt(@Root() model: EarningModel, @Ctx() ctx: RequestContext) {
-    return new Date(model.spentAt)
+  earnedAt(@Root() model: EarningModel, @Ctx() ctx: RequestContext) {
+    return new Date(model.earnedAt)
   }
 
   @FieldResolver((type) => EarningCategoryModel)
