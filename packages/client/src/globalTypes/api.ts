@@ -12,10 +12,32 @@ export interface DateFilter {
   before?: any | null;
 }
 
+export interface EarningCategoryFilters {
+  ids?: string[] | null;
+}
+
+export interface EarningFilters {
+  categoryIds?: string[] | null;
+  ids?: string[] | null;
+}
+
+export interface ExpenseCategoryFilters {
+  categoryGroupIds?: string[] | null;
+  ids?: string[] | null;
+}
+
 export interface ExpenseFilters {
   categoryIds?: string[] | null;
   ids?: string[] | null;
   spentAt?: DateFilter | null;
+}
+
+export interface UpsertEarningPayload {
+  categoryId?: string | null;
+  description?: string | null;
+  earnedAt?: any | null;
+  id?: string | null;
+  value?: number | null;
 }
 
 export interface UpsertExpensePayload {

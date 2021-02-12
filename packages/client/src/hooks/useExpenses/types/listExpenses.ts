@@ -26,7 +26,6 @@ export interface listExpenses_expenses_nodes {
   __typename: "Expense";
   id: string;
   description: string | null;
-  createdAt: any;
   value: number;
   spentAt: any;
   category: listExpenses_expenses_nodes_category;

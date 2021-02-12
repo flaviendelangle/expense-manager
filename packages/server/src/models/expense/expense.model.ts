@@ -78,7 +78,7 @@ export class ExpenseModel extends BaseModel {
   value: number
 
   @Field((type) => DateTimeResolver)
-  spentAt: string
+  spentAt: Date
 }
 
 @ObjectType('PaginatedExpense')

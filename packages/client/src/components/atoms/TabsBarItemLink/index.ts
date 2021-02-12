@@ -1,0 +1,1 @@
+export { TabsBarItemLink } from './TabsBarItemLink'

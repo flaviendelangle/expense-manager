@@ -1,6 +1,7 @@
 import DataLoader from 'dataloader'
 
 import { RequestContext } from '../globalTypes'
+import { EarningCategoryModel } from '../models/earningCategory'
 import { ExpenseCategoryModel } from '../models/expenseCategory'
 import { ExpenseCategoryGroupModel } from '../models/expenseCategoryGroup'
 
@@ -20,6 +21,13 @@ export class DataLoaderService {
 
   expenseCategoryGroup = new DataLoader((ids: (string | number)[]) =>
     ExpenseCategoryGroupModel.findByIds(
+      this.ctx,
+      ids.map((id) => Number(id))
+    )
+  )
+
+  earningCategory = new DataLoader((ids: (string | number)[]) =>
+    EarningCategoryModel.findByIds(
       this.ctx,
       ids.map((id) => Number(id))
     )

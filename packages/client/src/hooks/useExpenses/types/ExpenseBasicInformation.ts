@@ -24,7 +24,6 @@ export interface ExpenseBasicInformation {
   __typename: "Expense";
   id: string;
   description: string | null;
-  createdAt: any;
   value: number;
   spentAt: any;
   category: ExpenseBasicInformation_category;

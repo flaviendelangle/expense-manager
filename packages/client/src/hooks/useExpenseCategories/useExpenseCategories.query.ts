@@ -12,8 +12,8 @@ export const expenseCategoryBasicInformationFragment = gql`
 `
 
 export const listExpenseCategoriesQuery = gql`
-  query listExpenseCategories {
-    expenseCategories {
+  query listExpenseCategories($filters: ExpenseCategoryFilters) {
+    expenseCategories(filters: $filters) {
       nodes {
         id
         ...ExpenseCategoryBasicInformation

@@ -65,7 +65,7 @@ export const UpsertExpenseForm: React.VoidFunctionComponent<UpsertExpenseFormPro
           <NumberInput name="value" label="Montant" required />
           <TextInput
             name="spentAt"
-            label="Date de l'achat (à améliorer)"
+            label="Date de la dépense (à améliorer)"
             required
           />
           <ActionBar>

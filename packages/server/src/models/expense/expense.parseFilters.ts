@@ -24,4 +24,17 @@ export class ExpenseParseFilters extends ParseFilters<
       this.query.whereIn('categoryId', categoryIds)
     }
   }
+
+  @filter
+  spentAt() {
+    const spentAt = this.filters?.spentAt
+
+    if (spentAt?.after) {
+      this.query.where('spentAt', '>=', spentAt.after)
+    }
+
+    if (spentAt?.before) {
+      this.query.where('spentAt', '<=', spentAt.before)
+    }
+  }
 }

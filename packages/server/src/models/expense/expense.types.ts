@@ -16,7 +16,16 @@ export class UpsertExpensePayload {
   value?: number
 
   @Field((type) => GraphQLDateTime, { nullable: true })
-  spentAt?: string
+  spentAt?: Date
+}
+
+@InputType('DateFilter')
+export class DateFilter {
+  @Field((type) => GraphQLDateTime, { nullable: true })
+  before?: Date
+
+  @Field((type) => GraphQLDateTime, { nullable: true })
+  after?: Date
 }
 
 @InputType('ExpenseFilters')
@@ -26,4 +35,7 @@ export class ExpenseFilters {
 
   @Field((type) => [ID!], { nullable: true })
   categoryIds?: (string | number)[]
+
+  @Field((type) => DateFilter, { nullable: true })
+  spentAt?: DateFilter
 }

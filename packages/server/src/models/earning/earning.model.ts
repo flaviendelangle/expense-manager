@@ -78,7 +78,7 @@ export class EarningModel extends BaseModel {
   value: number
 
   @Field((type) => DateTimeResolver)
-  earnedAt: string
+  earnedAt: Date
 }
 
 @ObjectType('PaginatedEarning')

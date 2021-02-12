@@ -16,7 +16,7 @@ export class UpsertEarningPayload {
   value?: number
 
   @Field((type) => GraphQLDateTime, { nullable: true })
-  earnedAt?: string
+  earnedAt?: Date
 }
 
 @InputType('EarningFilters')

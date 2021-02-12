@@ -12,6 +12,7 @@ export const NavBar: React.VoidFunctionComponent = () => {
   return (
     <BaseNavBar backgroundColor={palette.purpleDawn[900]} title="Mes dépenses">
       <NavBarLink icon={<Icon icon="list" />} label="Dépenses" to="/expenses" />
+      <NavBarLink icon={<Icon icon="list" />} label="Recettes" to="/earnings" />
       <NavBarItem
         bottom
         onClick={() =>

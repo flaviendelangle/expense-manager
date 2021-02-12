@@ -26,7 +26,6 @@ export interface upsertExpenseForm_upsertExpense {
   __typename: "Expense";
   id: string;
   description: string | null;
-  createdAt: any;
   value: number;
   spentAt: any;
   category: upsertExpenseForm_upsertExpense_category;

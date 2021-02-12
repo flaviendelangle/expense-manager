@@ -21,6 +21,7 @@ export const Home: React.VoidFunctionComponent = () => {
   const mountDate = useMountDate()
 
   const expenses = useExpenses({
+    fetchPolicy: 'cache-and-network',
     variables: {
       filters: {
         spentAt: { after: addMonths(mountDate, -1) },

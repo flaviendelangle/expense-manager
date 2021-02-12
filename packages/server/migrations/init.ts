@@ -52,7 +52,7 @@ export const up = async (knex: Knex) => {
 
     t.timestamp('created_at').notNullable().defaultTo(knex.fn.now())
     t.timestamp('updated_at').notNullable().defaultTo(knex.fn.now())
-    t.timestamp('spent_at').notNullable()
+    t.dateTime('spent_at').notNullable()
   })
 
   await knex.schema.createTable(TABLES.EARNING_CATEGORIES, (t) => {
