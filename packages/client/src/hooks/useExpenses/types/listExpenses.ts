@@ -3,6 +3,8 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
+import { ExpenseFilters } from "./../../../globalTypes/api";
+
 // ====================================================
 // GraphQL query operation: listExpenses
 // ====================================================
@@ -37,4 +39,8 @@ export interface listExpenses_expenses {
 
 export interface listExpenses {
   expenses: listExpenses_expenses;
+}
+
+export interface listExpensesVariables {
+  filters?: ExpenseFilters | null;
 }

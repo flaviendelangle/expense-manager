@@ -1,3 +1,4 @@
+import { addMonths } from 'date-fns'
 import * as React from 'react'
 
 import {
@@ -12,11 +13,20 @@ import { ExpenseCategoryPie } from '@components/graphs/ExpenseCategoryPie'
 import { ExpenseTimeline } from '@components/graphs/ExpenseTimeline'
 
 import { useExpenses } from '@hooks/useExpenses'
+import { useMountDate } from '@hooks/useMountDate'
 
 import { HomeContent, HomeCardContent } from './Home.style'
 
 export const Home: React.VoidFunctionComponent = () => {
-  const expenses = useExpenses()
+  const mountDate = useMountDate()
+
+  const expenses = useExpenses({
+    variables: {
+      filters: {
+        spentAt: { after: addMonths(mountDate, -1) },
+      },
+    },
+  })
 
   return (
     <React.Fragment>
@@ -30,7 +40,7 @@ export const Home: React.VoidFunctionComponent = () => {
           <React.Fragment>
             <Card spacing="regular-horizontal-only">
               <HeaderBar sticky={false}>
-                <Title type="regular">Dépenses de la semaine</Title>
+                <Title type="regular">Dépenses du mois</Title>
               </HeaderBar>
               <HomeCardContent>
                 <ExpenseCategoryPie data={expenses.data} />
@@ -38,7 +48,7 @@ export const Home: React.VoidFunctionComponent = () => {
             </Card>
             <Card spacing="regular-horizontal-only">
               <HeaderBar sticky={false}>
-                <Title type="regular">Dépenses de la semaine</Title>
+                <Title type="regular">Dépenses du mois</Title>
               </HeaderBar>
               <HomeCardContent>
                 <ExpenseTimeline data={expenses.data} />

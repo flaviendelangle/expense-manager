@@ -1,19 +1,32 @@
-import { ApolloCache, useQuery } from '@apollo/client'
+import { ApolloCache, QueryHookOptions, useQuery } from '@apollo/client'
+import * as React from 'react'
 
-import { listExpenses, listExpenses_expenses_nodes } from './types/listExpenses'
+import {
+  listExpenses,
+  listExpenses_expenses_nodes,
+  listExpensesVariables,
+} from './types/listExpenses'
 import { listExpensesQuery } from './useExpenses.query'
 
 export type ExpenseBasicInformation = listExpenses_expenses_nodes
 
 const NO_DATA: ExpenseBasicInformation[] = []
 
-export const useExpenses = () => {
-  const response = useQuery<listExpenses, {}>(listExpensesQuery)
+export const useExpenses = (
+  options?: QueryHookOptions<listExpenses, listExpensesVariables>
+) => {
+  const response = useQuery<listExpenses, listExpensesVariables>(
+    listExpensesQuery,
+    options
+  )
 
-  return {
-    ...response,
-    data: response.data?.expenses.nodes ?? NO_DATA,
-  }
+  return React.useMemo(
+    () => ({
+      ...response,
+      data: response.data?.expenses.nodes ?? NO_DATA,
+    }),
+    [response]
+  )
 }
 
 export const addExpenseToCache = (

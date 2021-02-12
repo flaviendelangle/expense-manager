@@ -52,7 +52,7 @@ const PRECISIONS_CONFIG: Record<TimelinePrecision, Precision> = {
   },
 }
 
-export const ExpenseTimeline: React.VoidFunctionComponent<ExpenseTimelineProps> = ({
+const InnerExpenseTimeline: React.VoidFunctionComponent<ExpenseTimelineProps> = ({
   data,
 }) => {
   const { orderedData, startDate, endDate } = React.useMemo(() => {
@@ -191,6 +191,17 @@ export const ExpenseTimeline: React.VoidFunctionComponent<ExpenseTimelineProps> 
       {...nivoCustomization}
     />
   )
+}
+
+export const ExpenseTimeline: React.VoidFunctionComponent<ExpenseTimelineProps> = ({
+  data,
+  ...props
+}) => {
+  if (data.length < 2) {
+    return null
+  }
+
+  return <InnerExpenseTimeline data={data} {...props} />
 }
 
 interface ExpenseTimelineProps {
