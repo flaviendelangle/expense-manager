@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
 import { pick } from 'lodash'
 import * as React from 'react'
-import { Renderer, useSortBy } from 'react-table'
+import { Renderer, useSortBy, usePagination } from 'react-table'
 
 import { Modal } from '@habx/ui-core'
 import { CellProps, Column, Row, Table, useTable } from '@habx/ui-table'
@@ -63,9 +63,11 @@ export const ExpensesTable: React.VoidFunctionComponent<ExpensesTableProps> = ({
       columns: COLUMNS,
       initialState: {
         sortBy: [{ id: 'spentAt' }],
+        pageSize: 20,
       },
     },
-    useSortBy
+    useSortBy,
+    usePagination
   )
 
   const editExpensePayload = React.useMemo<UpsertExpensePayload | null>(() => {

@@ -5,23 +5,25 @@ import { ExpenseTimeline } from '@components/graphs/ExpenseTimeline'
 
 import { ExpenseBasicInformation } from '@hooks/useExpenses'
 
-import { ExpensesGraphTitle, ExpensesGraph } from './ExpensesGraphs.style'
+import { ExpensesGraph } from './ExpensesGraphs.style'
 
 export const ExpensesGraphs: React.VoidFunctionComponent<ExpensesGraphProps> = ({
   data,
 }) => (
   <React.Fragment>
-    <ExpensesGraphTitle type="section">
-      Répartition des dépenses par catégorie
-    </ExpensesGraphTitle>
-    <ExpensesGraph style={{ height: 480 }}>
-      <ExpenseCategoryPie data={data} />
+    <ExpensesGraph
+      label="Répartition des dépenses par catégorie"
+      graphHeight={480}
+      initialConfig={null}
+    >
+      {() => <ExpenseCategoryPie data={data} />}
     </ExpensesGraph>
-    <ExpensesGraphTitle type="section">
-      Répartition des dépenses dans le temps
-    </ExpensesGraphTitle>
-    <ExpensesGraph style={{ height: 480 }}>
-      <ExpenseTimeline data={data} />
+    <ExpensesGraph
+      label="Répartition des dépenses dans le temps"
+      graphHeight={480}
+      initialConfig={null}
+    >
+      {() => <ExpenseTimeline data={data} />}
     </ExpensesGraph>
   </React.Fragment>
 )

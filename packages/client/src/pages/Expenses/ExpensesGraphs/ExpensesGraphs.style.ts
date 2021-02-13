@@ -2,13 +2,15 @@ import styled from 'styled-components'
 
 import { Title } from '@habx/ui-core'
 
+import { CustomizableGraph } from '@components/molecules/CustomizableGraph'
+
 export const ExpensesGraphTitle = styled(Title).attrs(() => ({
   type: 'section',
 }))`
   margin-bottom: 36px;
 `
 
-export const ExpensesGraph = styled.div`
+export const ExpensesGraph = styled(CustomizableGraph)`
   &:not(:last-child) {
     margin-bottom: 96px;
   }

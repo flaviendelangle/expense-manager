@@ -1,11 +1,13 @@
-import { ResponsiveBar } from '@nivo/bar'
+import { ResponsiveBar, BarMouseEventHandler } from '@nivo/bar'
 import {
   startOfDay,
   startOfMonth,
   differenceInCalendarDays,
   startOfWeek,
   format,
+  isAfter,
 } from 'date-fns'
+import { orderBy } from 'lodash'
 import * as React from 'react'
 
 import { Text } from '@habx/ui-core'
@@ -55,11 +57,39 @@ const PRECISIONS_CONFIG: Record<TimelinePrecision, Precision> = {
   },
 }
 
-const InnerExpenseTimeline: React.VoidFunctionComponent<ExpenseTimelineProps> = ({
+export const ExpenseTimeline: React.VoidFunctionComponent<InnerExpenseTimelineProps> = ({
   data,
 }) => {
+  const [selectedInterval, setSelectedInterval] = React.useState<{
+    start: Date | null
+    end: Date | null
+  } | null>(null)
+
+  const filteredData = React.useMemo(() => {
+    if (!selectedInterval) {
+      return data
+    }
+
+    return data.filter((expense) => {
+      const expenseDate = new Date(expense.spentAt)
+
+      if (
+        selectedInterval.start &&
+        isAfter(selectedInterval.start, expenseDate)
+      ) {
+        return false
+      }
+
+      if (selectedInterval.end && isAfter(expenseDate, selectedInterval.end)) {
+        return false
+      }
+
+      return true
+    })
+  }, [data, selectedInterval])
+
   const precision = React.useMemo(() => {
-    const expensesDate = data.map((expense) =>
+    const expensesDate = filteredData.map((expense) =>
       new Date(expense.spentAt).getTime()
     )
     const startDate = Math.min(...expensesDate)
@@ -67,7 +97,7 @@ const InnerExpenseTimeline: React.VoidFunctionComponent<ExpenseTimelineProps> = 
 
     const timeLengthInDays = differenceInCalendarDays(endDate, startDate)
 
-    if (timeLengthInDays < 30) {
+    if (timeLengthInDays < 28) {
       return TimelinePrecision.OneDay
     }
 
@@ -76,7 +106,7 @@ const InnerExpenseTimeline: React.VoidFunctionComponent<ExpenseTimelineProps> = 
     }
 
     return TimelinePrecision.OneMonth
-  }, [data])
+  }, [filteredData])
 
   const precisionConfig = PRECISIONS_CONFIG[precision]
 
@@ -84,9 +114,9 @@ const InnerExpenseTimeline: React.VoidFunctionComponent<ExpenseTimelineProps> = 
 
   const { barData, barKeys } = React.useMemo(() => {
     const tempBarData: { [timestamp: number]: any } = {}
-    const tempBarKeys: string[] = []
+    const tempBarKeys: { [key: string]: number } = {}
 
-    for (const expense of data) {
+    for (const expense of filteredData) {
       const expenseVisibleDate = precisionConfig.getDate(
         new Date(expense.spentAt)
       )
@@ -95,9 +125,11 @@ const InnerExpenseTimeline: React.VoidFunctionComponent<ExpenseTimelineProps> = 
 
       const key = expense.category.categoryGroup.name
 
-      if (!tempBarKeys.includes(key)) {
-        tempBarKeys.push(key)
+      if (!tempBarKeys[key]) {
+        tempBarKeys[key] = 0
       }
+
+      tempBarKeys[key] += expense.value
 
       if (!tempBarData[expenseVisibleTimestamp]) {
         tempBarData[expenseVisibleTimestamp] = {
@@ -113,10 +145,32 @@ const InnerExpenseTimeline: React.VoidFunctionComponent<ExpenseTimelineProps> = 
     }
 
     return {
-      barData: Object.values(tempBarData),
-      barKeys: tempBarKeys,
+      barData: orderBy(
+        Object.values(tempBarData),
+        (line) => new Date(line.date)
+      ),
+      barKeys: orderBy(Object.entries(tempBarKeys), ([, value]) => -value).map(
+        ([key]) => key
+      ),
     }
-  }, [data, precisionConfig])
+  }, [filteredData, precisionConfig])
+
+  const handleClickItem = React.useCallback<BarMouseEventHandler>(
+    (datum) => {
+      if (precision === TimelinePrecision.OneDay) {
+        setSelectedInterval(null)
+      } else {
+        const startDate = new Date(barData[datum.index].date)
+        const endDate =
+          datum.index === barData.length - 1
+            ? null
+            : new Date(barData[datum.index + 1].date)
+
+        setSelectedInterval({ start: startDate, end: endDate })
+      }
+    },
+    [barData, precision]
+  )
 
   return (
     <ResponsiveBar
@@ -158,22 +212,12 @@ const InnerExpenseTimeline: React.VoidFunctionComponent<ExpenseTimelineProps> = 
           symbolSize: 20,
         },
       ]}
+      onClick={handleClickItem}
       {...nivoCustomization}
     />
   )
 }
 
-export const ExpenseTimeline: React.VoidFunctionComponent<ExpenseTimelineProps> = ({
-  data,
-  ...props
-}) => {
-  if (data.length < 2) {
-    return null
-  }
-
-  return <InnerExpenseTimeline data={data} {...props} />
-}
-
-interface ExpenseTimelineProps {
+interface InnerExpenseTimelineProps {
   data: ExpenseBasicInformation[]
 }

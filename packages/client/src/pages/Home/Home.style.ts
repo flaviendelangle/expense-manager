@@ -15,8 +15,3 @@ export const HomeContent = styled(Layout)`
   grid-row-gap: 24px;
   grid-column-gap: 36px;
 `
-
-export const HomeCardContent = styled.div`
-  height: calc(var(--card-height) - 60px);
-  padding: 24px;
-`

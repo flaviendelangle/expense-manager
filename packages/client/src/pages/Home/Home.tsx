@@ -1,21 +1,16 @@
 import { addMonths } from 'date-fns'
 import * as React from 'react'
 
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  Card,
-  HeaderBar,
-  Title,
-} from '@habx/ui-core'
+import { Breadcrumb, BreadcrumbItem, HeaderBar } from '@habx/ui-core'
 
 import { ExpenseCategoryPie } from '@components/graphs/ExpenseCategoryPie'
 import { ExpenseTimeline } from '@components/graphs/ExpenseTimeline'
+import { CustomizableGraphCard } from '@components/molecules/CustomizableGraphCard'
 
 import { useExpenses } from '@hooks/useExpenses'
 import { useMountDate } from '@hooks/useMountDate'
 
-import { HomeContent, HomeCardContent } from './Home.style'
+import { HomeContent } from './Home.style'
 
 export const Home: React.VoidFunctionComponent = () => {
   const mountDate = useMountDate()
@@ -39,22 +34,20 @@ export const Home: React.VoidFunctionComponent = () => {
       <HomeContent>
         {!expenses.loading && (
           <React.Fragment>
-            <Card spacing="regular-horizontal-only">
-              <HeaderBar sticky={false}>
-                <Title type="regular">Dépenses du mois</Title>
-              </HeaderBar>
-              <HomeCardContent>
-                <ExpenseCategoryPie data={expenses.data} />
-              </HomeCardContent>
-            </Card>
-            <Card spacing="regular-horizontal-only">
-              <HeaderBar sticky={false}>
-                <Title type="regular">Dépenses du mois</Title>
-              </HeaderBar>
-              <HomeCardContent>
-                <ExpenseTimeline data={expenses.data} />
-              </HomeCardContent>
-            </Card>
+            <CustomizableGraphCard
+              initialConfig={null}
+              label="Dépenses du mois"
+              graphHeight={420}
+            >
+              {() => <ExpenseCategoryPie data={expenses.data} />}
+            </CustomizableGraphCard>
+            <CustomizableGraphCard
+              initialConfig={null}
+              label="Dépenses du mois"
+              graphHeight={420}
+            >
+              {() => <ExpenseTimeline data={expenses.data} />}
+            </CustomizableGraphCard>
           </React.Fragment>
         )}
       </HomeContent>
