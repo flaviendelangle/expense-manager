@@ -66,7 +66,7 @@ export const ExpenseCategoryPie: React.VoidFunctionComponent<CategoryPieProps> =
   return (
     <ResponsivePie<PieDataLine>
       data={pieData}
-      margin={{ top: 24, right: 72, bottom: 0, left: 72 }}
+      margin={{ top: 24, right: 72, bottom: 24, left: 72 }}
       sortByValue
       innerRadius={0.5}
       cornerRadius={3}

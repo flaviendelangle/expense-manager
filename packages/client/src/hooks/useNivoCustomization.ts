@@ -26,6 +26,11 @@ export const useNivoCustomization = () => {
           backgroundColor: stringifyColor(background),
         },
       },
+      labels: {
+        text: {
+          color: 'green',
+        },
+      },
     }
 
     let colors: string[]
@@ -51,6 +56,7 @@ export const useNivoCustomization = () => {
     return {
       theme,
       colors,
+      labelTextColor: stringifyColor(themeVariant.typography.colors.text),
     }
   }, [themeVariant, background])
 }
