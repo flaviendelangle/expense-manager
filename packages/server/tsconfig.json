@@ -4,6 +4,7 @@
     "module": "commonjs",
     "lib": ["es2018", "esnext"],
     "allowJs": true,
+    "resolveJsonModule": true,
     "sourceMap": true,
     "outDir": "dist",
     "moduleResolution": "node",

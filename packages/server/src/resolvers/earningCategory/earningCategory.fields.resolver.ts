@@ -17,7 +17,7 @@ export class EarningCategoryFieldsResolver {
     return new Date(model.updatedAt)
   }
 
-  @FieldResolver((type) => [EarningModel!]!)
+  @FieldResolver((type) => [EarningModel!])
   earnings(@Root() model: EarningCategoryModel, @Ctx() ctx: RequestContext) {
     return EarningModel.query(ctx.trx).where('categoryId', model.id)
   }

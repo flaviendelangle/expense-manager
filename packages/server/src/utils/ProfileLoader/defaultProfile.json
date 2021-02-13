@@ -1,0 +1,154 @@
+{
+  "recurrentExpenses": [
+    {
+      "description": "Boulangerie",
+      "category": [
+        "Courses",
+        "Boulanger"
+      ],
+      "probability": 0.5,
+      "minimumInterval": 1,
+      "valueMax": 4,
+      "valueMin": 0.95
+    },
+    {
+      "description": "Grande Surface",
+      "category": [
+        "Courses",
+        "Grande Surface"
+      ],
+      "probability": 0.1,
+      "minimumInterval": 5,
+      "valueMax": 70,
+      "valueMin": 2
+    },
+    {
+      "description": "Primeur",
+      "category": [
+        "Courses",
+        "Primeur"
+      ],
+      "probability": 0.15,
+      "minimumInterval": 3,
+      "valueMax": 35,
+      "valueMin": 4
+    },
+    {
+      "description": "Librairie",
+      "category": [
+        "Culture",
+        "Livre"
+      ],
+      "probability": 0.1,
+      "minimumInterval": 7,
+      "valueMax": 35,
+      "valueMin": 12
+    },
+    {
+      "description": "Coiffeur",
+      "category": [
+        "Services",
+        "Coiffeur"
+      ],
+      "probability": 0.05,
+      "minimumInterval": 70,
+      "valueMax": 22,
+      "valueMin": 17
+    },
+    {
+      "description": "Retour en famille",
+      "category": [
+        "Transports",
+        "Train"
+      ],
+      "probability": 0.05,
+      "minimumInterval": 30,
+      "valueMin": 50,
+      "valueMax": 60
+    },
+    {
+      "description": "Anniversaire",
+      "category": [
+        "Cadeaux",
+        "Amis"
+      ],
+      "probability": 0.02,
+      "minimumInterval": 0,
+      "valueMin": 10,
+      "valueMax": 40
+    }
+  ],
+  "monthlyExpenses": [
+    {
+      "description": "Loyer",
+      "category": [
+        "Logement",
+        "Loyer"
+      ],
+      "value": 700,
+      "date": 28
+    },
+    {
+      "description": "Abonnement Téléphone mobile",
+      "category": [
+        "Abonnements",
+        "Téléphone Mobile"
+      ],
+      "value": 24.99,
+      "date": 12
+    },
+    {
+      "description": "Abonnement Internet",
+      "category": [
+        "Abonnements",
+        "Internet"
+      ],
+      "value": 34.99,
+      "date": 17
+    },
+    {
+      "description": "EDF",
+      "category": [
+        "Logement",
+        "Charges"
+      ],
+      "value": 37.56,
+      "date": 3
+    },
+    {
+      "description": "Spotify",
+      "category": [
+        "Culture",
+        "Musique"
+      ],
+      "value": 9.99,
+      "date": 11
+    },
+    {
+      "description": "Netflix",
+      "category": [
+        "Culture",
+        "Vidéo"
+      ],
+      "value": 11.99,
+      "date": 16
+    },
+    {
+      "description": "Abonnement UGC",
+      "category": [
+        "Culture",
+        "Cinéma"
+      ],
+      "value": 11.99,
+      "date": 16
+    }
+  ],
+  "monthlyEarnings": [
+    {
+      "description": "Salaire",
+      "category": "Salaire",
+      "value": 2000,
+      "date": 28
+    }
+  ]
+}
