@@ -24,7 +24,7 @@ export const Home: React.VoidFunctionComponent = () => {
     fetchPolicy: 'cache-and-network',
     variables: {
       filters: {
-        spentAt: { after: addMonths(mountDate, -1) },
+        spentAt: { after: addMonths(mountDate, -1), before: mountDate },
       },
     },
   })

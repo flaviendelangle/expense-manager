@@ -1,15 +1,14 @@
-import { ResponsiveLine } from '@nivo/line'
+import { ResponsiveBar } from '@nivo/bar'
 import {
-  eachDayOfInterval,
-  eachWeekOfInterval,
-  eachMonthOfInterval,
-  format,
   startOfDay,
   startOfMonth,
   differenceInCalendarDays,
+  startOfWeek,
+  format,
 } from 'date-fns'
-import { orderBy, uniqBy, sumBy } from 'lodash'
 import * as React from 'react'
+
+import { Text } from '@habx/ui-core'
 
 import { ExpenseBasicInformation } from '@hooks/useExpenses'
 import { useNivoCustomization } from '@hooks/useNivoCustomization'
@@ -19,7 +18,8 @@ type Precision = {
     format: string
     tickValues: string
   }
-  intervalBuilder: (interval: Interval) => Date[]
+  getDate: (date: Date) => Date
+  formatDate: (date: string) => string
 }
 
 enum TimelinePrecision {
@@ -34,160 +34,158 @@ const PRECISIONS_CONFIG: Record<TimelinePrecision, Precision> = {
       format: '%b %d',
       tickValues: 'every 1 day',
     },
-    intervalBuilder: eachDayOfInterval,
+    getDate: startOfDay,
+    formatDate: (date: string) => format(new Date(date), 'yyyy-MM-dd'),
   },
   [TimelinePrecision.OneWeek]: {
     axis: {
       format: '%d/%m',
       tickValues: 'every 1 week',
     },
-    intervalBuilder: eachWeekOfInterval,
+    getDate: startOfWeek,
+    formatDate: (date: string) => format(new Date(date), 'yyyy-MM-dd'),
   },
   [TimelinePrecision.OneMonth]: {
     axis: {
       format: '%m/%y',
       tickValues: 'every 1 month',
     },
-    intervalBuilder: eachMonthOfInterval,
+    getDate: startOfMonth,
+    formatDate: (date: string) => format(new Date(date), 'MM/yyyy'),
   },
 }
 
 const InnerExpenseTimeline: React.VoidFunctionComponent<ExpenseTimelineProps> = ({
   data,
 }) => {
-  const { orderedData, startDate, endDate } = React.useMemo(() => {
-    const tempOrderedData = orderBy(data, (el) =>
-      new Date(el.spentAt).getTime()
-    )
-
-    return {
-      orderedData: tempOrderedData,
-      startDate: startOfMonth(new Date(tempOrderedData[0].spentAt)),
-      endDate: startOfDay(
-        new Date(tempOrderedData[tempOrderedData.length - 1].spentAt)
-      ),
-    }
-  }, [data])
-
   const precision = React.useMemo(() => {
+    const expensesDate = data.map((expense) =>
+      new Date(expense.spentAt).getTime()
+    )
+    const startDate = Math.min(...expensesDate)
+    const endDate = Math.max(...expensesDate)
+
     const timeLengthInDays = differenceInCalendarDays(endDate, startDate)
 
     if (timeLengthInDays < 30) {
       return TimelinePrecision.OneDay
     }
 
-    if (timeLengthInDays < 365) {
+    if (timeLengthInDays < 200) {
       return TimelinePrecision.OneWeek
     }
 
     return TimelinePrecision.OneMonth
-  }, [endDate, startDate])
+  }, [data])
 
   const precisionConfig = PRECISIONS_CONFIG[precision]
 
   const nivoCustomization = useNivoCustomization()
 
-  const max = React.useMemo(
-    () => sumBy(data, (expense) => expense.value) * 1.1,
-    [data]
-  )
+  const { barData, barKeys } = React.useMemo(() => {
+    const tempBarData: { [timestamp: number]: any } = {}
+    const tempBarKeys: string[] = []
 
-  const lineData = React.useMemo(() => {
-    if (data.length < 2) {
-      return []
-    }
-
-    const snapshotDates = precisionConfig.intervalBuilder({
-      start: startDate,
-      end: endDate,
-    })
-
-    const categoryGroups = uniqBy(
-      data.map((expense) => expense.category.categoryGroup),
-      (group) => group.id
-    ).map((group) => ({
-      id: group.name,
-      data: snapshotDates.map((snapshotDate) => ({
-        x: format(snapshotDate, 'yyyy-MM-dd'),
-        y: 0,
-      })),
-    }))
-
-    for (const expense of orderedData) {
-      const expenseCategoryGroupIndex = categoryGroups.findIndex(
-        (group) => group.id === expense.category.categoryGroup.name
+    for (const expense of data) {
+      const expenseVisibleDate = precisionConfig.getDate(
+        new Date(expense.spentAt)
       )
 
-      const expenseDate = new Date(expense.spentAt)
+      const expenseVisibleTimestamp = expenseVisibleDate.getTime()
 
-      let i = snapshotDates.length - 1
-      while (snapshotDates[i] > expenseDate) {
-        categoryGroups[expenseCategoryGroupIndex].data[i].y += expense.value
-        i--
+      const key = expense.category.categoryGroup.name
+
+      if (!tempBarKeys.includes(key)) {
+        tempBarKeys.push(key)
       }
+
+      if (!tempBarData[expenseVisibleTimestamp]) {
+        tempBarData[expenseVisibleTimestamp] = {
+          date: expenseVisibleDate.toISOString(),
+        }
+      }
+
+      if (!tempBarData[expenseVisibleTimestamp][key]) {
+        tempBarData[expenseVisibleTimestamp][key] = 0
+      }
+
+      tempBarData[expenseVisibleTimestamp][key] += expense.value
     }
 
-    return orderBy(
-      categoryGroups,
-      (group) => group.data[group.data.length - 1].y
-    )
-  }, [data, endDate, orderedData, precisionConfig, startDate])
+    return {
+      barData: Object.values(tempBarData),
+      barKeys: tempBarKeys,
+    }
+  }, [data, precisionConfig])
 
   return (
-    <ResponsiveLine
-      margin={{ left: 48, bottom: 48 }}
-      animate
-      data={lineData}
-      xScale={{
-        type: 'time',
-        format: '%Y-%m-%d',
-        useUTC: false,
-        precision: 'day',
-      }}
-      xFormat="time:%Y-%m-%d"
-      yScale={{
-        type: 'linear',
-        stacked: true,
-        max,
-      }}
+    <ResponsiveBar
+      data={barData}
+      keys={barKeys}
+      indexBy="date"
+      margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
+      padding={0.3}
+      valueScale={{ type: 'linear' }}
+      indexScale={{ type: 'band', round: true }}
+      defs={[
+        {
+          id: 'dots',
+          type: 'patternDots',
+          background: 'inherit',
+          color: '#38bcb2',
+          size: 4,
+          padding: 1,
+          stagger: true,
+        },
+        {
+          id: 'lines',
+          type: 'patternLines',
+          background: 'inherit',
+          color: '#eed312',
+          rotation: -45,
+          lineWidth: 6,
+          spacing: 10,
+        },
+      ]}
+      borderColor={{ from: 'color', modifiers: [['darker', 1.6]] }}
       axisLeft={{
-        legend: 'linear scale',
-        legendOffset: 12,
+        tickSize: 5,
+        tickPadding: 5,
+        tickRotation: 0,
+        legend: 'Dépense',
+        legendPosition: 'middle',
+        legendOffset: -48,
+        format: (value) => `${value}€`,
       }}
       axisBottom={{
-        ...precisionConfig.axis,
-        legend: 'time scale',
-        legendOffset: -12,
+        format: (value) => precisionConfig.formatDate(value as string),
       }}
-      curve="monotoneX"
-      enableSlices="x"
-      enableArea
-      areaOpacity={0.7}
-      sliceTooltip={({ slice }) => {
-        return (
-          <div
-            style={{
-              background: 'white',
-              padding: '9px 12px',
-              border: '1px solid #ccc',
-            }}
-          >
-            <div>x: {slice.id}</div>
-            {slice.points.map((point) => (
-              <div
-                key={point.id}
-                style={{
-                  color: point.serieColor,
-                  padding: '3px 0',
-                }}
-              >
-                <strong>{point.serieId}</strong>{' '}
-                {Math.floor(point.data.yFormatted as number)}€
-              </div>
-            ))}
-          </div>
-        )
-      }}
+      labelSkipWidth={12}
+      labelSkipHeight={12}
+      labelFormat={(value) => `${Math.floor(value as number)}€`}
+      tooltip={({ id, value }) => (
+        <Text type="caption">
+          {id}: {Math.floor(value)}€
+        </Text>
+      )}
+      legends={[
+        {
+          dataFrom: 'keys',
+          anchor: 'bottom-right',
+          direction: 'column',
+          justify: false,
+          translateX: 120,
+          translateY: 0,
+          itemsSpacing: 12,
+          itemWidth: 100,
+          itemHeight: 20,
+          itemDirection: 'left-to-right',
+          symbolSize: 20,
+        },
+      ]}
+      animate={true}
+      motionStiffness={90}
+      motionDamping={15}
       {...nivoCustomization}
     />
   )

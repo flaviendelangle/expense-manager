@@ -21,6 +21,11 @@ export const useNivoCustomization = () => {
   return React.useMemo<NivoCustomization>(() => {
     const theme: Theme = {
       textColor: stringifyColor(themeVariant.typography.colors.text),
+      tooltip: {
+        container: {
+          backgroundColor: stringifyColor(background),
+        },
+      },
     }
 
     let colors: string[]
