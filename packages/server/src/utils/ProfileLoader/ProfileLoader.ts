@@ -14,7 +14,22 @@ import { Model } from 'objection'
 import knexFile from '../../../knexfile'
 
 import { EarningDataLoader, ExpenseDataLoader } from './DataLoaders'
-import { Profile } from './ProfileLoader.interface'
+import { ParametricValue, Profile } from './ProfileLoader.interface'
+
+const getValueFromParametricValue = (value: ParametricValue): number => {
+  if (typeof value === 'number') {
+    return value
+  }
+
+  if (value.max != null && value.min != null) {
+    return (
+      Math.round((value.min + (value.max - value.min) * Math.random()) * 10) /
+      10
+    )
+  }
+
+  throw Error('Invalid parametric value')
+}
 
 export class ProfileLoader {
   private expenseDataLoader = new ExpenseDataLoader()
@@ -49,7 +64,7 @@ export class ProfileLoader {
         if (isBefore(spentAt, this.endDate)) {
           await this.expenseDataLoader.load({
             spentAt,
-            value: monthlyExpense.value,
+            value: getValueFromParametricValue(monthlyExpense.value),
             description: monthlyExpense.description,
             category: monthlyExpense.category,
           })
@@ -65,7 +80,7 @@ export class ProfileLoader {
         if (isBefore(earnedAt, this.endDate)) {
           await this.earningDataLoader.load({
             earnedAt,
-            value: monthlyEarning.value,
+            value: getValueFromParametricValue(monthlyEarning.value),
             description: monthlyEarning.description,
             category: monthlyEarning.category,
           })
@@ -85,17 +100,9 @@ export class ProfileLoader {
         if (shouldDoExpenseOnThisDay) {
           lastExpenseDate = this.days[i]
 
-          const value =
-            Math.round(
-              (recurrenceExpense.valueMin +
-                (recurrenceExpense.valueMax - recurrenceExpense.valueMin) *
-                  Math.random()) *
-                10
-            ) / 10
-
           await this.expenseDataLoader.load({
             spentAt: this.days[i],
-            value,
+            value: getValueFromParametricValue(recurrenceExpense.value),
             description: recurrenceExpense.description,
             category: recurrenceExpense.category,
           })

@@ -1,3 +1,5 @@
+export type ParametricValue = number | { min: number; max: number }
+
 type RecurrentExpense = {
   description: string
   category: [string, string]
@@ -12,21 +14,20 @@ type RecurrentExpense = {
    */
   minimumInterval?: number
 
-  valueMax: number
-  valueMin: number
+  value: ParametricValue
 }
 
 type MonthlyExpense = {
   description?: string
   category: [string, string]
-  value: number
+  value: ParametricValue
   date: number
 }
 
 type MonthlyEarning = {
   description?: string
   category: string
-  value: number
+  value: ParametricValue
   date: number
 }
 

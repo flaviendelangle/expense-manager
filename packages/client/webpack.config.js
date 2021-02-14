@@ -1,5 +1,14 @@
 const path = require('path')
 
+const mapToFolder = (dependencies, folder) =>
+  dependencies.reduce(
+    (acc, dependency) => ({
+      [dependency]: path.resolve(`${folder}/${dependency}`),
+      ...acc,
+    }),
+    {}
+  )
+
 module.exports = {
   resolve: {
     alias: {
@@ -12,6 +21,10 @@ module.exports = {
       '@api': path.resolve(__dirname, './src/api'),
       '@style': path.resolve(__dirname, './src/style'),
       '@globalTypes': path.resolve(__dirname, './src/globalTypes'),
+      ...mapToFolder(
+        ['react', 'react-dom', 'styled-components'],
+        './node_modules'
+      ),
     },
   },
 }

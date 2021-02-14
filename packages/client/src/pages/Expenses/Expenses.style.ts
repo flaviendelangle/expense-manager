@@ -3,6 +3,9 @@ import styled from 'styled-components'
 import { Layout } from '@habx/ui-core'
 
 export const ExpensesActions = styled.div`
+  display: flex;
+  align-items: center;
+
   & > *:not(:last-child) {
     margin-right: 12px;
   }

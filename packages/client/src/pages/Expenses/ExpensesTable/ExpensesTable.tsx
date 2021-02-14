@@ -76,7 +76,8 @@ export const ExpensesTable: React.VoidFunctionComponent<ExpensesTableProps> = ({
     }
 
     return {
-      ...pick(selectedExpense, ['description', 'value', 'id', 'spentAt']),
+      ...pick(selectedExpense, ['description', 'value', 'id']),
+      spentAt: new Date(selectedExpense.spentAt),
       categoryId: selectedExpense.category.id,
     }
   }, [selectedExpense])

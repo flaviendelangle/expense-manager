@@ -4,6 +4,7 @@ import * as React from 'react'
 import { Form } from '@habx/lib-form-helper'
 import { ActionBar, Button, notify } from '@habx/ui-core'
 
+import { DatePickerSingle } from '@components/final-form/DatePickerSingle'
 import { NumberInput } from '@components/final-form/NumberInput'
 import { SelectExpenseCategory } from '@components/final-form/SelectExpenseCategory'
 import { TextInput } from '@components/final-form/TextInput'
@@ -63,9 +64,9 @@ export const UpsertExpenseForm: React.VoidFunctionComponent<UpsertExpenseFormPro
           />
           <TextInput name="description" label="Description" />
           <NumberInput name="value" label="Montant" required />
-          <TextInput
+          <DatePickerSingle
             name="spentAt"
-            label="Date de la dépense (à améliorer)"
+            label="Date de la dépense"
             required
           />
           <ActionBar>

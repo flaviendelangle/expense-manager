@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "@apollo/client": "^3.3.7",
+    "@datepicker-react/hooks": "^2.8.0",
+    "@delangle/use-modal": "^1.7.3",
     "@habx/lib-client-intl": "^1.2.0",
     "@habx/lib-form-helper": "^6.1.0",
     "@habx/ui-core": "^5.16.0",
