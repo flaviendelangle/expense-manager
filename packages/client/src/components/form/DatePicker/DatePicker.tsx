@@ -101,6 +101,7 @@ const InnerDatePicker: React.VoidFunctionComponent<DatePickerInnerProps> = ({
         data-small={small}
         data-background={hasBackground}
         data-disabled={disabled}
+        data-focused={isOpened}
         {...props}
       >
         {inputValue}

@@ -1,6 +1,8 @@
 import { GraphQLDateTime } from 'graphql-scalars'
 import { Field, ID, InputType } from 'type-graphql'
 
+import { DateFilter } from '../base/ParseFilters'
+
 @InputType('UpsertEarningPayload')
 export class UpsertEarningPayload {
   @Field((type) => ID, { nullable: true })
@@ -26,4 +28,7 @@ export class EarningFilters {
 
   @Field((type) => [ID!], { nullable: true })
   categoryIds?: (string | number)[]
+
+  @Field((type) => DateFilter, { nullable: true })
+  earnedAt?: DateFilter
 }

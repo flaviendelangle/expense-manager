@@ -31,6 +31,18 @@ export const useNivoCustomization = () => {
           color: 'green',
         },
       },
+      grid: {
+        line: {
+          stroke: stringifyColor(
+            themeVariant.neutralColor.withOpacityFading[400]
+          ),
+        },
+      },
+      crosshair: {
+        line: {
+          stroke: themeVariant.neutralColor.withOpacityFading[700],
+        },
+      },
     }
 
     let colors: string[]

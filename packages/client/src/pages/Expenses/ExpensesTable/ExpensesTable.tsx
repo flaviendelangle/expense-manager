@@ -62,7 +62,7 @@ export const ExpensesTable: React.VoidFunctionComponent<ExpensesTableProps> = ({
       data,
       columns: COLUMNS,
       initialState: {
-        sortBy: [{ id: 'spentAt' }],
+        sortBy: [{ id: 'spentAt', desc: true }],
         pageSize: 20,
       },
     },

@@ -18,8 +18,12 @@ export const expenseBasicInformationFragment = gql`
 `
 
 export const listExpensesQuery = gql`
-  query listExpenses($filters: ExpenseFilters) {
-    expenses(filters: $filters) {
+  query listExpenses(
+    $filters: ExpenseFilters
+    $orderBy: OrderOptions
+    $paginate: PaginationOptions
+  ) {
+    expenses(filters: $filters, orderBy: $orderBy, paginate: $paginate) {
       nodes {
         id
         ...ExpenseBasicInformation

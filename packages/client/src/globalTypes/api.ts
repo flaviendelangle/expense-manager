@@ -18,6 +18,7 @@ export interface EarningCategoryFilters {
 
 export interface EarningFilters {
   categoryIds?: string[] | null;
+  earnedAt?: DateFilter | null;
   ids?: string[] | null;
 }
 
@@ -30,6 +31,16 @@ export interface ExpenseFilters {
   categoryIds?: string[] | null;
   ids?: string[] | null;
   spentAt?: DateFilter | null;
+}
+
+export interface OrderOptions {
+  direction?: string | null;
+  field?: string | null;
+}
+
+export interface PaginationOptions {
+  limit: number;
+  offset: number;
 }
 
 export interface UpsertEarningPayload {

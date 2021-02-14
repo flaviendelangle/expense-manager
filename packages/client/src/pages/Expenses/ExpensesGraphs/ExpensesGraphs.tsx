@@ -16,14 +16,14 @@ export const ExpensesGraphs: React.VoidFunctionComponent<ExpensesGraphProps> = (
       graphHeight={480}
       initialConfig={null}
     >
-      {() => <ExpenseCategoryPie data={data} />}
+      {() => <ExpenseCategoryPie expenses={data} />}
     </ExpensesGraph>
     <ExpensesGraph
       label="Répartition des dépenses dans le temps"
       graphHeight={480}
       initialConfig={null}
     >
-      {() => <ExpenseTimeline data={data} />}
+      {() => <ExpenseTimeline expenses={data} />}
     </ExpensesGraph>
   </React.Fragment>
 )

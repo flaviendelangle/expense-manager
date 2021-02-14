@@ -1,7 +1,18 @@
+import { GraphQLDateTime } from 'graphql-scalars'
 import { map } from 'lodash'
 import { QueryBuilder } from 'objection'
+import { Field, InputType } from 'type-graphql'
 
 import { BaseModel } from './BaseModel'
+
+@InputType('DateFilter')
+export class DateFilter {
+  @Field((type) => GraphQLDateTime, { nullable: true })
+  before?: Date
+
+  @Field((type) => GraphQLDateTime, { nullable: true })
+  after?: Date
+}
 
 export const filter: MethodDecorator = (target, propertyKey) =>
   Reflect.defineMetadata('model:filter', true, target, propertyKey)

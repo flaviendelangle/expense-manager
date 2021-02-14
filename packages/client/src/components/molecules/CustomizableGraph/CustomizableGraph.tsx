@@ -23,6 +23,7 @@ export const CustomizableGraph: React.FunctionComponent<CustomizableGraphProps> 
   renderHeader = defaultHeaderRenderer,
   label,
   graphHeight,
+  loading,
   initialConfig,
   ...props
 }) => {
@@ -32,7 +33,7 @@ export const CustomizableGraph: React.FunctionComponent<CustomizableGraphProps> 
     <CustomizableGraphContainer {...props}>
       {renderHeader({ label, actions: null })}
       <CustomizableGraphContent style={{ height: graphHeight }}>
-        {children([config, setConfig])}
+        {!loading && children([config, setConfig])}
       </CustomizableGraphContent>
     </CustomizableGraphContainer>
   )
@@ -49,6 +50,7 @@ export interface CustomizableGraphProps
   renderHeader?: CustomizableGraphHeaderRenderer
   label: string
   graphHeight: number
+  loading?: boolean
   children: (
     value: [any, React.Dispatch<React.SetStateAction<any>>]
   ) => React.ReactNode

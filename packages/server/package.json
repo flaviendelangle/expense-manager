@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "scripts": {
     "start:dev": "nodemon --watch 'src/**/*' -e ts,tsx,json --exec ts-node src/index.ts",
-    "migrate:dev": "DEBUG=knex:* knex migrate:latest --knexfile knexfile.ts"
+    "migrate:dev": "DEBUG=knex:* knex migrate:latest --knexfile knexfile.ts",
+    "load-profile:default": "rm ./data/db.db3 && npm run migrate:dev && ts-node ./src/utils/ProfileLoader/index.ts"
   },
   "dependencies": {
     "@koa/cors": "^3.1.0",

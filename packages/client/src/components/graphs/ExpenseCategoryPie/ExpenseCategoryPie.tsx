@@ -7,7 +7,7 @@ import { useNivoCustomization } from '@hooks/useNivoCustomization'
 type PieDataLine = { id: string; label: string; value: number }
 
 export const ExpenseCategoryPie: React.VoidFunctionComponent<CategoryPieProps> = ({
-  data,
+  expenses,
 }) => {
   const nivoCustomization = useNivoCustomization()
 
@@ -20,7 +20,7 @@ export const ExpenseCategoryPie: React.VoidFunctionComponent<CategoryPieProps> =
       [categoryId: string]: PieDataLine
     } = {}
 
-    for (const expense of data) {
+    for (const expense of expenses) {
       if (selectedCategoryGroupId) {
         // Group expenses by category
 
@@ -51,7 +51,7 @@ export const ExpenseCategoryPie: React.VoidFunctionComponent<CategoryPieProps> =
     }
 
     return Object.values(temp)
-  }, [data, selectedCategoryGroupId])
+  }, [expenses, selectedCategoryGroupId])
 
   const handleCategoryClick = React.useCallback<
     MouseEventHandler<PieDataLine, any>
@@ -80,5 +80,5 @@ export const ExpenseCategoryPie: React.VoidFunctionComponent<CategoryPieProps> =
 }
 
 interface CategoryPieProps {
-  data: ExpenseBasicInformation[]
+  expenses: ExpenseBasicInformation[]
 }

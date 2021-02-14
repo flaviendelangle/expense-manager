@@ -2,6 +2,7 @@ import 'reflect-metadata'
 
 import {
   addDays,
+  addHours,
   addMonths,
   differenceInDays,
   eachDayOfInterval,
@@ -48,17 +49,21 @@ export class ProfileLoader {
     this.monthAmount = monthAmount
     this.endDate = new Date()
     this.startDate = startOfMonth(addMonths(this.endDate, -this.monthAmount))
-    this.days = eachDayOfInterval({ start: this.startDate, end: this.endDate })
+    this.days = eachDayOfInterval({
+      start: this.startDate,
+      end: this.endDate,
+    }).map((day) => addHours(day, 12))
 
     Model.knex(this.knex)
   }
 
   public load = async () => {
+    const t = new Date().getTime()
     for (let month = 0; month < this.monthAmount; month++) {
       for (const monthlyExpense of this.profile.monthlyExpenses ?? []) {
-        const spentAt = addDays(
-          addMonths(this.startDate, month),
-          monthlyExpense.date
+        const spentAt = addHours(
+          addDays(addMonths(this.startDate, month), monthlyExpense.date),
+          12
         )
 
         if (isBefore(spentAt, this.endDate)) {
@@ -72,9 +77,9 @@ export class ProfileLoader {
       }
 
       for (const monthlyEarning of this.profile.monthlyEarnings ?? []) {
-        const earnedAt = addDays(
-          addMonths(this.startDate, month),
-          monthlyEarning.date
+        const earnedAt = addHours(
+          addDays(addMonths(this.startDate, month), monthlyEarning.date),
+          12
         )
 
         if (isBefore(earnedAt, this.endDate)) {
@@ -87,6 +92,9 @@ export class ProfileLoader {
         }
       }
     }
+
+    // eslint-disable-next-line no-console
+    console.log('Monthly expenses and earnings inserted')
 
     for (const recurrenceExpense of this.profile.recurrentExpenses ?? []) {
       let lastExpenseDate: Date | null = this.startDate
@@ -109,6 +117,12 @@ export class ProfileLoader {
         }
       }
     }
+
+    // eslint-disable-next-line no-console
+    console.log('Recurrent expenses inserted')
+
+    // eslint-disable-next-line no-console
+    console.log(`Total time : ${(new Date().getTime() - t) / 1000}sec`)
 
     await this.knex.destroy()
   }

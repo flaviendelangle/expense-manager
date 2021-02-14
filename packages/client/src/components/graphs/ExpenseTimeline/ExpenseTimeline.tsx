@@ -16,10 +16,6 @@ import { ExpenseBasicInformation } from '@hooks/useExpenses'
 import { useNivoCustomization } from '@hooks/useNivoCustomization'
 
 type Precision = {
-  axis: {
-    format: string
-    tickValues: string
-  }
   getDate: (date: Date) => Date
   formatDate: (date: string) => string
 }
@@ -32,45 +28,33 @@ enum TimelinePrecision {
 
 const PRECISIONS_CONFIG: Record<TimelinePrecision, Precision> = {
   [TimelinePrecision.OneDay]: {
-    axis: {
-      format: '%b %d',
-      tickValues: 'every 1 day',
-    },
     getDate: startOfDay,
     formatDate: (date: string) => format(new Date(date), 'yyyy-MM-dd'),
   },
   [TimelinePrecision.OneWeek]: {
-    axis: {
-      format: '%d/%m',
-      tickValues: 'every 1 week',
-    },
     getDate: startOfWeek,
     formatDate: (date: string) => format(new Date(date), 'yyyy-MM-dd'),
   },
   [TimelinePrecision.OneMonth]: {
-    axis: {
-      format: '%m/%y',
-      tickValues: 'every 1 month',
-    },
     getDate: startOfMonth,
     formatDate: (date: string) => format(new Date(date), 'MM/yyyy'),
   },
 }
 
 export const ExpenseTimeline: React.VoidFunctionComponent<InnerExpenseTimelineProps> = ({
-  data,
+  expenses,
 }) => {
   const [selectedInterval, setSelectedInterval] = React.useState<{
     start: Date | null
     end: Date | null
   } | null>(null)
 
-  const filteredData = React.useMemo(() => {
+  const filteredExpenses = React.useMemo(() => {
     if (!selectedInterval) {
-      return data
+      return expenses
     }
 
-    return data.filter((expense) => {
+    return expenses.filter((expense) => {
       const expenseDate = new Date(expense.spentAt)
 
       if (
@@ -86,10 +70,10 @@ export const ExpenseTimeline: React.VoidFunctionComponent<InnerExpenseTimelinePr
 
       return true
     })
-  }, [data, selectedInterval])
+  }, [expenses, selectedInterval])
 
   const precision = React.useMemo(() => {
-    const expensesDate = filteredData.map((expense) =>
+    const expensesDate = filteredExpenses.map((expense) =>
       new Date(expense.spentAt).getTime()
     )
     const startDate = Math.min(...expensesDate)
@@ -106,7 +90,7 @@ export const ExpenseTimeline: React.VoidFunctionComponent<InnerExpenseTimelinePr
     }
 
     return TimelinePrecision.OneMonth
-  }, [filteredData])
+  }, [filteredExpenses])
 
   const precisionConfig = PRECISIONS_CONFIG[precision]
 
@@ -116,7 +100,7 @@ export const ExpenseTimeline: React.VoidFunctionComponent<InnerExpenseTimelinePr
     const tempBarData: { [timestamp: number]: any } = {}
     const tempBarKeys: { [key: string]: number } = {}
 
-    for (const expense of filteredData) {
+    for (const expense of filteredExpenses) {
       const expenseVisibleDate = precisionConfig.getDate(
         new Date(expense.spentAt)
       )
@@ -153,7 +137,7 @@ export const ExpenseTimeline: React.VoidFunctionComponent<InnerExpenseTimelinePr
         ([key]) => key
       ),
     }
-  }, [filteredData, precisionConfig])
+  }, [filteredExpenses, precisionConfig])
 
   const handleClickItem = React.useCallback<BarMouseEventHandler>(
     (datum) => {
@@ -219,5 +203,5 @@ export const ExpenseTimeline: React.VoidFunctionComponent<InnerExpenseTimelinePr
 }
 
 interface InnerExpenseTimelineProps {
-  data: ExpenseBasicInformation[]
+  expenses: ExpenseBasicInformation[]
 }

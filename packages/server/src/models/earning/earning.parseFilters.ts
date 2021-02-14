@@ -24,4 +24,17 @@ export class EarningParseFilters extends ParseFilters<
       this.query.whereIn('categoryId', categoryIds)
     }
   }
+
+  @filter
+  earnedAt() {
+    const earnedAt = this.filters?.earnedAt
+
+    if (earnedAt?.after) {
+      this.query.where('earnedAt', '>=', earnedAt.after)
+    }
+
+    if (earnedAt?.before) {
+      this.query.where('earnedAt', '<=', earnedAt.before)
+    }
+  }
 }
