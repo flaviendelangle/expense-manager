@@ -2,49 +2,47 @@ import { ModalState } from '@delangle/use-modal'
 import { format } from 'date-fns'
 import * as React from 'react'
 
-import { TextInput, TogglePanel, TogglePanelProps } from '@habx/ui-core'
+import {
+  TogglePanel,
+  TogglePanelStyleSetter,
+  menuDefaultPositionSetter,
+  useHasColoredBackground,
+  withLabel,
+} from '@habx/ui-core'
 
-import { DatePickerProps } from './DatePicker.interface'
+import { DatePickerInnerProps } from './DatePicker.interface'
+import { DatePickerFakeInput } from './DatePicker.style'
 import { DatePickerPanel } from './DatePickerPanel'
 
-const TRIGGER_MARGIN = 8
-
-const datePickerStyleSetter: Required<TogglePanelProps>['setStyle'] = (
+const togglePanelStyleSetter: TogglePanelStyleSetter = (
   dimensions,
   triggerDimensions
 ) => {
   const menuHeight = dimensions.clientHeight
   const menuWidth = dimensions.clientWidth
 
-  let top = triggerDimensions.bottom + TRIGGER_MARGIN
-
-  if (top + menuHeight > window.innerHeight) {
-    const topWithMenuAboveTrigger =
-      triggerDimensions.top - TRIGGER_MARGIN - menuHeight
-
-    if (topWithMenuAboveTrigger > 0) {
-      top = topWithMenuAboveTrigger
-    }
-  }
-
-  let left =
-    triggerDimensions.left + menuWidth > window.innerWidth
-      ? triggerDimensions.left - menuWidth + triggerDimensions.width
-      : triggerDimensions.left
-
-  return { top, left, minWidth: triggerDimensions.width }
+  return menuDefaultPositionSetter({
+    triggerDimensions,
+    menuHeight,
+    menuWidth,
+    position: 'vertical',
+  })
 }
 
-export const DatePicker: React.VoidFunctionComponent<DatePickerProps> = ({
+const InnerDatePicker: React.VoidFunctionComponent<DatePickerInnerProps> = ({
   value,
   onChange,
   exactMinBookingDays,
   onFocus,
   inputDateFormat = 'yyyy-MM-dd',
+  small,
+  disabled,
+  error,
   ...props
 }) => {
   const triggerRef = React.useRef<HTMLDivElement>(null)
   const [isOpened, setIsOpened] = React.useState(false)
+  const hasBackground = useHasColoredBackground()
 
   const handleTextInputFocus = React.useCallback(
     (e: React.FocusEvent<HTMLInputElement>) => {
@@ -79,7 +77,7 @@ export const DatePicker: React.VoidFunctionComponent<DatePickerProps> = ({
         triggerRef={triggerRef}
         open={isOpened}
         onClose={() => setIsOpened(false)}
-        setStyle={datePickerStyleSetter}
+        setStyle={togglePanelStyleSetter}
       >
         {(modal) =>
           modal.state !== ModalState.closed && (
@@ -95,12 +93,22 @@ export const DatePicker: React.VoidFunctionComponent<DatePickerProps> = ({
           )
         }
       </TogglePanel>
-      <TextInput
-        containerRef={triggerRef}
-        value={inputValue}
+      <DatePickerFakeInput
+        ref={triggerRef}
         onFocus={handleTextInputFocus}
+        tabIndex={0}
+        data-error={error}
+        data-small={small}
+        data-background={hasBackground}
+        data-disabled={disabled}
         {...props}
-      />
+      >
+        {inputValue}
+      </DatePickerFakeInput>
     </React.Fragment>
   )
 }
+
+export const DatePicker = withLabel<HTMLDivElement>({
+  orientation: 'vertical',
+})<DatePickerInnerProps>(InnerDatePicker)

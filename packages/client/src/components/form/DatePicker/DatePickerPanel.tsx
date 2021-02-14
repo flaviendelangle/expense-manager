@@ -94,6 +94,22 @@ export const DatePickerPanel: React.VoidFunctionComponent<DatePickerPanelProps> 
     exactMinBookingDays,
   })
 
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === 'ArrowLeft') {
+        goToPreviousMonths()
+      } else if (e.code === 'ArrowRight') {
+        goToNextMonths()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [goToNextMonths, goToPreviousMonths])
+
   const context = React.useMemo<DatePickerContextValue>(
     () => ({
       focusedDate,

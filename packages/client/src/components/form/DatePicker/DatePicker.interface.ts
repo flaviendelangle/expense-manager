@@ -4,7 +4,7 @@ import {
   UseDatepickerProps,
 } from '@datepicker-react/hooks'
 
-import { TextInputProps } from '@habx/ui-core'
+import { WithLabel } from '@habx/ui-core'
 
 export interface DatePickerContextValue
   extends Pick<
@@ -22,17 +22,22 @@ export interface DatePickerContextValue
 
 export type DatePickerValue = { start: Date | null; end: Date | null } | null
 
-export interface DatePickerProps
+export interface DatePickerInnerProps
   extends Pick<UseDatepickerProps, 'exactMinBookingDays'>,
-    Omit<TextInputProps, 'value' | 'onChange' | 'containerRef'> {
+    Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
   onChange: (value: DatePickerValue) => void
   value: DatePickerValue
   inputDateFormat?: string
+  small?: boolean
+  disabled?: boolean
+  error?: boolean
 }
 
-export interface DatePickerPanelProps extends DatePickerProps {
+export interface DatePickerPanelProps extends DatePickerInnerProps {
   onAbort: () => void
 }
+
+export interface DatePickerProps extends WithLabel<DatePickerInnerProps> {}
 
 export interface DatePickerState {
   startDate: Date | null
