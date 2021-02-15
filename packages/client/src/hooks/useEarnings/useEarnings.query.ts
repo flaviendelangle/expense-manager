@@ -6,7 +6,7 @@ export const earningBasicInformationFragment = gql`
     description
     value
     earnedAt
-    category {
+    earningCategory {
       id
       name
     }

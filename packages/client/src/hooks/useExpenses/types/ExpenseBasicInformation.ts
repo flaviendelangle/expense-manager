@@ -7,17 +7,17 @@
 // GraphQL fragment: ExpenseBasicInformation
 // ====================================================
 
-export interface ExpenseBasicInformation_category_categoryGroup {
+export interface ExpenseBasicInformation_expenseCategory_expenseCategoryGroup {
   __typename: "ExpenseCategoryGroup";
   id: string;
   name: string;
 }
 
-export interface ExpenseBasicInformation_category {
+export interface ExpenseBasicInformation_expenseCategory {
   __typename: "ExpenseCategory";
   id: string;
   name: string;
-  categoryGroup: ExpenseBasicInformation_category_categoryGroup;
+  expenseCategoryGroup: ExpenseBasicInformation_expenseCategory_expenseCategoryGroup;
 }
 
 export interface ExpenseBasicInformation {
@@ -26,5 +26,5 @@ export interface ExpenseBasicInformation {
   description: string | null;
   value: number;
   spentAt: any;
-  category: ExpenseBasicInformation_category;
+  expenseCategory: ExpenseBasicInformation_expenseCategory;
 }

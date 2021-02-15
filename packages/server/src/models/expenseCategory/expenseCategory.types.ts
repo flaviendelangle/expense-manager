@@ -12,7 +12,7 @@ export class UpsertExpenseCategoryPayload {
   description?: string
 
   @Field((type) => ID, { nullable: true })
-  categoryGroupId?: string | number
+  expenseCategoryGroupId?: string | number
 }
 
 @InputType('ExpenseCategoryFilters')
@@ -21,5 +21,5 @@ export class ExpenseCategoryFilters {
   ids?: (string | number)[]
 
   @Field((type) => [ID!], { nullable: true })
-  categoryGroupIds?: (string | number)[]
+  expenseCategoryGroupIds?: (string | number)[]
 }

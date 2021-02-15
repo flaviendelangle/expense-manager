@@ -17,11 +17,11 @@ export class ExpenseCategoryParseFilters extends ParseFilters<
   }
 
   @filter
-  categoryGroupIds() {
-    const categoryGroupIds = this.filters?.categoryGroupIds
+  expenseCategoryGroupIds() {
+    const expenseCategoryGroupIds = this.filters?.expenseCategoryGroupIds
 
-    if (categoryGroupIds) {
-      this.query.whereIn('categoryGroupId', categoryGroupIds)
+    if (expenseCategoryGroupIds) {
+      this.query.whereIn('expenseCategoryGroupId', expenseCategoryGroupIds)
     }
   }
 }

@@ -24,11 +24,14 @@ const COLUMNS: Column<ExpenseBasicInformation>[] = [
   },
   {
     Header: 'Catégorie',
-    id: 'category',
-    accessor: (el) => el.category,
+    id: 'expenseCategory',
+    accessor: (el) => el.expenseCategory,
     Cell: (({ cell }) =>
-      `${cell.value.categoryGroup.name} - ${cell.value.name}`) as Renderer<
-      CellProps<ExpenseBasicInformation, ExpenseBasicInformation['category']>
+      `${cell.value.expenseCategoryGroup.name} - ${cell.value.name}`) as Renderer<
+      CellProps<
+        ExpenseBasicInformation,
+        ExpenseBasicInformation['expenseCategory']
+      >
     >,
   },
   {
@@ -78,7 +81,7 @@ export const ExpensesTable: React.VoidFunctionComponent<ExpensesTableProps> = ({
     return {
       ...pick(selectedExpense, ['description', 'value', 'id']),
       spentAt: new Date(selectedExpense.spentAt),
-      categoryId: selectedExpense.category.id,
+      categoryId: selectedExpense.expenseCategory.id,
     }
   }, [selectedExpense])
 

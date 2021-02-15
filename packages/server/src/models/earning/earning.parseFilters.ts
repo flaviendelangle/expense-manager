@@ -17,11 +17,11 @@ export class EarningParseFilters extends ParseFilters<
   }
 
   @filter
-  categoryIds() {
-    const categoryIds = this.filters?.categoryIds
+  earningCategoryIds() {
+    const earningCategoryIds = this.filters?.earningCategoryIds
 
-    if (categoryIds) {
-      this.query.whereIn('categoryId', categoryIds)
+    if (earningCategoryIds) {
+      this.query.whereIn('earningCategoryId', earningCategoryIds)
     }
   }
 

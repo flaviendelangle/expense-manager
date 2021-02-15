@@ -7,13 +7,14 @@ import { ApolloResourceNotFound } from '../../utils/errors'
 import { PaginatedClass } from '../../utils/PaginatedClass'
 import { validateNeededArgs } from '../../utils/validateNeededArgs'
 import { BaseModel } from '../base/BaseModel'
+import { EarningCategoryModel } from '../earningCategory'
 
-import { UpsertEarningPayload } from './earning.types'
+import { UpsertRefundPayload } from './refund.types'
 
-@ObjectType('Earning')
-export class EarningModel extends BaseModel {
+@ObjectType('Refund')
+export class RefundModel extends BaseModel {
   static get tableName() {
-    return 'earnings'
+    return 'refunds'
   }
 
   static get relationMappings() {
@@ -21,47 +22,47 @@ export class EarningModel extends BaseModel {
   }
 
   static getReference(id: string | number, trx?: Transaction) {
-    return EarningModel.query(trx).where('id', id).first()
+    return RefundModel.query(trx).where('id', id).first()
   }
 
   static async upsertReference(
-    payload: UpsertEarningPayload,
+    payload: UpsertRefundPayload,
     trx?: Transaction
   ) {
     if (payload.id) {
-      const existing = await EarningModel.getReference(payload.id, trx)
+      const existing = await RefundModel.getReference(payload.id, trx)
 
       if (!existing) {
         throw new ApolloResourceNotFound({ payload })
       }
 
-      return EarningModel.query(trx)
+      return RefundModel.query(trx)
         .updateAndFetchById(
           payload.id,
-          pick(payload, EarningModel.UPDATE_FIELDS)
+          pick(payload, RefundModel.UPDATE_FIELDS)
         )
         .first()
     } else {
-      validateNeededArgs(payload, ['earningCategoryId', 'value', 'earnedAt'])
+      validateNeededArgs(payload, ['earningCategoryId', 'value', 'refundedAt'])
 
-      return EarningModel.query(trx)
-        .insertAndFetch(pick(payload, EarningModel.INSERT_FIELDS))
+      return RefundModel.query(trx)
+        .insertAndFetch(pick(payload, RefundModel.INSERT_FIELDS))
         .first()
     }
   }
 
-  static readonly INSERT_FIELDS: (keyof EarningModel)[] = [
+  static readonly INSERT_FIELDS: (keyof RefundModel)[] = [
     'description',
     'earningCategoryId',
     'value',
-    'earnedAt',
+    'refundedAt',
   ]
 
-  static readonly UPDATE_FIELDS: (keyof EarningModel)[] = [
+  static readonly UPDATE_FIELDS: (keyof RefundModel)[] = [
     'description',
     'earningCategoryId',
     'value',
-    'earnedAt',
+    'refundedAt',
   ]
 
   @Field((type) => String, { nullable: true })
@@ -70,12 +71,15 @@ export class EarningModel extends BaseModel {
   @Field((type) => ID)
   earningCategoryId: string | number
 
+  @Field((type) => EarningCategoryModel)
+  earningCategory: EarningCategoryModel
+
   @Field((type) => Number)
   value: number
 
   @Field((type) => DateTimeResolver)
-  earnedAt: Date
+  refundedAt: Date
 }
 
-@ObjectType('PaginatedEarning')
-export class PaginatedEarning extends PaginatedClass(EarningModel) {}
+@ObjectType('PaginatedRefund')
+export class PaginatedRefund extends PaginatedClass(RefundModel) {}

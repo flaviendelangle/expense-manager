@@ -39,7 +39,7 @@ export class ExpenseCategoryModel extends BaseModel {
         pick(payload, ExpenseCategoryModel.UPDATE_FIELDS)
       )
     } else {
-      validateNeededArgs(payload, ['name', 'categoryGroupId'])
+      validateNeededArgs(payload, ['name', 'expenseCategoryGroupId'])
 
       return ExpenseCategoryModel.query(trx)
         .insertAndFetch(pick(payload, ExpenseCategoryModel.INSERT_FIELDS))
@@ -50,13 +50,13 @@ export class ExpenseCategoryModel extends BaseModel {
   static readonly INSERT_FIELDS: (keyof ExpenseCategoryModel)[] = [
     'description',
     'name',
-    'categoryGroupId',
+    'expenseCategoryGroupId',
   ]
 
   static readonly UPDATE_FIELDS: (keyof ExpenseCategoryModel)[] = [
     'description',
     'name',
-    'categoryGroupId',
+    'expenseCategoryGroupId',
   ]
 
   @Field((type) => String)
@@ -66,7 +66,7 @@ export class ExpenseCategoryModel extends BaseModel {
   description?: string
 
   @Field((type) => ID)
-  categoryGroupId: string | number
+  expenseCategoryGroupId: string | number
 }
 
 @ObjectType('PaginatedExpenseCategory')

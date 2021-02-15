@@ -20,14 +20,14 @@ export class ExpenseCategoryFieldsResolver {
 
   @FieldResolver((type) => [ExpenseModel!]!)
   expenses(@Root() model: ExpenseCategoryModel, @Ctx() ctx: RequestContext) {
-    return ExpenseModel.query(ctx.trx).where('categoryId', model.id)
+    return ExpenseModel.query(ctx.trx).where('expenseCategoryId', model.id)
   }
 
   @FieldResolver((type) => ExpenseCategoryGroupModel)
-  categoryGroup(
+  expenseCategoryGroup(
     @Root() model: ExpenseCategoryModel,
     @Ctx() ctx: RequestContext
   ) {
-    return ctx.loaders.expenseCategoryGroup.load(model.categoryGroupId)
+    return ctx.loaders.expenseCategoryGroup.load(model.expenseCategoryGroupId)
   }
 }

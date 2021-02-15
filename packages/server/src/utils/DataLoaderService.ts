@@ -4,6 +4,7 @@ import { RequestContext } from '../globalTypes'
 import { EarningCategoryModel } from '../models/earningCategory'
 import { ExpenseCategoryModel } from '../models/expenseCategory'
 import { ExpenseCategoryGroupModel } from '../models/expenseCategoryGroup'
+import { RefundModel } from '../models/refund'
 
 export class DataLoaderService {
   public ctx: RequestContext
@@ -28,6 +29,13 @@ export class DataLoaderService {
 
   earningCategory = new DataLoader((ids: (string | number)[]) =>
     EarningCategoryModel.findByIds(
+      this.ctx,
+      ids.map((id) => Number(id))
+    )
+  )
+
+  refund = new DataLoader((ids: (string | number)[]) =>
+    RefundModel.findByIds(
       this.ctx,
       ids.map((id) => Number(id))
     )

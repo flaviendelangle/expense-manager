@@ -2,6 +2,7 @@ import { GraphQLDateTime } from 'graphql-scalars'
 import { Field, ID, InputType } from 'type-graphql'
 
 import { DateFilter } from '../base/ParseFilters'
+import { UpsertRefundPayload } from '../refund'
 
 @InputType('UpsertExpensePayload')
 export class UpsertExpensePayload {
@@ -12,13 +13,16 @@ export class UpsertExpensePayload {
   description?: string
 
   @Field((type) => ID, { nullable: true })
-  categoryId?: string | number
+  expenseCategoryId?: string | number
 
   @Field((type) => Number, { nullable: true })
   value?: number
 
   @Field((type) => GraphQLDateTime, { nullable: true })
   spentAt?: Date
+
+  @Field((type) => UpsertRefundPayload, { nullable: true })
+  refund?: UpsertRefundPayload
 }
 
 @InputType('ExpenseFilters')
@@ -27,7 +31,7 @@ export class ExpenseFilters {
   ids?: (string | number)[]
 
   @Field((type) => [ID!], { nullable: true })
-  categoryIds?: (string | number)[]
+  expenseCategoryIds?: (string | number)[]
 
   @Field((type) => DateFilter, { nullable: true })
   spentAt?: DateFilter

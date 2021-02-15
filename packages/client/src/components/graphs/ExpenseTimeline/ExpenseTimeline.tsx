@@ -107,7 +107,7 @@ export const ExpenseTimeline: React.VoidFunctionComponent<InnerExpenseTimelinePr
 
       const expenseVisibleTimestamp = expenseVisibleDate.getTime()
 
-      const key = expense.category.categoryGroup.name
+      const key = expense.expenseCategory.expenseCategoryGroup.name
 
       if (!tempBarKeys[key]) {
         tempBarKeys[key] = 0

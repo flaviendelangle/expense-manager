@@ -14,7 +14,7 @@ export const SelectExpenseCategory: React.FunctionComponent<
     () =>
       orderBy(
         (categories.data ?? []).map((category) => ({
-          label: `${category.categoryGroup.name} - ${category.name}`,
+          label: `${category.expenseCategoryGroup.name} - ${category.name}`,
           value: category.id,
         })),
         (option) => option.label

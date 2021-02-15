@@ -3,8 +3,8 @@ import { Field, ID, InputType } from 'type-graphql'
 
 import { DateFilter } from '../base/ParseFilters'
 
-@InputType('UpsertEarningPayload')
-export class UpsertEarningPayload {
+@InputType('UpsertRefundPayload')
+export class UpsertRefundPayload {
   @Field((type) => ID, { nullable: true })
   id?: number | string
 
@@ -18,11 +18,11 @@ export class UpsertEarningPayload {
   value?: number
 
   @Field((type) => GraphQLDateTime, { nullable: true })
-  earnedAt?: Date
+  refundedAt?: Date
 }
 
-@InputType('EarningFilters')
-export class EarningFilters {
+@InputType('RefundFilters')
+export class RefundFilters {
   @Field((type) => [ID!], { nullable: true })
   ids?: (string | number)[]
 
@@ -30,5 +30,5 @@ export class EarningFilters {
   earningCategoryIds?: (string | number)[]
 
   @Field((type) => DateFilter, { nullable: true })
-  earnedAt?: DateFilter
+  refundedAt?: DateFilter
 }

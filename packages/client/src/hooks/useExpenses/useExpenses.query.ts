@@ -6,10 +6,10 @@ export const expenseBasicInformationFragment = gql`
     description
     value
     spentAt
-    category {
+    expenseCategory {
       id
       name
-      categoryGroup {
+      expenseCategoryGroup {
         id
         name
       }

@@ -14,7 +14,7 @@ import { Model } from 'objection'
 
 import knexFile from '../../../knexfile'
 
-import { EarningDataLoader, ExpenseDataLoader } from './DataLoaders'
+import { DataLoaderManager } from './DataLoaders'
 import { ParametricValue, Profile } from './ProfileLoader.interface'
 
 const getValueFromParametricValue = (value: ParametricValue): number => {
@@ -33,14 +33,12 @@ const getValueFromParametricValue = (value: ParametricValue): number => {
 }
 
 export class ProfileLoader {
-  private expenseDataLoader = new ExpenseDataLoader()
-  private earningDataLoader = new EarningDataLoader()
-
   private readonly startDate: Date
   private readonly endDate: Date
   private readonly monthAmount: number
   private readonly days: Date[]
   private readonly profile: Profile
+  private readonly manager = new DataLoaderManager()
 
   private knex: Knex = Knex(knexFile)
 
@@ -67,7 +65,7 @@ export class ProfileLoader {
         )
 
         if (isBefore(spentAt, this.endDate)) {
-          await this.expenseDataLoader.load({
+          await this.manager.expenseDataLoader.load({
             spentAt,
             value: getValueFromParametricValue(monthlyExpense.value),
             description: monthlyExpense.description,
@@ -83,7 +81,7 @@ export class ProfileLoader {
         )
 
         if (isBefore(earnedAt, this.endDate)) {
-          await this.earningDataLoader.load({
+          await this.manager.earningDataLoader.load({
             earnedAt,
             value: getValueFromParametricValue(monthlyEarning.value),
             description: monthlyEarning.description,
@@ -108,7 +106,7 @@ export class ProfileLoader {
         if (shouldDoExpenseOnThisDay) {
           lastExpenseDate = this.days[i]
 
-          await this.expenseDataLoader.load({
+          await this.manager.expenseDataLoader.load({
             spentAt: this.days[i],
             value: getValueFromParametricValue(recurrenceExpense.value),
             description: recurrenceExpense.description,

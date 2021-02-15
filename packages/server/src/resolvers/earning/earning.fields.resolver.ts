@@ -1,20 +1,17 @@
 import { DateTimeResolver } from 'graphql-scalars'
-import { pick } from 'lodash'
 import {
   Query,
   Resolver,
   Ctx,
   Arg,
   ID,
-  Mutation,
   FieldResolver,
   Root,
 } from 'type-graphql'
 
 import { RequestContext } from '../../globalTypes'
-import { EarningModel, UpsertEarningPayload } from '../../models/earning'
+import { EarningModel } from '../../models/earning'
 import { EarningCategoryModel } from '../../models/earningCategory'
-import { validateNeededArgs } from '../../utils/validateNeededArgs'
 
 @Resolver(EarningModel)
 export class EarningFieldsResolver {
@@ -52,7 +49,7 @@ export class EarningFieldsResolver {
   }
 
   @FieldResolver((type) => EarningCategoryModel)
-  category(@Root() model: EarningModel, @Ctx() ctx: RequestContext) {
-    return ctx.loaders.earningCategory.load(model.categoryId)
+  earningCategory(@Root() model: EarningModel, @Ctx() ctx: RequestContext) {
+    return ctx.loaders.earningCategory.load(model.earningCategoryId)
   }
 }

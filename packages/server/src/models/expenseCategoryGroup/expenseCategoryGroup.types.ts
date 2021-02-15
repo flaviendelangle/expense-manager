@@ -18,5 +18,5 @@ export class ExpenseCategoryGroupFilters {
   ids?: (string | number)[]
 
   @Field((type) => [ID!], { nullable: true })
-  categoryGroupIds?: (string | number)[]
+  expenseCategoryGroupIds?: (string | number)[]
 }

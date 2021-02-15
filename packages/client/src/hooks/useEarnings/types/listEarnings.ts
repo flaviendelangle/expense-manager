@@ -9,7 +9,7 @@ import { EarningFilters } from "./../../../globalTypes/api";
 // GraphQL query operation: listEarnings
 // ====================================================
 
-export interface listEarnings_earnings_nodes_category {
+export interface listEarnings_earnings_nodes_earningCategory {
   __typename: "EarningCategory";
   id: string;
   name: string;
@@ -21,7 +21,7 @@ export interface listEarnings_earnings_nodes {
   description: string | null;
   value: number;
   earnedAt: any;
-  category: listEarnings_earnings_nodes_category;
+  earningCategory: listEarnings_earnings_nodes_earningCategory;
 }
 
 export interface listEarnings_earnings {

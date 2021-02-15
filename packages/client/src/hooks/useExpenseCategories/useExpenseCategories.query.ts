@@ -4,7 +4,7 @@ export const expenseCategoryBasicInformationFragment = gql`
   fragment ExpenseCategoryBasicInformation on ExpenseCategory {
     id
     name
-    categoryGroup {
+    expenseCategoryGroup {
       id
       name
     }

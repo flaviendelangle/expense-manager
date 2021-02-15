@@ -24,29 +24,33 @@ export const ExpenseCategoryPie: React.VoidFunctionComponent<CategoryPieProps> =
       if (selectedCategoryGroupId) {
         // Group expenses by category
 
-        if (expense.category.categoryGroup.id === selectedCategoryGroupId) {
-          if (!temp[expense.category.id]) {
-            temp[expense.category.id] = {
-              id: expense.category.id,
-              label: expense.category.name,
+        if (
+          expense.expenseCategory.expenseCategoryGroup.id ===
+          selectedCategoryGroupId
+        ) {
+          if (!temp[expense.expenseCategory.id]) {
+            temp[expense.expenseCategory.id] = {
+              id: expense.expenseCategory.id,
+              label: expense.expenseCategory.name,
               value: 0,
             }
           }
 
-          temp[expense.category.id].value += expense.value
+          temp[expense.expenseCategory.id].value += expense.value
         }
       } else {
         // Group expenses by category group
 
-        if (!temp[expense.category.categoryGroup.id]) {
-          temp[expense.category.categoryGroup.id] = {
-            id: expense.category.categoryGroup.id,
-            label: expense.category.categoryGroup.name,
+        if (!temp[expense.expenseCategory.expenseCategoryGroup.id]) {
+          temp[expense.expenseCategory.expenseCategoryGroup.id] = {
+            id: expense.expenseCategory.expenseCategoryGroup.id,
+            label: expense.expenseCategory.expenseCategoryGroup.name,
             value: 0,
           }
         }
 
-        temp[expense.category.categoryGroup.id].value += expense.value
+        temp[expense.expenseCategory.expenseCategoryGroup.id].value +=
+          expense.value
       }
     }
 

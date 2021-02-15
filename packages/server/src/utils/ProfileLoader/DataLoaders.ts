@@ -7,9 +7,14 @@ import { ExpenseCategoryModel } from '../../models/expenseCategory'
 import { ExpenseCategoryGroupModel } from '../../models/expenseCategoryGroup'
 
 abstract class BaseDataLoader<Input> {
-  private readonly cache: Map<string, string | number> = new Map()
+  private readonly cache = new Map<string, string | number>()
+  protected readonly manager: DataLoaderManager
 
   protected create: (input: Input) => Promise<string | number>
+
+  constructor(manager: DataLoaderManager) {
+    this.manager = manager
+  }
 
   public load = async (input: Input) => {
     const hash = md5(JSON.stringify(input))
@@ -26,7 +31,7 @@ abstract class BaseDataLoader<Input> {
   }
 }
 
-export class ExpenseCategoryGroupDataLoader extends BaseDataLoader<string> {
+class ExpenseCategoryGroupDataLoader extends BaseDataLoader<string> {
   create = async (categoryGroupName) => {
     const value = await ExpenseCategoryGroupModel.upsertReference({
       name: categoryGroupName,
@@ -41,17 +46,15 @@ type ExpenseCategoryDataLoaderInput = [
   categoryName: string
 ]
 
-export class ExpenseCategoryDataLoader extends BaseDataLoader<ExpenseCategoryDataLoaderInput> {
-  expenseCategoryGroupDataLoader = new ExpenseCategoryGroupDataLoader()
-
+class ExpenseCategoryDataLoader extends BaseDataLoader<ExpenseCategoryDataLoaderInput> {
   create = async ([categoryGroupName, categoryName]) => {
-    const categoryGroupId = await this.expenseCategoryGroupDataLoader.load(
+    const expenseCategoryGroupId = await this.manager.expenseCategoryGroupDataLoader.load(
       categoryGroupName
     )
 
     const value = await ExpenseCategoryModel.upsertReference({
       name: categoryName,
-      categoryGroupId,
+      expenseCategoryGroupId,
     })
 
     return value.id
@@ -60,19 +63,19 @@ export class ExpenseCategoryDataLoader extends BaseDataLoader<ExpenseCategoryDat
 
 type ExpenseDataLoaderInput = Omit<
   UpsertExpensePayload,
-  'id' | 'categoryId'
+  'id' | 'expenseCategoryId'
 > & {
   category: [string, string]
 }
 
-export class ExpenseDataLoader extends BaseDataLoader<ExpenseDataLoaderInput> {
-  expenseCategoryDataLoader = new ExpenseCategoryDataLoader()
-
+class ExpenseDataLoader extends BaseDataLoader<ExpenseDataLoaderInput> {
   create = async ({ category, ...payload }: ExpenseDataLoaderInput) => {
-    const categoryId = await this.expenseCategoryDataLoader.load(category)
+    const expenseCategoryId = await this.manager.expenseCategoryDataLoader.load(
+      category
+    )
 
     const value = await ExpenseModel.upsertReference({
-      categoryId,
+      expenseCategoryId,
       ...payload,
     })
 
@@ -80,7 +83,7 @@ export class ExpenseDataLoader extends BaseDataLoader<ExpenseDataLoaderInput> {
   }
 }
 
-export class EarningCategoryDataLoader extends BaseDataLoader<string> {
+class EarningCategoryDataLoader extends BaseDataLoader<string> {
   create = async (categoryName) => {
     const value = await EarningCategoryModel.upsertReference({
       name: categoryName,
@@ -92,22 +95,33 @@ export class EarningCategoryDataLoader extends BaseDataLoader<string> {
 
 type EarningDataLoaderInput = Omit<
   UpsertEarningPayload,
-  'id' | 'categoryId'
+  'id' | 'earningCategoryId'
 > & {
   category: string
 }
 
-export class EarningDataLoader extends BaseDataLoader<EarningDataLoaderInput> {
-  earningCategoryDataLoader = new EarningCategoryDataLoader()
-
+class EarningDataLoader extends BaseDataLoader<EarningDataLoaderInput> {
   create = async ({ category, ...payload }: EarningDataLoaderInput) => {
-    const categoryId = await this.earningCategoryDataLoader.load(category)
+    const earningCategoryId = await this.manager.earningCategoryDataLoader.load(
+      category
+    )
 
     const value = await EarningModel.upsertReference({
-      categoryId,
+      earningCategoryId,
       ...payload,
     })
 
     return value.id
   }
+}
+
+export class DataLoaderManager {
+  public earningCategoryDataLoader = new EarningCategoryDataLoader(this)
+  public earningDataLoader = new EarningDataLoader(this)
+
+  public expenseCategoryGroupDataLoader = new ExpenseCategoryGroupDataLoader(
+    this
+  )
+  public expenseCategoryDataLoader = new ExpenseCategoryDataLoader(this)
+  public expenseDataLoader = new ExpenseDataLoader(this)
 }

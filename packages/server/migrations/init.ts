@@ -6,6 +6,7 @@ const TABLES = {
   EXPENSES: 'expenses',
   EARNING_CATEGORIES: 'earning_categories',
   EARNINGS: 'earnings',
+  REFUND: 'refunds',
 }
 
 export const up = async (knex: Knex) => {
@@ -27,8 +28,8 @@ export const up = async (knex: Knex) => {
 
     t.string('name').notNullable()
 
-    t.integer('category_group_id')
-    t.foreign('category_group_id').references(
+    t.integer('expense_category_group_id').notNullable()
+    t.foreign('expense_category_group_id').references(
       `${TABLES.EXPENSE_CATEGORY_GROUPS}.id`
     )
 
@@ -37,14 +38,19 @@ export const up = async (knex: Knex) => {
     t.timestamp('created_at').notNullable().defaultTo(knex.fn.now())
     t.timestamp('updated_at').notNullable().defaultTo(knex.fn.now())
 
-    t.unique(['category_group_id', 'name'])
+    t.unique(['expense_category_group_id', 'name'])
   })
 
   await knex.schema.createTable(TABLES.EXPENSES, (t) => {
     t.increments()
 
-    t.integer('category_id')
-    t.foreign('category_id').references(`${TABLES.EXPENSE_CATEGORIES}.id`)
+    t.integer('expense_category_id').notNullable()
+    t.foreign('expense_category_id').references(
+      `${TABLES.EXPENSE_CATEGORIES}.id`
+    )
+
+    t.integer('refund_id')
+    t.foreign('refund_id').references(`${TABLES.REFUND}.id`)
 
     t.float('value').notNullable()
 
@@ -71,8 +77,10 @@ export const up = async (knex: Knex) => {
   await knex.schema.createTable(TABLES.EARNINGS, (t) => {
     t.increments()
 
-    t.integer('category_id')
-    t.foreign('category_id').references(`${TABLES.EARNING_CATEGORIES}.id`)
+    t.integer('earning_category_id').notNullable()
+    t.foreign('earning_category_id').references(
+      `${TABLES.EARNING_CATEGORIES}.id`
+    )
 
     t.float('value').notNullable()
 
@@ -81,6 +89,23 @@ export const up = async (knex: Knex) => {
     t.timestamp('created_at').notNullable().defaultTo(knex.fn.now())
     t.timestamp('updated_at').notNullable().defaultTo(knex.fn.now())
     t.timestamp('earned_at').notNullable()
+  })
+
+  await knex.schema.createTable(TABLES.REFUND, (t) => {
+    t.increments()
+
+    t.integer('earning_category_id').notNullable()
+    t.foreign('earning_category_id').references(
+      `${TABLES.EARNING_CATEGORIES}.id`
+    )
+
+    t.float('value').notNullable()
+
+    t.string('description')
+
+    t.timestamp('created_at').notNullable().defaultTo(knex.fn.now())
+    t.timestamp('updated_at').notNullable().defaultTo(knex.fn.now())
+    t.timestamp('refunded_at').notNullable()
   })
 }
 

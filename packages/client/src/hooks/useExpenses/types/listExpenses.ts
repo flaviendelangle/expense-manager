@@ -9,17 +9,17 @@ import { ExpenseFilters, OrderOptions, PaginationOptions } from "./../../../glob
 // GraphQL query operation: listExpenses
 // ====================================================
 
-export interface listExpenses_expenses_nodes_category_categoryGroup {
+export interface listExpenses_expenses_nodes_expenseCategory_expenseCategoryGroup {
   __typename: "ExpenseCategoryGroup";
   id: string;
   name: string;
 }
 
-export interface listExpenses_expenses_nodes_category {
+export interface listExpenses_expenses_nodes_expenseCategory {
   __typename: "ExpenseCategory";
   id: string;
   name: string;
-  categoryGroup: listExpenses_expenses_nodes_category_categoryGroup;
+  expenseCategoryGroup: listExpenses_expenses_nodes_expenseCategory_expenseCategoryGroup;
 }
 
 export interface listExpenses_expenses_nodes {
@@ -28,7 +28,7 @@ export interface listExpenses_expenses_nodes {
   description: string | null;
   value: number;
   spentAt: any;
-  category: listExpenses_expenses_nodes_category;
+  expenseCategory: listExpenses_expenses_nodes_expenseCategory;
 }
 
 export interface listExpenses_expenses {

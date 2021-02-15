@@ -8,7 +8,9 @@ import { PaginatedClass } from '../../utils/PaginatedClass'
 import { validateNeededArgs } from '../../utils/validateNeededArgs'
 import { BaseModel } from '../base/BaseModel'
 import { ExpenseCategoryModel } from '../expenseCategory'
+import { RefundModel } from '../refund'
 
+import { expenseRelationMappings } from './expense.relations'
 import { UpsertExpensePayload } from './expense.types'
 
 @ObjectType('Expense')
@@ -18,7 +20,7 @@ export class ExpenseModel extends BaseModel {
   }
 
   static get relationMappings() {
-    return {}
+    return expenseRelationMappings()
   }
 
   static getReference(id: string | number, trx?: Transaction) {
@@ -29,6 +31,8 @@ export class ExpenseModel extends BaseModel {
     payload: UpsertExpensePayload,
     trx?: Transaction
   ) {
+    let cleanPayload: UpsertExpensePayload
+
     if (payload.id) {
       const existing = await ExpenseModel.getReference(payload.id, trx)
 
@@ -36,43 +40,54 @@ export class ExpenseModel extends BaseModel {
         throw new ApolloResourceNotFound({ payload })
       }
 
-      return ExpenseModel.query(trx)
-        .updateAndFetchById(
-          payload.id,
-          pick(payload, ExpenseModel.UPDATE_FIELDS)
-        )
-        .first()
+      cleanPayload = pick(payload, ExpenseModel.UPDATE_FIELDS)
     } else {
-      validateNeededArgs(payload, ['categoryId', 'value', 'spentAt'])
+      validateNeededArgs(payload, ['expenseCategoryId', 'value', 'spentAt'])
 
-      return ExpenseModel.query(trx)
-        .insertAndFetch(pick(payload, ExpenseModel.INSERT_FIELDS))
-        .first()
+      cleanPayload = pick(payload, ExpenseModel.INSERT_FIELDS)
     }
+
+    return ExpenseModel.query(trx)
+      .upsertGraphAndFetch(cleanPayload, {
+        insertMissing: true,
+        noDelete: false,
+        relate: true,
+        unrelate: true,
+      })
+      .first()
   }
 
   static readonly INSERT_FIELDS: (keyof ExpenseModel)[] = [
     'description',
-    'categoryId',
+    'expenseCategoryId',
     'value',
     'spentAt',
+    'refund',
   ]
 
   static readonly UPDATE_FIELDS: (keyof ExpenseModel)[] = [
+    'id',
     'description',
-    'categoryId',
+    'expenseCategoryId',
     'value',
     'spentAt',
+    'refund',
   ]
 
   @Field((type) => String, { nullable: true })
   description?: string
 
+  @Field((type) => ID, { nullable: true })
+  refundId?: string | number
+
+  @Field((type) => RefundModel, { nullable: true })
+  refund?: RefundModel
+
   @Field((type) => ID)
-  categoryId: string | number
+  expenseCategoryId: string | number
 
   @Field((type) => ExpenseCategoryModel)
-  category: ExpenseCategoryModel
+  expenseCategory: ExpenseCategoryModel
 
   @Field((type) => Number)
   value: number

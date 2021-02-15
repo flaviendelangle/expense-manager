@@ -9,7 +9,7 @@ import { UpsertEarningPayload } from "./../../../../globalTypes/api";
 // GraphQL mutation operation: upsertEarningForm
 // ====================================================
 
-export interface upsertEarningForm_upsertEarning_category {
+export interface upsertEarningForm_upsertEarning_earningCategory {
   __typename: "EarningCategory";
   id: string;
   name: string;
@@ -21,7 +21,7 @@ export interface upsertEarningForm_upsertEarning {
   description: string | null;
   value: number;
   earnedAt: any;
-  category: upsertEarningForm_upsertEarning_category;
+  earningCategory: upsertEarningForm_upsertEarning_earningCategory;
 }
 
 export interface upsertEarningForm {

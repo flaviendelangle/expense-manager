@@ -17,18 +17,18 @@ export interface EarningCategoryFilters {
 }
 
 export interface EarningFilters {
-  categoryIds?: string[] | null;
   earnedAt?: DateFilter | null;
+  earningCategoryIds?: string[] | null;
   ids?: string[] | null;
 }
 
 export interface ExpenseCategoryFilters {
-  categoryGroupIds?: string[] | null;
+  expenseCategoryGroupIds?: string[] | null;
   ids?: string[] | null;
 }
 
 export interface ExpenseFilters {
-  categoryIds?: string[] | null;
+  expenseCategoryIds?: string[] | null;
   ids?: string[] | null;
   spentAt?: DateFilter | null;
 }
@@ -44,18 +44,27 @@ export interface PaginationOptions {
 }
 
 export interface UpsertEarningPayload {
-  categoryId?: string | null;
   description?: string | null;
   earnedAt?: any | null;
+  earningCategoryId?: string | null;
   id?: string | null;
   value?: number | null;
 }
 
 export interface UpsertExpensePayload {
-  categoryId?: string | null;
   description?: string | null;
+  expenseCategoryId?: string | null;
   id?: string | null;
+  refund?: UpsertRefundPayload | null;
   spentAt?: any | null;
+  value?: number | null;
+}
+
+export interface UpsertRefundPayload {
+  description?: string | null;
+  earningCategoryId?: string | null;
+  id?: string | null;
+  refundedAt?: any | null;
   value?: number | null;
 }
 

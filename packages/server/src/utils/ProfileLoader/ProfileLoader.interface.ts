@@ -1,9 +1,19 @@
 export type ParametricValue = number | { min: number; max: number }
 
-type RecurrentExpense = {
-  description: string
-  category: [string, string]
+type Refund = {
+  description?: string
+  value: ParametricValue
+  earningCategory: string
+}
 
+type BasicExpense = {
+  category: [string, string]
+  description?: string
+  value: ParametricValue
+  refund?: Refund
+}
+
+type RecurrentExpense = BasicExpense & {
   /**
    * Probability for the expense to occur on a specific day
    */
@@ -13,14 +23,9 @@ type RecurrentExpense = {
    * Minimum amount of day between two expenses of this type
    */
   minimumInterval?: number
-
-  value: ParametricValue
 }
 
-type MonthlyExpense = {
-  description?: string
-  category: [string, string]
-  value: ParametricValue
+type MonthlyExpense = BasicExpense & {
   date: number
 }
 

@@ -25,7 +25,7 @@ const COLUMNS: Column<EarningBasicInformation>[] = [
   {
     Header: 'Catégorie',
     id: 'category',
-    accessor: (el) => el.category.name,
+    accessor: (el) => el.earningCategory.name,
   },
   {
     Header: 'Montant',
@@ -71,7 +71,7 @@ export const EarningsTable: React.VoidFunctionComponent<ExpensesTableProps> = ({
 
     return {
       ...pick(selectedEarning, ['description', 'value', 'id', 'earnedAt']),
-      categoryId: selectedEarning.category.id,
+      categoryId: selectedEarning.earningCategory.id,
     }
   }, [selectedEarning])
 

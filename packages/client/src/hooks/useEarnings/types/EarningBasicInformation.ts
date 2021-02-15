@@ -7,7 +7,7 @@
 // GraphQL fragment: EarningBasicInformation
 // ====================================================
 
-export interface EarningBasicInformation_category {
+export interface EarningBasicInformation_earningCategory {
   __typename: "EarningCategory";
   id: string;
   name: string;
@@ -19,5 +19,5 @@ export interface EarningBasicInformation {
   description: string | null;
   value: number;
   earnedAt: any;
-  category: EarningBasicInformation_category;
+  earningCategory: EarningBasicInformation_earningCategory;
 }

@@ -103,7 +103,7 @@ const InnerExpenseTimeline: React.VoidFunctionComponent<ExpenseTimelineProps> = 
     })
 
     const categoryGroups = uniqBy(
-      data.map((expense) => expense.category.categoryGroup),
+      data.map((expense) => expense.expenseCategory.expenseCategoryGroup),
       (group) => group.id
     ).map((group) => ({
       id: group.name,
@@ -115,7 +115,8 @@ const InnerExpenseTimeline: React.VoidFunctionComponent<ExpenseTimelineProps> = 
 
     for (const expense of orderedData) {
       const expenseCategoryGroupIndex = categoryGroups.findIndex(
-        (group) => group.id === expense.category.categoryGroup.name
+        (group) =>
+          group.id === expense.expenseCategory.expenseCategoryGroup.name
       )
 
       const expenseDate = new Date(expense.spentAt)

@@ -1,20 +1,18 @@
 import { DateTimeResolver } from 'graphql-scalars'
-import { pick } from 'lodash'
 import {
   Query,
   Resolver,
   Ctx,
   Arg,
   ID,
-  Mutation,
   FieldResolver,
   Root,
 } from 'type-graphql'
 
 import { RequestContext } from '../../globalTypes'
-import { ExpenseModel, UpsertExpensePayload } from '../../models/expense'
+import { ExpenseModel } from '../../models/expense'
 import { ExpenseCategoryModel } from '../../models/expenseCategory'
-import { validateNeededArgs } from '../../utils/validateNeededArgs'
+import { RefundModel } from '../../models/refund'
 
 @Resolver(ExpenseModel)
 export class ExpenseFieldsResolver {
@@ -52,7 +50,16 @@ export class ExpenseFieldsResolver {
   }
 
   @FieldResolver((type) => ExpenseCategoryModel)
-  category(@Root() model: ExpenseModel, @Ctx() ctx: RequestContext) {
-    return ctx.loaders.expenseCategory.load(model.categoryId)
+  expenseCategory(@Root() model: ExpenseModel, @Ctx() ctx: RequestContext) {
+    return ctx.loaders.expenseCategory.load(model.expenseCategoryId)
+  }
+
+  @FieldResolver((type) => RefundModel, { nullable: true })
+  refund(@Root() model: ExpenseModel, @Ctx() ctx: RequestContext) {
+    if (!model.refundId) {
+      return null
+    }
+
+    return ctx.loaders.refund.load(model.refundId)
   }
 }
