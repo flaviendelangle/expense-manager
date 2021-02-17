@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client'
 import * as React from 'react'
 
-import { Form } from '@habx/lib-form-helper'
+import { Form, useFormKeyboardSubmitDecorator } from '@habx/lib-form-helper'
 import { ActionBar, Button, notify } from '@habx/ui-core'
 
 import { DatePickerSingle } from '@components/final-form/DatePickerSingle'
@@ -50,10 +50,13 @@ export const UpsertEarningForm: React.VoidFunctionComponent<UpsertExpenseFormPro
     return onClose()
   }
 
+  const keyboardSubmitDecorator = useFormKeyboardSubmitDecorator()
+
   return (
     <Form<UpsertExpensePayload>
       onSubmit={handleUpsertExpense}
       initialValues={initialValues}
+      decorators={[keyboardSubmitDecorator]}
       render={({ handleSubmit, pristine, hasValidationErrors, submitting }) => (
         <form onSubmit={handleSubmit}>
           <SelectEarningCategory

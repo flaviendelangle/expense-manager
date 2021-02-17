@@ -23,7 +23,7 @@ export class App {
     origin: (ctx) =>
       new RegExp('http://localhost:.*').test(ctx.header.origin)
         ? ctx.header.origin
-        : false,
+        : '',
     credentials: true,
   }
 

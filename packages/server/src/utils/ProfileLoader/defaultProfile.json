@@ -46,7 +46,7 @@
         "Courses",
         "Primeur"
       ],
-      "probability": 0.15,
+      "probability": 0.10,
       "minimumInterval": 3,
       "value": {
         "min": 4,
@@ -57,6 +57,37 @@
         "maxValue": 19,
         "earningCategory": "Ticket Restaurant",
         "description": "Remboursement ticket resto"
+      }
+    },
+    {
+      "description": "Fromager",
+      "category": [
+        "Courses",
+        "Fromager"
+      ],
+      "probability": 0.05,
+      "minimumInterval": 7,
+      "value": {
+        "min": 8,
+        "max": 35
+      },
+      "refund": {
+        "probability": 0.7,
+        "maxValue": 19,
+        "earningCategory": "Ticket Restaurant",
+        "description": "Remboursement ticket resto"
+      }
+    },
+    {
+      "category": [
+        "Courses",
+        "Divers"
+      ],
+      "probability": 0.05,
+      "minimumInterval": 1,
+      "value": {
+        "min": 2,
+        "max": 50
       }
     },
     {
@@ -149,6 +180,71 @@
         "min": 150,
         "max": 700
       }
+    },
+    {
+      "description": "Meubles",
+      "category": [
+        "Équipement",
+        "Meubles"
+      ],
+      "probability": 0.01,
+      "minimumInterval": 200,
+      "value": {
+        "min": 40,
+        "max": 180
+      }
+    },
+    {
+      "description": "Matériel de Cuisine",
+      "category": [
+        "Équipement",
+        "Cuisine"
+      ],
+      "probability": 0.01,
+      "minimumInterval": 50,
+      "value": {
+        "min": 20,
+        "max": 150
+      }
+    },
+    {
+      "description": "Alcool",
+      "category": [
+        "Sortie",
+        "Alcool"
+      ],
+      "probability": 0.10,
+      "minimumInterval": 3,
+      "value": {
+        "min": 5,
+        "max": 15
+      }
+    },
+    {
+      "description": "Bar",
+      "category": [
+        "Sortie",
+        "Bar"
+      ],
+      "probability": 0.10,
+      "minimumInterval": 5,
+      "value": {
+        "min": 7,
+        "max": 25
+      }
+    },
+    {
+      "description": "Restaurant",
+      "category": [
+        "Sortie",
+        "Restaurant"
+      ],
+      "probability": 0.05,
+      "minimumInterval": 10,
+      "value": {
+        "min": 10,
+        "max": 20
+      }
     }
   ],
   "monthlyExpenses": [
@@ -219,6 +315,15 @@
       ],
       "value": 11.99,
       "date": 16
+    },
+    {
+      "description": "Abonnement Métro",
+      "category": [
+        "Transports",
+        "Train"
+      ],
+      "value": 30,
+      "date": 18
     }
   ],
   "monthlyEarnings": [
