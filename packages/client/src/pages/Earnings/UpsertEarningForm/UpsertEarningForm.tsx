@@ -4,6 +4,7 @@ import * as React from 'react'
 import { Form } from '@habx/lib-form-helper'
 import { ActionBar, Button, notify } from '@habx/ui-core'
 
+import { DatePickerSingle } from '@components/final-form/DatePickerSingle'
 import { NumberInput } from '@components/final-form/NumberInput'
 import { SelectEarningCategory } from '@components/final-form/SelectEarningCategory'
 import { TextInput } from '@components/final-form/TextInput'
@@ -57,15 +58,15 @@ export const UpsertEarningForm: React.VoidFunctionComponent<UpsertExpenseFormPro
         <form onSubmit={handleSubmit}>
           <SelectEarningCategory
             filterable
-            name="categoryId"
+            name="earningCategoryId"
             label="Catégorie"
             required
           />
           <TextInput name="description" label="Description" />
           <NumberInput name="value" label="Montant" required />
-          <TextInput
+          <DatePickerSingle
             name="earnedAt"
-            label="Date de la recette (à améliorer)"
+            label="Date de la recette"
             required
           />
           <ActionBar>

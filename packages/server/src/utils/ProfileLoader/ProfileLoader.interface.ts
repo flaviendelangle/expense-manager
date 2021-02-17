@@ -1,12 +1,13 @@
 export type ParametricValue = number | { min: number; max: number }
 
-type Refund = {
+export type Refund = {
   description?: string
-  value: ParametricValue
+  maxValue: number
   earningCategory: string
+  probability: number
 }
 
-type BasicExpense = {
+export type BasicExpense = {
   category: [string, string]
   description?: string
   value: ParametricValue

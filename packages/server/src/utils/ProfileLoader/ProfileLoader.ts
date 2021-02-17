@@ -13,9 +13,10 @@ import Knex from 'knex'
 import { Model } from 'objection'
 
 import knexFile from '../../../knexfile'
+import { UpsertRefundPayload } from '../../models/refund'
 
 import { DataLoaderManager } from './DataLoaders'
-import { ParametricValue, Profile } from './ProfileLoader.interface'
+import { ParametricValue, Profile, Refund } from './ProfileLoader.interface'
 
 const getValueFromParametricValue = (value: ParametricValue): number => {
   if (typeof value === 'number') {
@@ -40,6 +41,8 @@ export class ProfileLoader {
   private readonly profile: Profile
   private readonly manager = new DataLoaderManager()
 
+  private refundCapacity: { [earningCategory: string]: number } = {}
+
   private knex: Knex = Knex(knexFile)
 
   constructor(profile: Profile, monthAmount: number) {
@@ -55,6 +58,37 @@ export class ProfileLoader {
     Model.knex(this.knex)
   }
 
+  public applyRefund = async (
+    refund: Refund | undefined,
+    expenseValue: number,
+    refundedAt: Date
+  ): Promise<UpsertRefundPayload | undefined> => {
+    if (!refund) {
+      return undefined
+    }
+
+    const currentRefundCapacity =
+      this.refundCapacity[refund.earningCategory] ?? 0
+    const value = Math.min(currentRefundCapacity, refund.maxValue, expenseValue)
+
+    if (value === 0 || Math.random() > refund.probability) {
+      return undefined
+    }
+
+    const earningCategoryId = await this.manager.earningCategoryDataLoader.load(
+      refund.earningCategory
+    )
+
+    this.refundCapacity[refund.earningCategory] = currentRefundCapacity - value
+
+    return {
+      earningCategoryId,
+      value,
+      refundedAt,
+      description: refund.description,
+    }
+  }
+
   public load = async () => {
     const t = new Date().getTime()
     for (let month = 0; month < this.monthAmount; month++) {
@@ -65,11 +99,19 @@ export class ProfileLoader {
         )
 
         if (isBefore(spentAt, this.endDate)) {
+          const value = getValueFromParametricValue(monthlyExpense.value)
+          const refund = await this.applyRefund(
+            monthlyExpense.refund,
+            value,
+            spentAt
+          )
+
           await this.manager.expenseDataLoader.load({
             spentAt,
-            value: getValueFromParametricValue(monthlyExpense.value),
+            value,
             description: monthlyExpense.description,
             category: monthlyExpense.category,
+            refund,
           })
         }
       }
@@ -81,12 +123,17 @@ export class ProfileLoader {
         )
 
         if (isBefore(earnedAt, this.endDate)) {
+          const value = getValueFromParametricValue(monthlyEarning.value)
+
           await this.manager.earningDataLoader.load({
             earnedAt,
-            value: getValueFromParametricValue(monthlyEarning.value),
+            value,
             description: monthlyEarning.description,
             category: monthlyEarning.category,
           })
+
+          this.refundCapacity[monthlyEarning.category] =
+            (this.refundCapacity[monthlyEarning.category] ?? 0) + value
         }
       }
     }
@@ -106,11 +153,20 @@ export class ProfileLoader {
         if (shouldDoExpenseOnThisDay) {
           lastExpenseDate = this.days[i]
 
+          const spentAt = this.days[i]
+          const value = getValueFromParametricValue(recurrenceExpense.value)
+          const refund = await this.applyRefund(
+            recurrenceExpense.refund,
+            value,
+            spentAt
+          )
+
           await this.manager.expenseDataLoader.load({
-            spentAt: this.days[i],
-            value: getValueFromParametricValue(recurrenceExpense.value),
+            spentAt,
+            value,
             description: recurrenceExpense.description,
             category: recurrenceExpense.category,
+            refund,
           })
         }
       }

@@ -70,8 +70,9 @@ export const EarningsTable: React.VoidFunctionComponent<ExpensesTableProps> = ({
     }
 
     return {
-      ...pick(selectedEarning, ['description', 'value', 'id', 'earnedAt']),
-      categoryId: selectedEarning.earningCategory.id,
+      ...pick(selectedEarning, ['description', 'value', 'id']),
+      earnedAt: new Date(selectedEarning.earnedAt),
+      earningCategoryId: selectedEarning.earningCategory.id,
     }
   }, [selectedEarning])
 

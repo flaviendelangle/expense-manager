@@ -22,6 +22,20 @@ export interface upsertExpenseForm_upsertExpense_expenseCategory {
   expenseCategoryGroup: upsertExpenseForm_upsertExpense_expenseCategory_expenseCategoryGroup;
 }
 
+export interface upsertExpenseForm_upsertExpense_refund_earningCategory {
+  __typename: "EarningCategory";
+  id: string;
+  name: string;
+}
+
+export interface upsertExpenseForm_upsertExpense_refund {
+  __typename: "Refund";
+  id: string;
+  earningCategory: upsertExpenseForm_upsertExpense_refund_earningCategory;
+  description: string | null;
+  value: number;
+}
+
 export interface upsertExpenseForm_upsertExpense {
   __typename: "Expense";
   id: string;
@@ -29,6 +43,7 @@ export interface upsertExpenseForm_upsertExpense {
   value: number;
   spentAt: any;
   expenseCategory: upsertExpenseForm_upsertExpense_expenseCategory;
+  refund: upsertExpenseForm_upsertExpense_refund | null;
 }
 
 export interface upsertExpenseForm {

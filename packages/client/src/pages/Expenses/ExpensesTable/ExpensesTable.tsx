@@ -9,9 +9,10 @@ import { CellProps, Column, Row, Table, useTable } from '@habx/ui-table'
 import { UpsertExpensePayload } from '@globalTypes/api'
 import { ExpenseBasicInformation } from '@hooks/useExpenses'
 
+import { ExpensesHeaderBars } from '../ExpensesHeaderBars'
 import { UpsertExpenseForm } from '../UpsertExpenseForm'
 
-import { ExpensesTableContainer } from './ExpensesTable.style'
+import { ExpensesTableContent } from './ExpensesTable.style'
 
 const COLUMNS: Column<ExpenseBasicInformation>[] = [
   {
@@ -44,6 +45,23 @@ const COLUMNS: Column<ExpenseBasicInformation>[] = [
   {
     Header: 'Description',
     accessor: 'description',
+  },
+  {
+    Header: 'Remboursement',
+    accessor: 'refund',
+    Cell: (({ cell }) => {
+      const refund = cell.value
+
+      if (!refund) {
+        return null
+      }
+
+      return `${refund.value} €${
+        refund.description ? ` (${refund.description})` : ''
+      }`
+    }) as Renderer<
+      CellProps<ExpenseBasicInformation, ExpenseBasicInformation['refund']>
+    >,
   },
 ]
 
@@ -81,7 +99,18 @@ export const ExpensesTable: React.VoidFunctionComponent<ExpensesTableProps> = ({
     return {
       ...pick(selectedExpense, ['description', 'value', 'id']),
       spentAt: new Date(selectedExpense.spentAt),
-      categoryId: selectedExpense.expenseCategory.id,
+      expenseCategoryId: selectedExpense.expenseCategory.id,
+      refund: selectedExpense.refund
+        ? {
+            ...pick(selectedExpense.refund, [
+              'id',
+              'description',
+              'refundedAt',
+              'value',
+            ]),
+            earningCategoryId: selectedExpense.refund.earningCategory.id,
+          }
+        : undefined,
     }
   }, [selectedExpense])
 
@@ -91,29 +120,33 @@ export const ExpensesTable: React.VoidFunctionComponent<ExpensesTableProps> = ({
   )
 
   return (
-    <ExpensesTableContainer>
-      <Table
-        loading={loading}
-        instance={tableInstance}
-        style={{ striped: true, scrollable: true }}
-        getRowCharacteristics={getRowCharacteristics}
-        onRowClick={handleRowClick}
-      />
-      <Modal
-        title="Édition d'une dépense"
-        value={editExpensePayload}
-        open={!!editExpensePayload}
-        onClose={() => setSelectedExpense(null)}
-        persistent
-      >
-        {(modal) => (
-          <UpsertExpenseForm
-            initialValues={modal.value}
-            onClose={modal.close}
-          />
-        )}
-      </Modal>
-    </ExpensesTableContainer>
+    <React.Fragment>
+      <ExpensesHeaderBars />
+      <ExpensesTableContent>
+        <Table
+          loading={loading}
+          instance={tableInstance}
+          style={{ striped: true, scrollable: true }}
+          getRowCharacteristics={getRowCharacteristics}
+          onRowClick={handleRowClick}
+        />
+        <Modal
+          title="Édition d'une dépense"
+          value={editExpensePayload}
+          open={!!editExpensePayload}
+          onClose={() => setSelectedExpense(null)}
+          persistent
+          width="large"
+        >
+          {(modal) => (
+            <UpsertExpenseForm
+              initialValues={modal.value}
+              onClose={modal.close}
+            />
+          )}
+        </Modal>
+      </ExpensesTableContent>
+    </React.Fragment>
   )
 }
 

@@ -22,6 +22,20 @@ export interface listExpenses_expenses_nodes_expenseCategory {
   expenseCategoryGroup: listExpenses_expenses_nodes_expenseCategory_expenseCategoryGroup;
 }
 
+export interface listExpenses_expenses_nodes_refund_earningCategory {
+  __typename: "EarningCategory";
+  id: string;
+  name: string;
+}
+
+export interface listExpenses_expenses_nodes_refund {
+  __typename: "Refund";
+  id: string;
+  earningCategory: listExpenses_expenses_nodes_refund_earningCategory;
+  description: string | null;
+  value: number;
+}
+
 export interface listExpenses_expenses_nodes {
   __typename: "Expense";
   id: string;
@@ -29,6 +43,7 @@ export interface listExpenses_expenses_nodes {
   value: number;
   spentAt: any;
   expenseCategory: listExpenses_expenses_nodes_expenseCategory;
+  refund: listExpenses_expenses_nodes_refund | null;
 }
 
 export interface listExpenses_expenses {

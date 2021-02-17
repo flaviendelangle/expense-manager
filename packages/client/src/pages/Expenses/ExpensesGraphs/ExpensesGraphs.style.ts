@@ -1,13 +1,18 @@
 import styled from 'styled-components'
 
-import { Title } from '@habx/ui-core'
+import { Layout } from '@habx/ui-core'
 
 import { CustomizableGraph } from '@components/molecules/CustomizableGraph'
 
-export const ExpensesGraphTitle = styled(Title).attrs(() => ({
-  type: 'section',
-}))`
-  margin-bottom: 36px;
+export const ExpenseGraphsContent = styled(Layout)`
+  --layout-left-padding: 36px;
+  --layout-right-padding: 36px;
+  --layout-top-padding: 24px;
+  --layout-bottom-padding: 24px;
+
+  flex: 1 1 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
 `
 
 export const ExpensesGraph = styled(CustomizableGraph)`

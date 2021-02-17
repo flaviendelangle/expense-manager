@@ -14,6 +14,15 @@ export const expenseBasicInformationFragment = gql`
         name
       }
     }
+    refund {
+      id
+      earningCategory {
+        id
+        name
+      }
+      description
+      value
+    }
   }
 `
 

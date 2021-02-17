@@ -13,7 +13,13 @@
         "max": 4
       },
       "valueMax": 4,
-      "valueMin": 0.95
+      "valueMin": 0.95,
+      "refund": {
+        "probability": 0.7,
+        "maxValue": 19,
+        "earningCategory": "Ticket Restaurant",
+        "description": "Remboursement ticket resto"
+      }
     },
     {
       "description": "Grande Surface",
@@ -26,6 +32,12 @@
       "value": {
         "min": 2,
         "max": 70
+      },
+      "refund": {
+        "probability": 0.7,
+        "maxValue": 19,
+        "earningCategory": "Ticket Restaurant",
+        "description": "Remboursement ticket resto"
       }
     },
     {
@@ -39,6 +51,12 @@
       "value": {
         "min": 4,
         "max": 35
+      },
+      "refund": {
+        "probability": 0.7,
+        "maxValue": 19,
+        "earningCategory": "Ticket Restaurant",
+        "description": "Remboursement ticket resto"
       }
     },
     {
@@ -141,7 +159,12 @@
         "Loyer"
       ],
       "value": 500,
-      "date": 26
+      "date": 26,
+      "refund": {
+        "probability": 1,
+        "maxValue": 160,
+        "earningCategory": "APL"
+      }
     },
     {
       "description": "Abonnement Téléphone mobile",
@@ -214,12 +237,14 @@
       "value": {
         "min": 96,
         "max": 168
-      }
+      },
+      "date": 27
     },
     {
       "description": "APL",
       "category": "APL",
-      "value": 160
+      "value": 160,
+      "date": 11
     }
   ]
 }

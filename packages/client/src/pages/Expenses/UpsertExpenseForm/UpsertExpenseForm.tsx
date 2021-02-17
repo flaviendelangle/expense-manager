@@ -1,13 +1,15 @@
 import { useMutation } from '@apollo/client'
 import * as React from 'react'
 
-import { Form } from '@habx/lib-form-helper'
+import { Form, useFormKeyboardSubmitDecorator } from '@habx/lib-form-helper'
 import { ActionBar, Button, notify } from '@habx/ui-core'
 
 import { DatePickerSingle } from '@components/final-form/DatePickerSingle'
 import { NumberInput } from '@components/final-form/NumberInput'
+import { SelectEarningCategory } from '@components/final-form/SelectEarningCategory'
 import { SelectExpenseCategory } from '@components/final-form/SelectExpenseCategory'
 import { TextInput } from '@components/final-form/TextInput'
+import { Toggle } from '@components/final-form/Toggle'
 
 import { UpsertExpensePayload } from '@globalTypes/api'
 import { addExpenseToCache } from '@hooks/useExpenses'
@@ -17,9 +19,13 @@ import {
   upsertExpenseFormVariables,
 } from './types/upsertExpenseForm'
 import { upsertExpenseFormMutation } from './UpsertExpenseForm.query'
+import {
+  UpsertExpenseFormSubGrid,
+  RefundToggleContainer,
+} from './UpsertExpenseForm.style'
 
 export const UpsertExpenseForm: React.VoidFunctionComponent<UpsertExpenseFormProps> = ({
-  initialValues,
+  initialValues: rawInitialValues,
   onClose,
 }) => {
   const [onUpsertExpense] = useMutation<
@@ -38,10 +44,23 @@ export const UpsertExpenseForm: React.VoidFunctionComponent<UpsertExpenseFormPro
     },
   })
 
-  const handleUpsertExpense = async (value: UpsertExpensePayload) => {
+  const handleUpsertExpense = async ({
+    hasRefund,
+    ...restValue
+  }: FormValue) => {
+    let payload: UpsertExpensePayload = restValue
+
+    if (!hasRefund) {
+      payload.refund = null
+    }
+
+    if (payload.refund && !payload.refund.refundedAt) {
+      payload.refund.refundedAt = restValue.spentAt
+    }
+
     await onUpsertExpense({
       variables: {
-        payload: value,
+        payload,
       },
     })
 
@@ -50,25 +69,59 @@ export const UpsertExpenseForm: React.VoidFunctionComponent<UpsertExpenseFormPro
     return onClose()
   }
 
+  const initialValues = React.useMemo<FormValue | undefined>(() => {
+    if (!rawInitialValues) {
+      return undefined
+    }
+
+    return { ...rawInitialValues, hasRefund: !!rawInitialValues.refund }
+  }, [rawInitialValues])
+
+  const keyboardSubmitDecorator = useFormKeyboardSubmitDecorator()
+
   return (
-    <Form<UpsertExpensePayload>
+    <Form<FormValue>
       onSubmit={handleUpsertExpense}
       initialValues={initialValues}
-      render={({ handleSubmit, pristine, hasValidationErrors, submitting }) => (
+      decorators={[keyboardSubmitDecorator]}
+      render={({
+        handleSubmit,
+        pristine,
+        hasValidationErrors,
+        submitting,
+        values,
+      }) => (
         <form onSubmit={handleSubmit}>
-          <SelectExpenseCategory
-            filterable
-            name="categoryId"
-            label="Catégorie"
-            required
-          />
-          <TextInput name="description" label="Description" />
-          <NumberInput name="value" label="Montant" required />
-          <DatePickerSingle
-            name="spentAt"
-            label="Date de la dépense"
-            required
-          />
+          <UpsertExpenseFormSubGrid>
+            <SelectExpenseCategory
+              filterable
+              name="expenseCategoryId"
+              label="Catégorie"
+              required
+            />
+            <TextInput name="description" label="Description" />
+            <NumberInput name="value" label="Montant" required />
+            <DatePickerSingle
+              name="spentAt"
+              label="Date de la dépense"
+              required
+            />
+          </UpsertExpenseFormSubGrid>
+          <RefundToggleContainer>
+            <Toggle name="hasRefund" label="Appliquer un remboursement" />
+          </RefundToggleContainer>
+          {values.hasRefund && (
+            <UpsertExpenseFormSubGrid>
+              <SelectEarningCategory
+                filterable
+                name="refund.earningCategoryId"
+                label="Catégorie"
+                required
+              />
+              <NumberInput name="refund.value" label="Montant" required />
+              <TextInput name="refund.description" label="Description" />
+            </UpsertExpenseFormSubGrid>
+          )}
           <ActionBar>
             <Button ghost error onClick={onClose}>
               Annuler
@@ -84,6 +137,10 @@ export const UpsertExpenseForm: React.VoidFunctionComponent<UpsertExpenseFormPro
       )}
     />
   )
+}
+
+type FormValue = UpsertExpensePayload & {
+  hasRefund?: boolean
 }
 
 interface UpsertExpenseFormProps {
