@@ -10,7 +10,7 @@ import {
 } from '@habx/ui-core'
 
 export const DatePickerFakeInput = styled.div`
-  ${inputStyle}
+  ${inputStyle};
 
   position: relative;
   color: ${theme.textColor()};
@@ -24,6 +24,11 @@ export const DatePickerFakeInput = styled.div`
 export const DatePickerPanelContainer = styled(Layout)`
   box-shadow: ${theme.shadow()};
   border-radius: 4px;
+
+  --layout-left-padding: 36px;
+  --layout-right-padding: 36px;
+  --layout-top-padding: 24px;
+  --layout-bottom-padding: 24px;
 `
 
 export const DatePickerMonthsContainer = styled.div`

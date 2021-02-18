@@ -1,10 +1,9 @@
-import { format } from 'date-fns'
 import { pick } from 'lodash'
 import * as React from 'react'
-import { Renderer, useSortBy, usePagination } from 'react-table'
+import { useSortBy, usePagination, useFilters } from 'react-table'
 
 import { Modal } from '@habx/ui-core'
-import { CellProps, Column, Row, Table, useTable } from '@habx/ui-table'
+import { Row, Table, useTable } from '@habx/ui-table'
 
 import { UpsertExpensePayload } from '@globalTypes/api'
 import { ExpenseBasicInformation } from '@hooks/useExpenses'
@@ -12,58 +11,8 @@ import { ExpenseBasicInformation } from '@hooks/useExpenses'
 import { ExpensesHeaderBars } from '../ExpensesHeaderBars'
 import { UpsertExpenseForm } from '../UpsertExpenseForm'
 
+import { useColumns } from './ExpensesTable.columns'
 import { ExpensesTableContent } from './ExpensesTable.style'
-
-const COLUMNS: Column<ExpenseBasicInformation>[] = [
-  {
-    Header: 'Date',
-    accessor: 'spentAt',
-    Cell: (({ cell }) =>
-      format(new Date(cell.value), 'yyyy-MM-dd')) as Renderer<
-      CellProps<ExpenseBasicInformation, string>
-    >,
-  },
-  {
-    Header: 'Catégorie',
-    id: 'expenseCategory',
-    accessor: (el) => el.expenseCategory,
-    Cell: (({ cell }) =>
-      `${cell.value.expenseCategoryGroup.name} - ${cell.value.name}`) as Renderer<
-      CellProps<
-        ExpenseBasicInformation,
-        ExpenseBasicInformation['expenseCategory']
-      >
-    >,
-  },
-  {
-    Header: 'Montant',
-    accessor: 'value',
-    Cell: (({ cell }) => `${cell.value}€`) as Renderer<
-      CellProps<ExpenseBasicInformation, number>
-    >,
-  },
-  {
-    Header: 'Description',
-    accessor: 'description',
-  },
-  {
-    Header: 'Remboursement',
-    accessor: 'refund',
-    Cell: (({ cell }) => {
-      const refund = cell.value
-
-      if (!refund) {
-        return null
-      }
-
-      return `${refund.value} €${
-        refund.description ? ` (${refund.description})` : ''
-      }`
-    }) as Renderer<
-      CellProps<ExpenseBasicInformation, ExpenseBasicInformation['refund']>
-    >,
-  },
-]
 
 const getRowCharacteristics = () => ({
   isInteractive: true,
@@ -78,15 +27,18 @@ export const ExpensesTable: React.VoidFunctionComponent<ExpensesTableProps> = ({
     setSelectedExpense,
   ] = React.useState<ExpenseBasicInformation | null>(null)
 
+  const columns = useColumns()
+
   const tableInstance = useTable(
     {
-      data,
-      columns: COLUMNS,
+      data: data ?? [],
+      columns,
       initialState: {
         sortBy: [{ id: 'spentAt', desc: true }],
         pageSize: 20,
       },
     },
+    useFilters,
     useSortBy,
     usePagination
   )

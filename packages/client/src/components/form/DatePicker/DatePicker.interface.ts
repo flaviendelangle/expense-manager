@@ -3,6 +3,7 @@ import {
   useDatepicker,
   UseDatepickerProps,
 } from '@datepicker-react/hooks'
+import * as React from 'react'
 
 import { WithLabel } from '@habx/ui-core'
 

@@ -1,6 +1,6 @@
 import { ClassType, Field, InputType, Int, ObjectType } from 'type-graphql'
 
-interface Paginated<TItem> {
+export interface Paginated<TItem> {
   total: number
   nodes: TItem[]
 }
@@ -11,7 +11,7 @@ abstract class BasePaginatedClass<TItem> implements Paginated<TItem> {
   total: number
 }
 
-function PaginatedClass<TItem>(TItemClass: ClassType<TItem>) {
+export const PaginatedClass = <TItem>(TItemClass: ClassType<TItem>) => {
   // `isAbstract` decorator option is mandatory to prevent registering in schema
   @ObjectType({ isAbstract: true })
   abstract class CustomPaginatedClass extends BasePaginatedClass<TItem> {
@@ -25,7 +25,7 @@ function PaginatedClass<TItem>(TItemClass: ClassType<TItem>) {
 }
 
 @InputType()
-class OrderOptions {
+export class OrderOptions {
   @Field({ nullable: true })
   field: string
   @Field({ nullable: true })
@@ -33,11 +33,9 @@ class OrderOptions {
 }
 
 @InputType()
-class PaginationOptions {
+export class PaginationOptions {
   @Field((_) => Int)
   limit: number
   @Field((_) => Int)
   offset: number
 }
-
-export { PaginationOptions, OrderOptions, Paginated, PaginatedClass }
