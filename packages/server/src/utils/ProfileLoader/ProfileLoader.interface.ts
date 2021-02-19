@@ -1,3 +1,5 @@
+import { InsertUserPayload } from '../../models/user'
+
 export type ParametricValue = number | { min: number; max: number }
 
 export type Refund = {
@@ -41,4 +43,5 @@ export interface Profile {
   recurrentExpenses?: RecurrentExpense[]
   monthlyExpenses?: MonthlyExpense[]
   monthlyEarnings?: MonthlyEarning[]
+  users?: InsertUserPayload[]
 }

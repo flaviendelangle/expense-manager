@@ -351,5 +351,11 @@
       "value": 160,
       "date": 11
     }
+  ],
+  "users": [
+    {
+      "email": "test@test.com",
+      "password": "very-strong-password"
+    }
   ]
 }

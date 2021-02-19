@@ -9,7 +9,7 @@ import { RefundModel } from '../models/refund'
 export class DataLoaderService {
   public ctx: RequestContext
 
-  constructor(ctx: RequestContext = {}) {
+  constructor(ctx: RequestContext) {
     this.ctx = ctx
   }
 

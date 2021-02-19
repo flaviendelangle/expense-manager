@@ -1,6 +1,7 @@
 import * as Knex from 'knex'
 
 const TABLES = {
+  USERS: 'users',
   EXPENSE_CATEGORY_GROUPS: 'expense_category_groups',
   EXPENSE_CATEGORIES: 'expense_categories',
   EXPENSES: 'expenses',
@@ -10,6 +11,19 @@ const TABLES = {
 }
 
 export const up = async (knex: Knex) => {
+  await knex.schema.createTable(TABLES.USERS, (t) => {
+    t.increments()
+
+    t.string('email').notNullable()
+
+    t.string('password').notNullable()
+
+    t.timestamp('created_at').notNullable().defaultTo(knex.fn.now())
+    t.timestamp('updated_at').notNullable().defaultTo(knex.fn.now())
+
+    t.unique(['email'])
+  })
+
   await knex.schema.createTable(TABLES.EXPENSE_CATEGORY_GROUPS, (t) => {
     t.increments()
 

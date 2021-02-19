@@ -14,6 +14,7 @@ import { Model } from 'objection'
 
 import knexFile from '../../../knexfile'
 import { UpsertRefundPayload } from '../../models/refund'
+import { UserModel } from '../../models/user'
 
 import { DataLoaderManager } from './DataLoaders'
 import { ParametricValue, Profile, Refund } from './ProfileLoader.interface'
@@ -90,6 +91,10 @@ export class ProfileLoader {
   }
 
   public load = async () => {
+    for (const user of this.profile.users ?? []) {
+      await UserModel.insertReference(user)
+    }
+
     const t = new Date().getTime()
     for (let month = 0; month < this.monthAmount; month++) {
       for (const monthlyExpense of this.profile.monthlyExpenses ?? []) {

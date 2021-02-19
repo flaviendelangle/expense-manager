@@ -12,7 +12,7 @@ import {
 @ObjectType('BaseModel')
 export class BaseModel extends Model {
   static async findByIds<M extends BaseModel>(
-    ctx: RequestContext = {},
+    ctx: RequestContext,
     ids: number[]
   ): Promise<M[]> {
     return this.findBy(ctx, 'id', ids)

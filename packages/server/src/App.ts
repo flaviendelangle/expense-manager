@@ -1,8 +1,11 @@
 import cors from '@koa/cors'
 import { ApolloServer } from 'apollo-server-koa'
 import { Server } from 'http'
+import jsonwebtoken from 'jsonwebtoken'
 import Knex from 'knex'
-import Koa from 'koa'
+import Koa, { Context } from 'koa'
+import bodyParser from 'koa-bodyparser'
+import jwt from 'koa-jwt'
 import { Model } from 'objection'
 
 import knexFile from '../knexfile'
@@ -40,8 +43,21 @@ export class App {
         },
         endpoint: '/graphql',
       },
-      context: () => {
-        const c: RequestContext = {}
+      context: ({ ctx }: { ctx: Context }) => {
+        const c: RequestContext = {
+          setJWT: async (userId) => {
+            const token = await jsonwebtoken.sign(
+              {
+                id: userId,
+              },
+              'TEMP_SECRET',
+              { expiresIn: '7d' }
+            )
+
+            ctx.cookies.set('token', token, { httpOnly: true })
+          },
+          userId: ctx.state.user?.id ?? null,
+        }
 
         c.loaders = Object.freeze(new DataLoaderService(c))
 
@@ -52,6 +68,16 @@ export class App {
     this.koa = new Koa()
 
     this.koa.use(cors(this.corsOptions))
+
+    this.koa.use(bodyParser())
+
+    this.koa.use(
+      jwt({
+        secret: 'TEMP_SECRET',
+        passthrough: true,
+        getToken: (req) => req.cookies.get('token'),
+      })
+    )
 
     const knex = Knex(knexFile)
 
