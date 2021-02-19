@@ -1,5 +1,6 @@
 import { Transaction } from 'knex'
 
+import { UserModel } from '../models/user'
 import { DataLoaderService } from '../utils/DataLoaderService'
 
 export type UserJWTProfile = {
@@ -9,7 +10,7 @@ export type UserJWTProfile = {
 export type RequestContext = {
   trx?: Transaction
   loaders?: DataLoaderService
-  setJWT: (userId: string | number) => Promise<void>
+  setJWT: (userId: UserModel) => Promise<void>
   removeJWT: () => void
   user: UserJWTProfile | null
 }

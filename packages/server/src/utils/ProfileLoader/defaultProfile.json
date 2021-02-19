@@ -1,6 +1,7 @@
 {
   "users": [
     {
+      "isAdmin": true,
       "credentials": {
         "email": "test@test.com",
         "password": "very-strong-password"

@@ -45,10 +45,11 @@ export class App {
       },
       context: ({ ctx }: { ctx: Context }) => {
         const c: RequestContext = {
-          setJWT: async (userId) => {
+          setJWT: async (user) => {
             const token = await jsonwebtoken.sign(
               {
-                id: userId,
+                id: user.id,
+                isAdmin: user.isAdmin,
               },
               'TEMP_SECRET',
               { expiresIn: '7d' }

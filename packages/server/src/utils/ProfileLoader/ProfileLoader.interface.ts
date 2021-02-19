@@ -41,6 +41,7 @@ type MonthlyEarning = {
 
 interface UserProfile {
   credentials: InsertUserPayload
+  isAdmin?: boolean
   recurrentExpenses?: RecurrentExpense[]
   monthlyExpenses?: MonthlyExpense[]
   monthlyEarnings?: MonthlyEarning[]

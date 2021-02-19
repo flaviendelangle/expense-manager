@@ -4,7 +4,8 @@
   "scripts": {
     "start:dev": "nodemon --watch 'src/**/*' -e ts,tsx,json --exec ts-node src/index.ts",
     "migrate:dev": "DEBUG=knex:* knex migrate:latest --knexfile knexfile.ts",
-    "load-profile:default": "rimraf ./data/db.db3 && npm run migrate:dev && ts-node ./src/utils/ProfileLoader/index.ts"
+    "load-profile:default": "npm run reset && ts-node ./src/utils/ProfileLoader/index.ts",
+    "reset": "rimraf ./data/db.db3 && npm run migrate:dev"
   },
   "dependencies": {
     "@koa/cors": "^3.1.0",

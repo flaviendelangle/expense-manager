@@ -16,24 +16,6 @@ import { RefundModel } from '../../models/refund'
 
 @Resolver(RefundModel)
 export class RefundFieldsResolver {
-  @Query((returns) => [RefundModel!])
-  async refunds(
-    @Ctx()
-    ctx: RequestContext
-  ) {
-    return RefundModel.query(ctx.trx).context({ ctx })
-  }
-
-  @Query((returns) => RefundModel, { nullable: true })
-  async refund(
-    @Ctx()
-    ctx: RequestContext,
-    @Arg('id', (type) => ID)
-    id: string
-  ) {
-    return RefundModel.query(ctx.trx).where('id', id).first()
-  }
-
   @FieldResolver((type) => DateTimeResolver)
   createdAt(@Root() model: RefundModel, @Ctx() ctx: RequestContext) {
     return new Date(model.createdAt)

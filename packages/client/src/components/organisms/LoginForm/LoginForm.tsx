@@ -10,8 +10,8 @@ import { PasswordInput } from '@components/final-form/PasswordInput'
 import { LoginPayload } from '@globalTypes/api'
 import { updateCurrentUserInCache } from '@hooks/useCurrentUser'
 
-import { loginMutation } from './AuthenticatedPage.query'
-import { LoginFormContainer, LoginFormContent } from './AuthenticatedPage.style'
+import { loginMutation } from './LoginForm.query'
+import { LoginFormContainer, LoginFormContent } from './LoginForm.style'
 import { login, loginVariables } from './types/login'
 
 export const LoginForm: React.VoidFunctionComponent = () => {
@@ -49,13 +49,15 @@ export const LoginForm: React.VoidFunctionComponent = () => {
     <LoginFormContainer>
       <Form
         onSubmit={handleLogin}
-        render={({ handleSubmit }) => (
+        render={({ handleSubmit, hasValidationErrors }) => (
           <LoginFormContent spacing="regular">
             <form onSubmit={handleSubmit}>
               <EmailInput name="email" label="Adresse email" required />
               <PasswordInput name="password" label="Mot de passe" required />
               <ActionBar>
-                <Button type="submit">Me connecter</Button>
+                <Button type="submit" disabled={hasValidationErrors}>
+                  Me connecter
+                </Button>
               </ActionBar>
             </form>
           </LoginFormContent>

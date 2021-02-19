@@ -15,24 +15,6 @@ import { EarningCategoryModel } from '../../models/earningCategory'
 
 @Resolver(EarningModel)
 export class EarningFieldsResolver {
-  @Query((returns) => [EarningModel!])
-  async earnings(
-    @Ctx()
-    ctx: RequestContext
-  ) {
-    return EarningModel.query(ctx.trx).context({ ctx })
-  }
-
-  @Query((returns) => EarningModel, { nullable: true })
-  async earning(
-    @Ctx()
-    ctx: RequestContext,
-    @Arg('id', (type) => ID)
-    id: string
-  ) {
-    return EarningModel.query(ctx.trx).where('id', id).first()
-  }
-
   @FieldResolver((type) => DateTimeResolver)
   createdAt(@Root() model: EarningModel, @Ctx() ctx: RequestContext) {
     return new Date(model.createdAt)

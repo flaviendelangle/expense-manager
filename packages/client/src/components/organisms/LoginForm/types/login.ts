@@ -13,6 +13,7 @@ export interface login_login {
   __typename: "User";
   id: string;
   email: string;
+  isAdmin: boolean;
 }
 
 export interface login {

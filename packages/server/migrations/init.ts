@@ -15,8 +15,8 @@ export const up = async (knex: Knex) => {
     t.increments()
 
     t.string('email').notNullable()
-
     t.string('password').notNullable()
+    t.boolean('is_admin').notNullable()
 
     t.timestamp('created_at').notNullable().defaultTo(knex.fn.now())
     t.timestamp('updated_at').notNullable().defaultTo(knex.fn.now())

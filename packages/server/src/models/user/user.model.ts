@@ -47,12 +47,16 @@ export class UserModel extends BaseModel {
     return user
   }
 
-  static async insertReference(payload: InsertUserPayload, trx?: Transaction) {
+  static async insertReference(
+    payload: InsertUserPayload,
+    isAdmin: boolean,
+    trx?: Transaction
+  ) {
     const cleanPayload = pick(payload, UserModel.INSERT_FIELDS)
 
     cleanPayload.password = await hashPassword(cleanPayload.password)
 
-    return this.query(trx).insertAndFetch(cleanPayload)
+    return this.query(trx).insertAndFetch({ ...cleanPayload, isAdmin })
   }
 
   static readonly INSERT_FIELDS: (keyof UserModel)[] = ['email', 'password']
@@ -63,4 +67,7 @@ export class UserModel extends BaseModel {
   email: string
 
   password: string
+
+  @Field((type) => Boolean)
+  isAdmin: boolean
 }

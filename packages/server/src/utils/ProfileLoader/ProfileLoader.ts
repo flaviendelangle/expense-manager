@@ -96,7 +96,10 @@ export class ProfileLoader {
     const t = new Date().getTime()
 
     for (const userProfile of this.profile.users ?? []) {
-      const user = await UserModel.insertReference(userProfile.credentials)
+      const user = await UserModel.insertReference(
+        userProfile.credentials,
+        userProfile.isAdmin ?? false
+      )
 
       for (let month = 0; month < this.monthAmount; month++) {
         for (const monthlyExpense of userProfile.monthlyExpenses ?? []) {

@@ -11,6 +11,7 @@ export interface currentUser_me {
   __typename: "User";
   id: string;
   email: string;
+  isAdmin: boolean;
 }
 
 export interface currentUser {

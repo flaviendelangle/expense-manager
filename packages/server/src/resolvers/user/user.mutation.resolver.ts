@@ -14,7 +14,7 @@ export class UserMutationResolver {
   ) {
     const user = await UserModel.checkCredentials(payload, ctx.trx)
 
-    await ctx.setJWT(user.id)
+    await ctx.setJWT(user)
 
     return user
   }

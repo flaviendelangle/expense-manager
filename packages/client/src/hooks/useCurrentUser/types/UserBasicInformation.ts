@@ -11,4 +11,5 @@ export interface UserBasicInformation {
   __typename: "User";
   id: string;
   email: string;
+  isAdmin: boolean;
 }

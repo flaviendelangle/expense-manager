@@ -11,7 +11,7 @@ import {
 
 import { NavBarLink } from '@components/atoms/NavBarLink'
 
-import { updateCurrentUserInCache } from '@hooks/useCurrentUser'
+import { updateCurrentUserInCache, useCurrentUser } from '@hooks/useCurrentUser'
 import { useThemePreset } from '@hooks/useThemePreset'
 
 import { logoutMutation } from './NavBar.query'
@@ -19,6 +19,9 @@ import { logout } from './types/logout'
 
 export const NavBar: React.VoidFunctionComponent = () => {
   const [themePreset, setThemePreset] = useThemePreset()
+
+  const currentUser = useCurrentUser()
+
   const [onLogout] = useMutation<logout, {}>(logoutMutation, {
     update: (cache) => updateCurrentUserInCache(cache, null),
   })
@@ -45,6 +48,14 @@ export const NavBar: React.VoidFunctionComponent = () => {
           />
         }
       />
+      {currentUser.data?.isAdmin && (
+        <NavBarLink
+          bottom
+          icon={<Icon icon="wrench" />}
+          label="Administration"
+          to="/admin"
+        />
+      )}
       <NavBarItem
         bottom
         label="Me déconnecter"
