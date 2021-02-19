@@ -3,11 +3,16 @@ import * as React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { Provider as DesignSystemProvider, ThemeProvider } from '@habx/ui-core'
+import {
+  EuclidFont,
+  Provider as DesignSystemProvider,
+  ThemeProvider,
+} from '@habx/ui-core'
 
 import { ThemePresetProvider } from '@hooks/useThemePreset'
 import { Provider as IntlProvider } from '@hooks/useTranslate'
 import { buildApolloClient } from '@lib/api'
+import { GlobalStyle } from '@style/global'
 
 const apolloClient = buildApolloClient()
 
@@ -26,7 +31,11 @@ export const Providers: React.FunctionComponent = ({ children }) => (
         <StyledThemeProvider preset={preset}>
           <DesignSystemProvider>
             <ApolloProvider client={apolloClient}>
-              <BrowserRouter>{children}</BrowserRouter>
+              <BrowserRouter>
+                {children}
+                <GlobalStyle />
+                <EuclidFont />
+              </BrowserRouter>
             </ApolloProvider>
           </DesignSystemProvider>
         </StyledThemeProvider>

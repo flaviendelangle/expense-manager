@@ -7,7 +7,7 @@ import { UserModel } from '../../models/user'
 export class UserQueryResolver {
   @Query((type) => UserModel, { nullable: true })
   async me(@Ctx() ctx: RequestContext) {
-    const userId = ctx.userId
+    const userId = ctx.user?.id
 
     if (!userId) {
       return null

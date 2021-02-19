@@ -3,7 +3,7 @@ import { pick } from 'lodash'
 import { Transaction } from 'objection'
 import { Field, ObjectType, ID } from 'type-graphql'
 
-import { ApolloResourceNotFound } from '../../utils/errors'
+import { ApolloForbidden, ApolloResourceNotFound } from '../../utils/errors'
 import { PaginatedClass } from '../../utils/PaginatedClass'
 import { validateNeededArgs } from '../../utils/validateNeededArgs'
 import { BaseModel } from '../base/BaseModel'
@@ -26,6 +26,7 @@ export class RefundModel extends BaseModel {
   }
 
   static async upsertReference(
+    userId: string | number,
     payload: UpsertRefundPayload,
     trx?: Transaction
   ) {
@@ -34,6 +35,12 @@ export class RefundModel extends BaseModel {
 
       if (!existing) {
         throw new ApolloResourceNotFound({ payload })
+      }
+
+      if (existing.userId !== userId) {
+        throw new ApolloForbidden({
+          message: 'Wrong user',
+        })
       }
 
       return RefundModel.query(trx)
@@ -46,7 +53,7 @@ export class RefundModel extends BaseModel {
       validateNeededArgs(payload, ['earningCategoryId', 'value', 'refundedAt'])
 
       return RefundModel.query(trx)
-        .insertAndFetch(pick(payload, RefundModel.INSERT_FIELDS))
+        .insertAndFetch({ ...pick(payload, RefundModel.INSERT_FIELDS), userId })
         .first()
     }
   }
@@ -79,6 +86,8 @@ export class RefundModel extends BaseModel {
 
   @Field((type) => DateTimeResolver)
   refundedAt: Date
+
+  userId: string | number
 }
 
 @ObjectType('PaginatedRefund')

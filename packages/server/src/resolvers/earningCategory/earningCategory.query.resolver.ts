@@ -1,4 +1,4 @@
-import { Query, Resolver, Ctx, Arg, ID } from 'type-graphql'
+import { Query, Resolver, Ctx, Arg, ID, Authorized } from 'type-graphql'
 
 import { RequestContext } from '../../globalTypes'
 import {
@@ -7,10 +7,12 @@ import {
   EarningCategoryParseFilters,
   PaginatedEarningCategory,
 } from '../../models/earningCategory'
+import { ApolloForbidden } from '../../utils/errors'
 import { OrderOptions, PaginationOptions } from '../../utils/PaginatedClass'
 
 @Resolver(EarningCategoryModel)
 export class EarningCategoryQueryResolver {
+  @Authorized()
   @Query((returns) => PaginatedEarningCategory)
   async earningCategories(
     @Ctx()
@@ -24,12 +26,13 @@ export class EarningCategoryQueryResolver {
   ) {
     const query = EarningCategoryModel.query(ctx.trx)
 
-    new EarningCategoryParseFilters(query, filters).parse()
+    new EarningCategoryParseFilters(ctx.user, query, filters).parse()
     EarningCategoryModel.parseOrder(query, orderBy)
 
     return EarningCategoryModel.paginate(query, paginate)
   }
 
+  @Authorized()
   @Query((returns) => EarningCategoryModel, { nullable: true })
   async earningCategory(
     @Ctx()
@@ -37,6 +40,16 @@ export class EarningCategoryQueryResolver {
     @Arg('id', (type) => ID)
     id: string
   ) {
-    return EarningCategoryModel.query(ctx.trx).where('id', id).first()
+    const earningCategory = await EarningCategoryModel.query(ctx.trx)
+      .where('id', id)
+      .first()
+
+    if (earningCategory && earningCategory.userId !== ctx.user?.id) {
+      throw new ApolloForbidden({
+        message: 'Wrong user',
+      })
+    }
+
+    return earningCategory
   }
 }

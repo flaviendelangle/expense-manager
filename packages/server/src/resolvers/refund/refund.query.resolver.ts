@@ -1,4 +1,4 @@
-import { Query, Resolver, Ctx, Arg, ID } from 'type-graphql'
+import { Query, Resolver, Ctx, Arg, ID, Authorized } from 'type-graphql'
 
 import { RequestContext } from '../../globalTypes'
 import {
@@ -7,10 +7,12 @@ import {
   RefundParseFilters,
   PaginatedRefund,
 } from '../../models/refund'
+import { ApolloForbidden } from '../../utils/errors'
 import { PaginationOptions, OrderOptions } from '../../utils/PaginatedClass'
 
 @Resolver(RefundModel)
 export class RefundQueryResolver {
+  @Authorized()
   @Query((returns) => PaginatedRefund)
   async refunds(
     @Ctx()
@@ -24,12 +26,13 @@ export class RefundQueryResolver {
   ) {
     const query = RefundModel.query(ctx.trx)
 
-    new RefundParseFilters(query, filters).parse()
+    new RefundParseFilters(ctx.user, query, filters).parse()
     RefundModel.parseOrder(query, orderBy)
 
     return RefundModel.paginate(query, paginate)
   }
 
+  @Authorized()
   @Query((returns) => RefundModel, { nullable: true })
   async refund(
     @Ctx()
@@ -37,6 +40,14 @@ export class RefundQueryResolver {
     @Arg('id', (type) => ID)
     id: string
   ) {
-    return RefundModel.query(ctx.trx).where('id', id).first()
+    const refund = await RefundModel.query(ctx.trx).where('id', id).first()
+
+    if (refund && refund.userId !== ctx.user?.id) {
+      throw new ApolloForbidden({
+        message: 'Wrong user',
+      })
+    }
+
+    return refund
   }
 }

@@ -3,6 +3,8 @@ import { map } from 'lodash'
 import { QueryBuilder } from 'objection'
 import { Field, InputType } from 'type-graphql'
 
+import { UserJWTProfile } from '../../globalTypes'
+
 import { BaseModel } from './BaseModel'
 
 @InputType('DateFilter')
@@ -20,8 +22,14 @@ export const filter: MethodDecorator = (target, propertyKey) =>
 export abstract class ParseFilters<M extends BaseModel, Filters extends {}> {
   protected query: QueryBuilder<M>
   protected filters: Filters
+  protected user: UserJWTProfile | null
 
-  constructor(query: QueryBuilder<M>, filters: Filters) {
+  constructor(
+    user: UserJWTProfile | null,
+    query: QueryBuilder<M>,
+    filters: Filters
+  ) {
+    this.user = user
     this.query = query
     this.filters = filters
   }

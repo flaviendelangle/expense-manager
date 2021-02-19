@@ -56,7 +56,8 @@ export class App {
 
             ctx.cookies.set('token', token, { httpOnly: true })
           },
-          userId: ctx.state.user?.id ?? null,
+          removeJWT: async () => ctx.cookies.set('token', undefined),
+          user: ctx.state.user ?? null,
         }
 
         c.loaders = Object.freeze(new DataLoaderService(c))

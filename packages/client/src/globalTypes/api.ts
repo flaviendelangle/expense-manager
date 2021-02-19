@@ -33,6 +33,11 @@ export interface ExpenseFilters {
   spentAt?: DateFilter | null;
 }
 
+export interface LoginPayload {
+  email: string;
+  password: string;
+}
+
 export interface OrderOptions {
   direction?: string | null;
   field?: string | null;

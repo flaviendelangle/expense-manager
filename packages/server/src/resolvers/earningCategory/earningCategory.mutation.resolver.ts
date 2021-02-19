@@ -1,4 +1,4 @@
-import { Resolver, Ctx, Arg, Mutation } from 'type-graphql'
+import { Resolver, Ctx, Arg, Mutation, Authorized } from 'type-graphql'
 
 import { RequestContext } from '../../globalTypes'
 import {
@@ -8,6 +8,7 @@ import {
 
 @Resolver(EarningCategoryModel)
 export class EarningCategoryMutationResolver {
+  @Authorized()
   @Mutation((returns) => EarningCategoryModel)
   async upsertEarningCategory(
     @Ctx()
@@ -15,6 +16,10 @@ export class EarningCategoryMutationResolver {
     @Arg('payload', (type) => UpsertEarningCategoryPayload)
     payload: UpsertEarningCategoryPayload
   ) {
-    return EarningCategoryModel.upsertReference(payload, ctx.trx)
+    return EarningCategoryModel.upsertReference(
+      ctx.user?.id as string | number,
+      payload,
+      ctx.trx
+    )
   }
 }

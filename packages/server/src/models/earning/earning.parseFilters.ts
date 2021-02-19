@@ -1,3 +1,4 @@
+import { ApolloForbidden } from '../../utils/errors'
 import { filter, ParseFilters } from '../base/ParseFilters'
 
 import { EarningModel } from './earning.model'
@@ -7,6 +8,17 @@ export class EarningParseFilters extends ParseFilters<
   EarningModel,
   EarningFilters
 > {
+  @filter
+  userId() {
+    if (!this.user?.id) {
+      throw new ApolloForbidden({
+        message: 'No user',
+      })
+    }
+
+    this.query.where('userId', this.user.id)
+  }
+
   @filter
   ids() {
     const ids = this.filters?.ids

@@ -1,4 +1,4 @@
-import { Query, Resolver, Ctx, Arg, ID } from 'type-graphql'
+import { Query, Resolver, Ctx, Arg, ID, Authorized } from 'type-graphql'
 
 import { RequestContext } from '../../globalTypes'
 import {
@@ -7,10 +7,12 @@ import {
   PaginatedExpenseCategoryGroup,
   ExpenseCategoryGroupFilters,
 } from '../../models/expenseCategoryGroup'
+import { ApolloForbidden } from '../../utils/errors'
 import { OrderOptions, PaginationOptions } from '../../utils/PaginatedClass'
 
 @Resolver(ExpenseCategoryGroupModel)
 export class ExpenseCategoryGroupQueryResolver {
+  @Authorized()
   @Query((returns) => PaginatedExpenseCategoryGroup)
   async expenseCategoryGroups(
     @Ctx()
@@ -24,12 +26,13 @@ export class ExpenseCategoryGroupQueryResolver {
   ) {
     const query = ExpenseCategoryGroupModel.query(ctx.trx)
 
-    new ExpenseCategoryGroupParseFilters(query, filters).parse()
+    new ExpenseCategoryGroupParseFilters(ctx.user, query, filters).parse()
     ExpenseCategoryGroupModel.parseOrder(query, orderBy)
 
     return ExpenseCategoryGroupModel.paginate(query, paginate)
   }
 
+  @Authorized()
   @Query((returns) => ExpenseCategoryGroupModel, { nullable: true })
   async expenseCategoryGroup(
     @Ctx()
@@ -37,6 +40,16 @@ export class ExpenseCategoryGroupQueryResolver {
     @Arg('id', (type) => ID)
     id: string
   ) {
-    return ExpenseCategoryGroupModel.query(ctx.trx).where('id', id).first()
+    const expenseCategoryGroup = await ExpenseCategoryGroupModel.query(ctx.trx)
+      .where('id', id)
+      .first()
+
+    if (expenseCategoryGroup && expenseCategoryGroup.userId !== ctx.user?.id) {
+      throw new ApolloForbidden({
+        message: 'Wrong user',
+      })
+    }
+
+    return expenseCategoryGroup
   }
 }

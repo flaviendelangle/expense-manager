@@ -1,13 +1,33 @@
+import { useMutation } from '@apollo/client'
 import * as React from 'react'
 
-import { Icon, NavBar as BaseNavBar, NavBarItem, palette } from '@habx/ui-core'
+import {
+  Icon,
+  NavBar as BaseNavBar,
+  NavBarItem,
+  notify,
+  palette,
+} from '@habx/ui-core'
 
 import { NavBarLink } from '@components/atoms/NavBarLink'
 
+import { updateCurrentUserInCache } from '@hooks/useCurrentUser'
 import { useThemePreset } from '@hooks/useThemePreset'
+
+import { logoutMutation } from './NavBar.query'
+import { logout } from './types/logout'
 
 export const NavBar: React.VoidFunctionComponent = () => {
   const [themePreset, setThemePreset] = useThemePreset()
+  const [onLogout] = useMutation<logout, {}>(logoutMutation, {
+    update: (cache) => updateCurrentUserInCache(cache, null),
+  })
+
+  const handleLogout = async () => {
+    await onLogout()
+
+    notify('Vous êtes maintenant déconnecté')
+  }
 
   return (
     <BaseNavBar backgroundColor={palette.purpleDawn[900]} title="Mes dépenses">
@@ -24,6 +44,12 @@ export const NavBar: React.VoidFunctionComponent = () => {
             icon={themePreset === 'dark' ? 'magicstick-outline' : 'magicstick'}
           />
         }
+      />
+      <NavBarItem
+        bottom
+        label="Me déconnecter"
+        icon={<Icon icon="to-east" />}
+        onClick={handleLogout}
       />
     </BaseNavBar>
   )

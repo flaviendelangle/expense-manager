@@ -3,7 +3,7 @@ import { pick } from 'lodash'
 import { Transaction } from 'objection'
 import { Field, ObjectType, ID } from 'type-graphql'
 
-import { ApolloResourceNotFound } from '../../utils/errors'
+import { ApolloForbidden, ApolloResourceNotFound } from '../../utils/errors'
 import { PaginatedClass } from '../../utils/PaginatedClass'
 import { validateNeededArgs } from '../../utils/validateNeededArgs'
 import { BaseModel } from '../base/BaseModel'
@@ -28,16 +28,23 @@ export class ExpenseModel extends BaseModel {
   }
 
   static async upsertReference(
+    userId: string | number,
     payload: UpsertExpensePayload,
     trx?: Transaction
   ) {
-    let cleanPayload: UpsertExpensePayload
+    let cleanPayload: any
 
     if (payload.id) {
       const existing = await ExpenseModel.getReference(payload.id, trx)
 
       if (!existing) {
         throw new ApolloResourceNotFound({ payload })
+      }
+
+      if (existing.userId !== userId) {
+        throw new ApolloForbidden({
+          message: 'Wrong user',
+        })
       }
 
       cleanPayload = pick(payload, ExpenseModel.UPDATE_FIELDS)
@@ -47,13 +54,20 @@ export class ExpenseModel extends BaseModel {
       cleanPayload = pick(payload, ExpenseModel.INSERT_FIELDS)
     }
 
+    if (cleanPayload.refund && !cleanPayload.refund.id) {
+      cleanPayload.refund.userId = userId
+    }
+
     return ExpenseModel.query(trx)
-      .upsertGraphAndFetch(cleanPayload, {
-        insertMissing: true,
-        noDelete: false,
-        relate: true,
-        unrelate: true,
-      })
+      .upsertGraphAndFetch(
+        { ...cleanPayload, userId },
+        {
+          insertMissing: true,
+          noDelete: false,
+          relate: true,
+          unrelate: true,
+        }
+      )
       .first()
   }
 
@@ -94,6 +108,8 @@ export class ExpenseModel extends BaseModel {
 
   @Field((type) => DateTimeResolver)
   spentAt: Date
+
+  userId: string | number
 }
 
 @ObjectType('PaginatedExpense')

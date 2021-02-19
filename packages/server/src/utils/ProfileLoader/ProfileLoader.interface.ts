@@ -39,9 +39,13 @@ type MonthlyEarning = {
   date: number
 }
 
-export interface Profile {
+interface UserProfile {
+  credentials: InsertUserPayload
   recurrentExpenses?: RecurrentExpense[]
   monthlyExpenses?: MonthlyExpense[]
   monthlyEarnings?: MonthlyEarning[]
-  users?: InsertUserPayload[]
+}
+
+export interface Profile {
+  users?: UserProfile[]
 }

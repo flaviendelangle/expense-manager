@@ -3,7 +3,7 @@ import { pick } from 'lodash'
 import { Transaction } from 'objection'
 import { Field, ObjectType, ID } from 'type-graphql'
 
-import { ApolloResourceNotFound } from '../../utils/errors'
+import { ApolloForbidden, ApolloResourceNotFound } from '../../utils/errors'
 import { PaginatedClass } from '../../utils/PaginatedClass'
 import { validateNeededArgs } from '../../utils/validateNeededArgs'
 import { BaseModel } from '../base/BaseModel'
@@ -25,6 +25,7 @@ export class EarningModel extends BaseModel {
   }
 
   static async upsertReference(
+    userId: string | number,
     payload: UpsertEarningPayload,
     trx?: Transaction
   ) {
@@ -33,6 +34,12 @@ export class EarningModel extends BaseModel {
 
       if (!existing) {
         throw new ApolloResourceNotFound({ payload })
+      }
+
+      if (existing.userId !== userId) {
+        throw new ApolloForbidden({
+          message: 'Wrong user',
+        })
       }
 
       return EarningModel.query(trx)
@@ -45,7 +52,10 @@ export class EarningModel extends BaseModel {
       validateNeededArgs(payload, ['earningCategoryId', 'value', 'earnedAt'])
 
       return EarningModel.query(trx)
-        .insertAndFetch(pick(payload, EarningModel.INSERT_FIELDS))
+        .insertAndFetch({
+          ...pick(payload, EarningModel.INSERT_FIELDS),
+          userId,
+        })
         .first()
     }
   }
@@ -75,6 +85,8 @@ export class EarningModel extends BaseModel {
 
   @Field((type) => DateTimeResolver)
   earnedAt: Date
+
+  userId: string | number
 }
 
 @ObjectType('PaginatedEarning')

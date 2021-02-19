@@ -2,7 +2,7 @@ import { pick } from 'lodash'
 import { Transaction } from 'objection'
 import { Field, ObjectType } from 'type-graphql'
 
-import { ApolloForbidden } from '../../utils/errors'
+import { ApolloForbidden, ApolloResourceNotFound } from '../../utils/errors'
 import { checkPassword, hashPassword } from '../../utils/hashPassword'
 import { BaseModel } from '../base/BaseModel'
 
@@ -28,8 +28,8 @@ export class UserModel extends BaseModel {
       .first()
 
     if (!user) {
-      throw new ApolloForbidden({
-        message: 'Wrong credentials',
+      throw new ApolloResourceNotFound({
+        message: 'Wrong email',
       })
     }
 
@@ -40,7 +40,7 @@ export class UserModel extends BaseModel {
 
     if (!isPasswordCorrect) {
       throw new ApolloForbidden({
-        message: 'Wrong credentials',
+        message: 'Wrong password',
       })
     }
 

@@ -1,4 +1,4 @@
-import { Resolver, Ctx, Arg, Mutation } from 'type-graphql'
+import { Resolver, Ctx, Arg, Mutation, Authorized } from 'type-graphql'
 
 import { RequestContext } from '../../globalTypes'
 import {
@@ -8,6 +8,7 @@ import {
 
 @Resolver(ExpenseCategoryGroupModel)
 export class ExpenseCategoryGroupMutationResolver {
+  @Authorized()
   @Mutation((returns) => ExpenseCategoryGroupModel)
   async upsertExpenseCategoryGroup(
     @Ctx()
@@ -15,6 +16,10 @@ export class ExpenseCategoryGroupMutationResolver {
     @Arg('payload', (type) => UpsertExpenseCategoryGroupPayload)
     payload: UpsertExpenseCategoryGroupPayload
   ) {
-    return ExpenseCategoryGroupModel.upsertReference(payload, ctx.trx)
+    return ExpenseCategoryGroupModel.upsertReference(
+      ctx.user?.id as string | number,
+      payload,
+      ctx.trx
+    )
   }
 }

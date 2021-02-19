@@ -1,10 +1,11 @@
-import { Resolver, Ctx, Arg, Mutation } from 'type-graphql'
+import { Resolver, Ctx, Arg, Mutation, Authorized } from 'type-graphql'
 
 import { RequestContext } from '../../globalTypes'
 import { EarningModel, UpsertEarningPayload } from '../../models/earning'
 
 @Resolver(EarningModel)
 export class EarningMutationResolver {
+  @Authorized()
   @Mutation((returns) => EarningModel)
   async upsertEarning(
     @Ctx()
@@ -12,6 +13,10 @@ export class EarningMutationResolver {
     @Arg('payload', (type) => UpsertEarningPayload)
     payload: UpsertEarningPayload
   ) {
-    return EarningModel.upsertReference(payload, ctx.trx)
+    return EarningModel.upsertReference(
+      ctx.user?.id as string | number,
+      payload,
+      ctx.trx
+    )
   }
 }

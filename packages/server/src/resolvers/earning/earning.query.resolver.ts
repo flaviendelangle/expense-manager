@@ -1,4 +1,4 @@
-import { Query, Resolver, Ctx, Arg, ID } from 'type-graphql'
+import { Query, Resolver, Ctx, Arg, ID, Authorized } from 'type-graphql'
 
 import { RequestContext } from '../../globalTypes'
 import {
@@ -7,10 +7,12 @@ import {
   EarningParseFilters,
   PaginatedEarning,
 } from '../../models/earning'
+import { ApolloForbidden } from '../../utils/errors'
 import { PaginationOptions, OrderOptions } from '../../utils/PaginatedClass'
 
 @Resolver(EarningModel)
 export class EarningQueryResolver {
+  @Authorized()
   @Query((returns) => PaginatedEarning)
   async earnings(
     @Ctx()
@@ -24,12 +26,13 @@ export class EarningQueryResolver {
   ) {
     const query = EarningModel.query(ctx.trx)
 
-    new EarningParseFilters(query, filters).parse()
+    new EarningParseFilters(ctx.user, query, filters).parse()
     EarningModel.parseOrder(query, orderBy)
 
     return EarningModel.paginate(query, paginate)
   }
 
+  @Authorized()
   @Query((returns) => EarningModel, { nullable: true })
   async earning(
     @Ctx()
@@ -37,6 +40,14 @@ export class EarningQueryResolver {
     @Arg('id', (type) => ID)
     id: string
   ) {
-    return EarningModel.query(ctx.trx).where('id', id).first()
+    const earning = await EarningModel.query(ctx.trx).where('id', id).first()
+
+    if (earning && earning.userId !== ctx.user?.id) {
+      throw new ApolloForbidden({
+        message: 'Wrong user',
+      })
+    }
+
+    return earning
   }
 }

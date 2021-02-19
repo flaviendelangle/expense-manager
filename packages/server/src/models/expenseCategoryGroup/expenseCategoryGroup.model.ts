@@ -2,7 +2,7 @@ import { pick } from 'lodash'
 import { Transaction } from 'objection'
 import { Field, ObjectType } from 'type-graphql'
 
-import { ApolloResourceNotFound } from '../../utils/errors'
+import { ApolloForbidden, ApolloResourceNotFound } from '../../utils/errors'
 import { PaginatedClass } from '../../utils/PaginatedClass'
 import { validateNeededArgs } from '../../utils/validateNeededArgs'
 import { BaseModel } from '../base/BaseModel'
@@ -24,6 +24,7 @@ export class ExpenseCategoryGroupModel extends BaseModel {
   }
 
   static async upsertReference(
+    userId: string | number,
     payload: UpsertExpenseCategoryGroupPayload,
     trx?: Transaction
   ) {
@@ -37,6 +38,12 @@ export class ExpenseCategoryGroupModel extends BaseModel {
         throw new ApolloResourceNotFound({ payload })
       }
 
+      if (existing.userId !== userId) {
+        throw new ApolloForbidden({
+          message: 'Wrong user',
+        })
+      }
+
       return ExpenseCategoryGroupModel.query(trx)
         .updateAndFetchById(
           payload.id,
@@ -46,9 +53,10 @@ export class ExpenseCategoryGroupModel extends BaseModel {
     } else {
       validateNeededArgs(payload, ['name'])
 
-      return ExpenseCategoryGroupModel.query(trx).insertAndFetch(
-        pick(payload, ExpenseCategoryGroupModel.INSERT_FIELDS)
-      )
+      return ExpenseCategoryGroupModel.query(trx).insertAndFetch({
+        ...pick(payload, ExpenseCategoryGroupModel.INSERT_FIELDS),
+        userId,
+      })
     }
   }
 
@@ -67,6 +75,8 @@ export class ExpenseCategoryGroupModel extends BaseModel {
 
   @Field((type) => String, { nullable: true })
   description?: string
+
+  userId: string | number
 }
 
 @ObjectType('PaginatedExpenseCategoryGroup')

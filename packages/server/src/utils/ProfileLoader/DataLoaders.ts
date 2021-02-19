@@ -10,21 +10,24 @@ abstract class BaseDataLoader<Input> {
   private readonly cache = new Map<string, string | number>()
   protected readonly manager: DataLoaderManager
 
-  protected create: (input: Input) => Promise<string | number>
+  protected create: (
+    userId: string | number,
+    input: Input
+  ) => Promise<string | number>
 
   constructor(manager: DataLoaderManager) {
     this.manager = manager
   }
 
-  public load = async (input: Input) => {
-    const hash = md5(JSON.stringify(input))
+  public load = async (userId: string | number, input: Input) => {
+    const hash = md5(JSON.stringify({ userId, input }))
     const idFromCache = this.cache.get(hash)
 
     if (idFromCache) {
       return idFromCache
     }
 
-    const idFromCreation = await this.create(input)
+    const idFromCreation = await this.create(userId, input)
     this.cache.set(hash, idFromCreation)
 
     return idFromCreation
@@ -32,8 +35,8 @@ abstract class BaseDataLoader<Input> {
 }
 
 class ExpenseCategoryGroupDataLoader extends BaseDataLoader<string> {
-  create = async (categoryGroupName) => {
-    const value = await ExpenseCategoryGroupModel.upsertReference({
+  create = async (userId: string | number, categoryGroupName: string) => {
+    const value = await ExpenseCategoryGroupModel.upsertReference(userId, {
       name: categoryGroupName,
     })
 
@@ -47,12 +50,16 @@ type ExpenseCategoryDataLoaderInput = [
 ]
 
 class ExpenseCategoryDataLoader extends BaseDataLoader<ExpenseCategoryDataLoaderInput> {
-  create = async ([categoryGroupName, categoryName]) => {
+  create = async (
+    userId: string | number,
+    [categoryGroupName, categoryName]: ExpenseCategoryDataLoaderInput
+  ) => {
     const expenseCategoryGroupId = await this.manager.expenseCategoryGroupDataLoader.load(
+      userId,
       categoryGroupName
     )
 
-    const value = await ExpenseCategoryModel.upsertReference({
+    const value = await ExpenseCategoryModel.upsertReference(userId, {
       name: categoryName,
       expenseCategoryGroupId,
     })
@@ -69,12 +76,16 @@ type ExpenseDataLoaderInput = Omit<
 }
 
 class ExpenseDataLoader extends BaseDataLoader<ExpenseDataLoaderInput> {
-  create = async ({ category, ...payload }: ExpenseDataLoaderInput) => {
+  create = async (
+    userId: string | number,
+    { category, ...payload }: ExpenseDataLoaderInput
+  ) => {
     const expenseCategoryId = await this.manager.expenseCategoryDataLoader.load(
+      userId,
       category
     )
 
-    const value = await ExpenseModel.upsertReference({
+    const value = await ExpenseModel.upsertReference(userId, {
       expenseCategoryId,
       ...payload,
     })
@@ -84,8 +95,8 @@ class ExpenseDataLoader extends BaseDataLoader<ExpenseDataLoaderInput> {
 }
 
 class EarningCategoryDataLoader extends BaseDataLoader<string> {
-  create = async (categoryName) => {
-    const value = await EarningCategoryModel.upsertReference({
+  create = async (userId: string | number, categoryName: string) => {
+    const value = await EarningCategoryModel.upsertReference(userId, {
       name: categoryName,
     })
 
@@ -101,12 +112,16 @@ type EarningDataLoaderInput = Omit<
 }
 
 class EarningDataLoader extends BaseDataLoader<EarningDataLoaderInput> {
-  create = async ({ category, ...payload }: EarningDataLoaderInput) => {
+  create = async (
+    userId: string | number,
+    { category, ...payload }: EarningDataLoaderInput
+  ) => {
     const earningCategoryId = await this.manager.earningCategoryDataLoader.load(
+      userId,
       category
     )
 
-    const value = await EarningModel.upsertReference({
+    const value = await EarningModel.upsertReference(userId, {
       earningCategoryId,
       ...payload,
     })

@@ -27,6 +27,9 @@ export const up = async (knex: Knex) => {
   await knex.schema.createTable(TABLES.EXPENSE_CATEGORY_GROUPS, (t) => {
     t.increments()
 
+    t.integer('user_id').notNullable()
+    t.foreign('user_id').references(`${TABLES.USERS}.id`)
+
     t.string('name').notNullable()
 
     t.string('description')
@@ -34,11 +37,14 @@ export const up = async (knex: Knex) => {
     t.timestamp('created_at').notNullable().defaultTo(knex.fn.now())
     t.timestamp('updated_at').notNullable().defaultTo(knex.fn.now())
 
-    t.unique(['name'])
+    t.unique(['user_id', 'name'])
   })
 
   await knex.schema.createTable(TABLES.EXPENSE_CATEGORIES, (t) => {
     t.increments()
+
+    t.integer('user_id').notNullable()
+    t.foreign('user_id').references(`${TABLES.USERS}.id`)
 
     t.string('name').notNullable()
 
@@ -52,11 +58,14 @@ export const up = async (knex: Knex) => {
     t.timestamp('created_at').notNullable().defaultTo(knex.fn.now())
     t.timestamp('updated_at').notNullable().defaultTo(knex.fn.now())
 
-    t.unique(['expense_category_group_id', 'name'])
+    t.unique(['user_id', 'expense_category_group_id', 'name'])
   })
 
   await knex.schema.createTable(TABLES.EXPENSES, (t) => {
     t.increments()
+
+    t.integer('user_id').notNullable()
+    t.foreign('user_id').references(`${TABLES.USERS}.id`)
 
     t.integer('expense_category_id').notNullable()
     t.foreign('expense_category_id').references(
@@ -78,6 +87,9 @@ export const up = async (knex: Knex) => {
   await knex.schema.createTable(TABLES.EARNING_CATEGORIES, (t) => {
     t.increments()
 
+    t.integer('user_id').notNullable()
+    t.foreign('user_id').references(`${TABLES.USERS}.id`)
+
     t.string('name').notNullable()
 
     t.string('description')
@@ -85,11 +97,14 @@ export const up = async (knex: Knex) => {
     t.timestamp('created_at').notNullable().defaultTo(knex.fn.now())
     t.timestamp('updated_at').notNullable().defaultTo(knex.fn.now())
 
-    t.unique(['name'])
+    t.unique(['user_id', 'name'])
   })
 
   await knex.schema.createTable(TABLES.EARNINGS, (t) => {
     t.increments()
+
+    t.integer('user_id').notNullable()
+    t.foreign('user_id').references(`${TABLES.USERS}.id`)
 
     t.integer('earning_category_id').notNullable()
     t.foreign('earning_category_id').references(
@@ -107,6 +122,9 @@ export const up = async (knex: Knex) => {
 
   await knex.schema.createTable(TABLES.REFUND, (t) => {
     t.increments()
+
+    t.integer('user_id').notNullable()
+    t.foreign('user_id').references(`${TABLES.USERS}.id`)
 
     t.integer('earning_category_id').notNullable()
     t.foreign('earning_category_id').references(

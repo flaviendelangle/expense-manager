@@ -18,4 +18,11 @@ export class UserMutationResolver {
 
     return user
   }
+
+  @Mutation((type) => Boolean)
+  async logout(@Ctx() ctx: RequestContext) {
+    ctx.removeJWT()
+
+    return true
+  }
 }

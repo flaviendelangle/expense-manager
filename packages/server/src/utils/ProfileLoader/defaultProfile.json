@@ -1,361 +1,386 @@
 {
-  "recurrentExpenses": [
-    {
-      "description": "Boulangerie",
-      "category": [
-        "Courses",
-        "Boulanger"
-      ],
-      "probability": 0.5,
-      "minimumInterval": 1,
-      "value": {
-        "min": 0.95,
-        "max": 4
-      },
-      "valueMax": 4,
-      "valueMin": 0.95,
-      "refund": {
-        "probability": 0.7,
-        "maxValue": 19,
-        "earningCategory": "Ticket Restaurant",
-        "description": "Remboursement ticket resto"
-      }
-    },
-    {
-      "description": "Grande Surface",
-      "category": [
-        "Courses",
-        "Grande Surface"
-      ],
-      "probability": 0.1,
-      "minimumInterval": 5,
-      "value": {
-        "min": 2,
-        "max": 70
-      },
-      "refund": {
-        "probability": 0.7,
-        "maxValue": 19,
-        "earningCategory": "Ticket Restaurant",
-        "description": "Remboursement ticket resto"
-      }
-    },
-    {
-      "description": "Primeur",
-      "category": [
-        "Courses",
-        "Primeur"
-      ],
-      "probability": 0.10,
-      "minimumInterval": 3,
-      "value": {
-        "min": 4,
-        "max": 35
-      },
-      "refund": {
-        "probability": 0.7,
-        "maxValue": 19,
-        "earningCategory": "Ticket Restaurant",
-        "description": "Remboursement ticket resto"
-      }
-    },
-    {
-      "description": "Fromager",
-      "category": [
-        "Courses",
-        "Fromager"
-      ],
-      "probability": 0.05,
-      "minimumInterval": 7,
-      "value": {
-        "min": 8,
-        "max": 35
-      },
-      "refund": {
-        "probability": 0.7,
-        "maxValue": 19,
-        "earningCategory": "Ticket Restaurant",
-        "description": "Remboursement ticket resto"
-      }
-    },
-    {
-      "category": [
-        "Courses",
-        "Divers"
-      ],
-      "probability": 0.05,
-      "minimumInterval": 1,
-      "value": {
-        "min": 2,
-        "max": 50
-      }
-    },
-    {
-      "description": "Librairie",
-      "category": [
-        "Culture",
-        "Livre"
-      ],
-      "probability": 0.1,
-      "minimumInterval": 7,
-      "value": {
-        "min": 12,
-        "max": 35
-      }
-    },
-    {
-      "description": "Coiffeur",
-      "category": [
-        "Services",
-        "Coiffeur"
-      ],
-      "probability": 0.05,
-      "minimumInterval": 70,
-      "value": {
-        "min": 17,
-        "max": 22
-      }
-    },
-    {
-      "description": "Retour en famille",
-      "category": [
-        "Transports",
-        "Train"
-      ],
-      "probability": 0.05,
-      "minimumInterval": 30,
-      "value": {
-        "min": 50,
-        "max": 60
-      }
-    },
-    {
-      "description": "Anniversaire",
-      "category": [
-        "Cadeaux",
-        "Amis"
-      ],
-      "probability": 0.02,
-      "minimumInterval": 0,
-      "value": {
-        "min": 10,
-        "max": 40
-      }
-    },
-    {
-      "description": "Chaussures",
-      "category": [
-        "Vêtements",
-        "Chaussures"
-      ],
-      "probability": 0.02,
-      "minimumInterval": 100,
-      "value": {
-        "min": 30,
-        "max": 70
-      }
-    },
-    {
-      "description": "Habits",
-      "category": [
-        "Vêtements",
-        "Habits"
-      ],
-      "probability": 0.02,
-      "minimumInterval": 0,
-      "value": {
-        "min": 10,
-        "max": 100
-      }
-    },
-    {
-      "description": "Ordinateur",
-      "category": [
-        "Équipement",
-        "Informatique"
-      ],
-      "probability": 0.01,
-      "minimumInterval": 200,
-      "value": {
-        "min": 150,
-        "max": 700
-      }
-    },
-    {
-      "description": "Meubles",
-      "category": [
-        "Équipement",
-        "Meubles"
-      ],
-      "probability": 0.01,
-      "minimumInterval": 200,
-      "value": {
-        "min": 40,
-        "max": 180
-      }
-    },
-    {
-      "description": "Matériel de Cuisine",
-      "category": [
-        "Équipement",
-        "Cuisine"
-      ],
-      "probability": 0.01,
-      "minimumInterval": 50,
-      "value": {
-        "min": 20,
-        "max": 150
-      }
-    },
-    {
-      "description": "Alcool",
-      "category": [
-        "Sortie",
-        "Alcool"
-      ],
-      "probability": 0.10,
-      "minimumInterval": 3,
-      "value": {
-        "min": 5,
-        "max": 15
-      }
-    },
-    {
-      "description": "Bar",
-      "category": [
-        "Sortie",
-        "Bar"
-      ],
-      "probability": 0.10,
-      "minimumInterval": 5,
-      "value": {
-        "min": 7,
-        "max": 25
-      }
-    },
-    {
-      "description": "Restaurant",
-      "category": [
-        "Sortie",
-        "Restaurant"
-      ],
-      "probability": 0.05,
-      "minimumInterval": 10,
-      "value": {
-        "min": 10,
-        "max": 20
-      }
-    }
-  ],
-  "monthlyExpenses": [
-    {
-      "description": "Loyer",
-      "category": [
-        "Logement",
-        "Loyer"
-      ],
-      "value": 500,
-      "date": 26,
-      "refund": {
-        "probability": 1,
-        "maxValue": 160,
-        "earningCategory": "APL"
-      }
-    },
-    {
-      "description": "Abonnement Téléphone mobile",
-      "category": [
-        "Abonnements",
-        "Téléphone Mobile"
-      ],
-      "value": 24.99,
-      "date": 12
-    },
-    {
-      "description": "Abonnement Internet",
-      "category": [
-        "Abonnements",
-        "Internet"
-      ],
-      "value": 34.99,
-      "date": 17
-    },
-    {
-      "description": "EDF",
-      "category": [
-        "Logement",
-        "Charges"
-      ],
-      "value": 37.56,
-      "date": 3
-    },
-    {
-      "description": "Spotify",
-      "category": [
-        "Culture",
-        "Musique"
-      ],
-      "value": 9.99,
-      "date": 11
-    },
-    {
-      "description": "Netflix",
-      "category": [
-        "Culture",
-        "Vidéo"
-      ],
-      "value": 11.99,
-      "date": 16
-    },
-    {
-      "description": "Abonnement UGC",
-      "category": [
-        "Culture",
-        "Cinéma"
-      ],
-      "value": 11.99,
-      "date": 16
-    },
-    {
-      "description": "Abonnement Métro",
-      "category": [
-        "Transports",
-        "Train"
-      ],
-      "value": 30,
-      "date": 18
-    }
-  ],
-  "monthlyEarnings": [
-    {
-      "description": "Salaire",
-      "category": "Salaire",
-      "value": {
-        "min": 1250,
-        "max": 1350
-      },
-      "date": 26
-    },
-    {
-      "description": "Ticket Restaurant",
-      "category": "Ticket Restaurant",
-      "value": {
-        "min": 96,
-        "max": 168
-      },
-      "date": 27
-    },
-    {
-      "description": "APL",
-      "category": "APL",
-      "value": 160,
-      "date": 11
-    }
-  ],
   "users": [
     {
-      "email": "test@test.com",
-      "password": "very-strong-password"
+      "credentials": {
+        "email": "test@test.com",
+        "password": "very-strong-password"
+      },
+      "recurrentExpenses": [
+        {
+          "description": "Boulangerie",
+          "category": [
+            "Courses",
+            "Boulanger"
+          ],
+          "probability": 0.5,
+          "minimumInterval": 1,
+          "value": {
+            "min": 0.95,
+            "max": 4
+          },
+          "valueMax": 4,
+          "valueMin": 0.95,
+          "refund": {
+            "probability": 0.7,
+            "maxValue": 19,
+            "earningCategory": "Ticket Restaurant",
+            "description": "Remboursement ticket resto"
+          }
+        },
+        {
+          "description": "Grande Surface",
+          "category": [
+            "Courses",
+            "Grande Surface"
+          ],
+          "probability": 0.1,
+          "minimumInterval": 5,
+          "value": {
+            "min": 2,
+            "max": 70
+          },
+          "refund": {
+            "probability": 0.7,
+            "maxValue": 19,
+            "earningCategory": "Ticket Restaurant",
+            "description": "Remboursement ticket resto"
+          }
+        },
+        {
+          "description": "Primeur",
+          "category": [
+            "Courses",
+            "Primeur"
+          ],
+          "probability": 0.10,
+          "minimumInterval": 3,
+          "value": {
+            "min": 4,
+            "max": 35
+          },
+          "refund": {
+            "probability": 0.7,
+            "maxValue": 19,
+            "earningCategory": "Ticket Restaurant",
+            "description": "Remboursement ticket resto"
+          }
+        },
+        {
+          "description": "Fromager",
+          "category": [
+            "Courses",
+            "Fromager"
+          ],
+          "probability": 0.05,
+          "minimumInterval": 7,
+          "value": {
+            "min": 8,
+            "max": 35
+          },
+          "refund": {
+            "probability": 0.7,
+            "maxValue": 19,
+            "earningCategory": "Ticket Restaurant",
+            "description": "Remboursement ticket resto"
+          }
+        },
+        {
+          "category": [
+            "Courses",
+            "Divers"
+          ],
+          "probability": 0.05,
+          "minimumInterval": 1,
+          "value": {
+            "min": 2,
+            "max": 50
+          }
+        },
+        {
+          "description": "Librairie",
+          "category": [
+            "Culture",
+            "Livre"
+          ],
+          "probability": 0.1,
+          "minimumInterval": 7,
+          "value": {
+            "min": 12,
+            "max": 35
+          }
+        },
+        {
+          "description": "Coiffeur",
+          "category": [
+            "Services",
+            "Coiffeur"
+          ],
+          "probability": 0.05,
+          "minimumInterval": 70,
+          "value": {
+            "min": 17,
+            "max": 22
+          }
+        },
+        {
+          "description": "Retour en famille",
+          "category": [
+            "Transports",
+            "Train"
+          ],
+          "probability": 0.05,
+          "minimumInterval": 30,
+          "value": {
+            "min": 50,
+            "max": 60
+          }
+        },
+        {
+          "description": "Anniversaire",
+          "category": [
+            "Cadeaux",
+            "Amis"
+          ],
+          "probability": 0.02,
+          "minimumInterval": 0,
+          "value": {
+            "min": 10,
+            "max": 40
+          }
+        },
+        {
+          "description": "Chaussures",
+          "category": [
+            "Vêtements",
+            "Chaussures"
+          ],
+          "probability": 0.02,
+          "minimumInterval": 100,
+          "value": {
+            "min": 30,
+            "max": 70
+          }
+        },
+        {
+          "description": "Habits",
+          "category": [
+            "Vêtements",
+            "Habits"
+          ],
+          "probability": 0.02,
+          "minimumInterval": 0,
+          "value": {
+            "min": 10,
+            "max": 100
+          }
+        },
+        {
+          "description": "Ordinateur",
+          "category": [
+            "Équipement",
+            "Informatique"
+          ],
+          "probability": 0.01,
+          "minimumInterval": 200,
+          "value": {
+            "min": 150,
+            "max": 700
+          }
+        },
+        {
+          "description": "Meubles",
+          "category": [
+            "Équipement",
+            "Meubles"
+          ],
+          "probability": 0.01,
+          "minimumInterval": 200,
+          "value": {
+            "min": 40,
+            "max": 180
+          }
+        },
+        {
+          "description": "Matériel de Cuisine",
+          "category": [
+            "Équipement",
+            "Cuisine"
+          ],
+          "probability": 0.01,
+          "minimumInterval": 50,
+          "value": {
+            "min": 20,
+            "max": 150
+          }
+        },
+        {
+          "description": "Alcool",
+          "category": [
+            "Sortie",
+            "Alcool"
+          ],
+          "probability": 0.10,
+          "minimumInterval": 3,
+          "value": {
+            "min": 5,
+            "max": 15
+          }
+        },
+        {
+          "description": "Bar",
+          "category": [
+            "Sortie",
+            "Bar"
+          ],
+          "probability": 0.10,
+          "minimumInterval": 5,
+          "value": {
+            "min": 7,
+            "max": 25
+          }
+        },
+        {
+          "description": "Restaurant",
+          "category": [
+            "Sortie",
+            "Restaurant"
+          ],
+          "probability": 0.05,
+          "minimumInterval": 10,
+          "value": {
+            "min": 10,
+            "max": 20
+          }
+        }
+      ],
+      "monthlyExpenses": [
+        {
+          "description": "Loyer",
+          "category": [
+            "Logement",
+            "Loyer"
+          ],
+          "value": 500,
+          "date": 26,
+          "refund": {
+            "probability": 1,
+            "maxValue": 160,
+            "earningCategory": "APL"
+          }
+        },
+        {
+          "description": "Abonnement Téléphone mobile",
+          "category": [
+            "Abonnements",
+            "Téléphone Mobile"
+          ],
+          "value": 24.99,
+          "date": 12
+        },
+        {
+          "description": "Abonnement Internet",
+          "category": [
+            "Abonnements",
+            "Internet"
+          ],
+          "value": 34.99,
+          "date": 17
+        },
+        {
+          "description": "EDF",
+          "category": [
+            "Logement",
+            "Charges"
+          ],
+          "value": 37.56,
+          "date": 3
+        },
+        {
+          "description": "Spotify",
+          "category": [
+            "Culture",
+            "Musique"
+          ],
+          "value": 9.99,
+          "date": 11
+        },
+        {
+          "description": "Netflix",
+          "category": [
+            "Culture",
+            "Vidéo"
+          ],
+          "value": 11.99,
+          "date": 16
+        },
+        {
+          "description": "Abonnement UGC",
+          "category": [
+            "Culture",
+            "Cinéma"
+          ],
+          "value": 11.99,
+          "date": 16
+        },
+        {
+          "description": "Abonnement Métro",
+          "category": [
+            "Transports",
+            "Train"
+          ],
+          "value": 30,
+          "date": 18
+        }
+      ],
+      "monthlyEarnings": [
+        {
+          "description": "Salaire",
+          "category": "Salaire",
+          "value": {
+            "min": 1250,
+            "max": 1350
+          },
+          "date": 26
+        },
+        {
+          "description": "Ticket Restaurant",
+          "category": "Ticket Restaurant",
+          "value": {
+            "min": 96,
+            "max": 168
+          },
+          "date": 27
+        },
+        {
+          "description": "APL",
+          "category": "APL",
+          "value": 160,
+          "date": 11
+        }
+      ]
+    },
+    {
+      "credentials": {
+        "email": "test-2@test.com",
+        "password": "weak-password"
+      },
+      "recurrentExpenses": [
+        {
+          "description": "Boulangerie",
+          "category": [
+            "Courses",
+            "Boulanger"
+          ],
+          "probability": 0.5,
+          "minimumInterval": 1,
+          "value": {
+            "min": 0.95,
+            "max": 4
+          },
+          "valueMax": 4,
+          "valueMin": 0.95
+        }
+      ]
     }
   ]
 }
