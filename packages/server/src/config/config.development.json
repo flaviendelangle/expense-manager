@@ -1,0 +1,7 @@
+{
+  "port": 3001,
+  "apollo": {
+    "debug": true,
+    "tracing": true
+  }
+}

@@ -10,12 +10,13 @@ import { Model } from 'objection'
 
 import knexFile from '../knexfile'
 
+import { config } from './config'
 import { RequestContext } from './globalTypes'
 import { schema } from './middlewares/graphql'
 import { DataLoaderService } from './utils/DataLoaderService'
 
-const HTTP_PORT = 3001
-const PLAYGROUND_URL = `http://localhost:${HTTP_PORT}/graphql`
+const HTTP_PORT = config.get('port')
+const JWT_SECRET = config.get('jwtSecret')
 
 export class App {
   private readonly koa: Koa
@@ -33,8 +34,8 @@ export class App {
   constructor() {
     this.apollo = new ApolloServer({
       schema,
-      tracing: true,
-      debug: true,
+      tracing: config.get('apollo.tracing'),
+      debug: config.get('apollo.debug'),
       introspection: true,
       playground: {
         settings: {
@@ -51,7 +52,7 @@ export class App {
                 id: user.id,
                 isAdmin: user.isAdmin,
               },
-              'TEMP_SECRET',
+              JWT_SECRET,
               { expiresIn: '7d' }
             )
 
@@ -75,7 +76,7 @@ export class App {
 
     this.koa.use(
       jwt({
-        secret: 'TEMP_SECRET',
+        secret: JWT_SECRET,
         passthrough: true,
         getToken: (req) => req.cookies.get('token'),
       })
@@ -89,9 +90,7 @@ export class App {
 
     this.server = this.koa.listen({ port: HTTP_PORT }, () => {
       // eslint-disable-next-line
-      console.log(`GraphQL Server ready at ${PLAYGROUND_URL}`)
+      console.log('GraphQL Server ready')
     })
   }
-
-  async test() {}
 }
