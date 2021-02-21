@@ -1,6 +1,12 @@
 import { ApolloProvider } from '@apollo/client'
 import * as React from 'react'
-import { BrowserRouter } from 'react-router-dom'
+import {
+  BrowserRouter,
+  Switch,
+  Route,
+  Redirect,
+  RouteComponentProps,
+} from 'react-router-dom'
 import styled from 'styled-components'
 
 import {
@@ -24,22 +30,40 @@ export const StyledThemeProvider = styled(ThemeProvider)`
   overflow: hidden;
 `
 
-export const Providers: React.FunctionComponent = ({ children }) => (
-  <IntlProvider>
-    <ThemePresetProvider>
-      {(preset) => (
-        <StyledThemeProvider preset={preset}>
-          <DesignSystemProvider>
-            <ApolloProvider client={apolloClient}>
-              <BrowserRouter>
-                {children}
-                <GlobalStyle />
-                <EuclidFont />
-              </BrowserRouter>
-            </ApolloProvider>
-          </DesignSystemProvider>
-        </StyledThemeProvider>
-      )}
-    </ThemePresetProvider>
-  </IntlProvider>
+const DEFAULT_LANGUAGE = window.navigator.language.startsWith('fr-')
+  ? 'fr'
+  : 'en'
+
+export const Providers: React.FunctionComponent<ProvidersProps> = ({
+  children,
+}) => (
+  <BrowserRouter>
+    <Switch>
+      <Route
+        path="/:language(fr|en)"
+        render={(props) => (
+          <IntlProvider language={props.match.params.language}>
+            <ThemePresetProvider>
+              {(preset) => (
+                <StyledThemeProvider preset={preset}>
+                  <DesignSystemProvider>
+                    <ApolloProvider client={apolloClient}>
+                      {children(props)}
+                      <GlobalStyle />
+                      <EuclidFont />
+                    </ApolloProvider>
+                  </DesignSystemProvider>
+                </StyledThemeProvider>
+              )}
+            </ThemePresetProvider>
+          </IntlProvider>
+        )}
+      />
+      <Redirect to={`/${DEFAULT_LANGUAGE}`} />
+    </Switch>
+  </BrowserRouter>
 )
+
+interface ProvidersProps {
+  children: (props: RouteComponentProps) => void
+}

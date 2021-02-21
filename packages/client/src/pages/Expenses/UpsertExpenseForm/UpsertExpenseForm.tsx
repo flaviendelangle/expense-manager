@@ -13,6 +13,7 @@ import { Toggle } from '@components/final-form/Toggle'
 
 import { UpsertExpensePayload } from '@globalTypes/api'
 import { addExpenseToCache } from '@hooks/useExpenses'
+import { useTranslate } from '@hooks/useTranslate'
 
 import {
   upsertExpenseForm,
@@ -28,6 +29,8 @@ export const UpsertExpenseForm: React.VoidFunctionComponent<UpsertExpenseFormPro
   initialValues: rawInitialValues,
   onClose,
 }) => {
+  const t = useTranslate()
+
   const [onUpsertExpense] = useMutation<
     upsertExpenseForm,
     upsertExpenseFormVariables
@@ -64,7 +67,7 @@ export const UpsertExpenseForm: React.VoidFunctionComponent<UpsertExpenseFormPro
       },
     })
 
-    notify('Dépense entregistrée')
+    notify(t('pages.expenses.itemModal.onSuccess.notify'))
 
     return onClose()
   }
@@ -96,41 +99,58 @@ export const UpsertExpenseForm: React.VoidFunctionComponent<UpsertExpenseFormPro
             <SelectExpenseCategory
               filterable
               name="expenseCategoryId"
-              label="Catégorie"
+              label={t('entities.expenses.fields.expenseCategory.label')}
               required
             />
-            <TextInput name="description" label="Description" />
-            <NumberInput name="value" label="Montant" required />
+            <TextInput
+              name="description"
+              label={t('entities.expenses.fields.description.label')}
+            />
+            <NumberInput
+              name="value"
+              label={t('entities.expenses.fields.amount.label')}
+              required
+            />
             <DatePickerSingle
               name="spentAt"
-              label="Date de la dépense"
+              label={t('entities.expenses.fields.spentAt.label')}
               required
             />
           </UpsertExpenseFormSubGrid>
           <RefundToggleContainer>
-            <Toggle name="hasRefund" label="Appliquer un remboursement" />
+            <Toggle
+              name="hasRefund"
+              label={t('pages.expenses.itemModal.hasRefund.label')}
+            />
           </RefundToggleContainer>
           {values.hasRefund && (
             <UpsertExpenseFormSubGrid>
               <SelectEarningCategory
                 filterable
                 name="refund.earningCategoryId"
-                label="Catégorie"
+                label={t('entities.refunds.fields.earningCategory.label')}
                 required
               />
-              <NumberInput name="refund.value" label="Montant" required />
-              <TextInput name="refund.description" label="Description" />
+              <NumberInput
+                name="refund.value"
+                label={t('entities.refunds.fields.amount.label')}
+                required
+              />
+              <TextInput
+                name="refund.description"
+                label={t('entities.refunds.fields.description.label')}
+              />
             </UpsertExpenseFormSubGrid>
           )}
           <ActionBar>
             <Button ghost error onClick={onClose}>
-              Annuler
+              {t('generic.abort')}
             </Button>
             <Button
               type="submit"
               disabled={pristine || hasValidationErrors || submitting}
             >
-              Enregistrer
+              {t('generic.submit')}
             </Button>
           </ActionBar>
         </form>

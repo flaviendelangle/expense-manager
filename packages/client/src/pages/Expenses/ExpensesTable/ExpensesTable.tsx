@@ -7,6 +7,7 @@ import { Row, Table, useTable } from '@habx/ui-table'
 
 import { UpsertExpensePayload } from '@globalTypes/api'
 import { ExpenseBasicInformation } from '@hooks/useExpenses'
+import { useTranslate } from '@hooks/useTranslate'
 
 import { ExpensesHeaderBars } from '../ExpensesHeaderBars'
 import { UpsertExpenseForm } from '../UpsertExpenseForm'
@@ -27,6 +28,7 @@ export const ExpensesTable: React.VoidFunctionComponent<ExpensesTableProps> = ({
     setSelectedExpense,
   ] = React.useState<ExpenseBasicInformation | null>(null)
 
+  const t = useTranslate()
   const columns = useColumns()
 
   const tableInstance = useTable(
@@ -83,7 +85,7 @@ export const ExpensesTable: React.VoidFunctionComponent<ExpensesTableProps> = ({
           onRowClick={handleRowClick}
         />
         <Modal
-          title="Édition d'une dépense"
+          title={t('pages.expenses.itemModal.edit.title')}
           value={editExpensePayload}
           open={!!editExpensePayload}
           onClose={() => setSelectedExpense(null)}

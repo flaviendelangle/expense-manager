@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useMatch, Link } from 'react-router-dom'
+import { useRouteMatch, Link } from 'react-router-dom'
 
 import { TabsBarItemProps, TabsBarItem } from '@habx/ui-core'
 
@@ -9,7 +9,7 @@ export const TabsBarItemLink: React.FunctionComponent<TabsBarItemLinkProps> = ({
   active,
   ...props
 }) => {
-  const match = useMatch({ path: to })
+  const match = useRouteMatch({ path: to })
 
   const content = (
     <TabsBarItem {...props} disabled={disabled} active={active ?? !!match} />

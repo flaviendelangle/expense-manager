@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useMatch } from 'react-router-dom'
+import { useRouteMatch } from 'react-router-dom'
 
 import { NavBarItem, NavBarItemProps } from '@habx/ui-core'
 
@@ -10,7 +10,7 @@ export const NavBarLink: React.FunctionComponent<NavBarLinkProps> = ({
   bottom,
   ...props
 }) => {
-  const match = useMatch({ path: to })
+  const match = useRouteMatch({ path: to })
 
   return (
     <NavBarLinkContainer to={to} data-bottom={!!bottom}>

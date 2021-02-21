@@ -1,7 +1,7 @@
 import { addMonths, addYears, startOfMonth } from 'date-fns'
 import * as React from 'react'
 
-import { Breadcrumb, BreadcrumbItem, HeaderBar } from '@habx/ui-core'
+import { Breadcrumb, BreadcrumbItem, HeaderBar, Icon } from '@habx/ui-core'
 
 import { ExpenseAndEarningLine } from '@components/graphs/ExpenseAndEarningLine'
 import { ExpenseCategoryPie } from '@components/graphs/ExpenseCategoryPie'
@@ -12,11 +12,13 @@ import { DateFilter } from '@globalTypes/api'
 import { useEarnings } from '@hooks/useEarnings'
 import { useExpenses } from '@hooks/useExpenses'
 import { useMountDate } from '@hooks/useMountDate'
+import { useTranslate } from '@hooks/useTranslate'
 
 import { HomeContent } from './Home.style'
 
 export const Home: React.VoidFunctionComponent = () => {
   const mountDate = useMountDate()
+  const t = useTranslate()
 
   const monthlyExpenses = useExpenses({
     fetchPolicy: 'cache-and-network',
@@ -57,15 +59,17 @@ export const Home: React.VoidFunctionComponent = () => {
 
   return (
     <React.Fragment>
-      <HeaderBar>
+      <HeaderBar small>
         <Breadcrumb>
-          <BreadcrumbItem>Gestionnaire de dépenses</BreadcrumbItem>
+          <BreadcrumbItem>
+            <Icon icon="house-outline" />
+          </BreadcrumbItem>
         </Breadcrumb>
       </HeaderBar>
       <HomeContent>
         <CustomizableGraphCard
           initialConfig={null}
-          label="Répartition des dépenses depuis un mois"
+          label={t('pages.home.lastMonth.expenseCategoryPie.title')}
           graphHeight={420}
           loading={monthlyExpenses.loading}
         >
@@ -73,7 +77,7 @@ export const Home: React.VoidFunctionComponent = () => {
         </CustomizableGraphCard>
         <CustomizableGraphCard
           initialConfig={null}
-          label="Dépenses depuis un mois"
+          label={t('pages.home.lastMonth.expenseTimeline.title')}
           graphHeight={420}
           loading={monthlyExpenses.loading}
         >
@@ -81,7 +85,7 @@ export const Home: React.VoidFunctionComponent = () => {
         </CustomizableGraphCard>
         <CustomizableGraphCard
           initialConfig={null}
-          label="Dépenses et recettes depuis un an"
+          label={t('pages.home.lastYear.expenseAndEarning.title')}
           graphHeight={420}
           loading={yearlyExpenses.loading || yearlyEarnings.loading}
         >

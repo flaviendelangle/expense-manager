@@ -11,6 +11,7 @@ import { TextInput } from '@components/final-form/TextInput'
 
 import { UpsertExpensePayload } from '@globalTypes/api'
 import { addEarningToCache } from '@hooks/useEarnings'
+import { useTranslate } from '@hooks/useTranslate'
 
 import {
   upsertEarningForm,
@@ -22,6 +23,8 @@ export const UpsertEarningForm: React.VoidFunctionComponent<UpsertExpenseFormPro
   initialValues,
   onClose,
 }) => {
+  const t = useTranslate()
+
   const [onUpsertEarning] = useMutation<
     upsertEarningForm,
     upsertEarningFormVariables
@@ -45,7 +48,7 @@ export const UpsertEarningForm: React.VoidFunctionComponent<UpsertExpenseFormPro
       },
     })
 
-    notify('Recette entregistrée')
+    notify(t('pages.earnings.itemModal.onSuccess.notify'))
 
     return onClose()
   }
@@ -62,25 +65,32 @@ export const UpsertEarningForm: React.VoidFunctionComponent<UpsertExpenseFormPro
           <SelectEarningCategory
             filterable
             name="earningCategoryId"
-            label="Catégorie"
+            label={t('entities.earnings.fields.earningCategory.label')}
             required
           />
-          <TextInput name="description" label="Description" />
-          <NumberInput name="value" label="Montant" required />
+          <TextInput
+            name="description"
+            label={t('entities.earnings.fields.description.label')}
+          />
+          <NumberInput
+            name="value"
+            label={t('entities.earnings.fields.amount.label')}
+            required
+          />
           <DatePickerSingle
             name="earnedAt"
-            label="Date de la recette"
+            label={t('entities.earnings.fields.earnedAt.label')}
             required
           />
           <ActionBar>
             <Button ghost error onClick={onClose}>
-              Annuler
+              {t('generic.abort')}
             </Button>
             <Button
               type="submit"
               disabled={pristine || hasValidationErrors || submitting}
             >
-              Enregistrer
+              {t('generic.submit')}
             </Button>
           </ActionBar>
         </form>

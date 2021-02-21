@@ -1,12 +1,22 @@
 import { ModalState } from '@delangle/use-modal'
+import { join } from 'path'
 import * as React from 'react'
-import { Link, LinkProps, Routes, Route, Navigate } from 'react-router-dom'
+import {
+  Link,
+  LinkProps,
+  Switch,
+  Route,
+  Redirect,
+  RouteComponentProps,
+  generatePath,
+} from 'react-router-dom'
 
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbItemProps,
   HeaderBar,
+  Icon,
   IconButton,
   Modal,
   TabsBar,
@@ -15,6 +25,7 @@ import {
 import { TabsBarItemLink } from '@components/atoms/TabsBarItemLink'
 
 import { useEarnings } from '@hooks/useEarnings'
+import { useTranslate } from '@hooks/useTranslate'
 
 import { ExpensesActions, ExpensesContent } from './Earnings.style'
 import { EarningsGraphs } from './EarningsGraphs'
@@ -25,27 +36,36 @@ const BreadcrumbLinkItem = BreadcrumbItem as React.ForwardRefExoticComponent<
   BreadcrumbItemProps & (LinkProps | React.HTMLProps<HTMLAnchorElement>)
 >
 
-export const Earnings: React.VoidFunctionComponent = () => {
+export const Earnings: React.VoidFunctionComponent<
+  RouteComponentProps<{ language: string; tab?: string }>
+> = ({ match: { params, path, url } }) => {
   const earnings = useEarnings()
+  const t = useTranslate()
+
+  const getTabURL = (tab: string) => generatePath(path, { ...params, tab })
 
   return (
     <React.Fragment>
       <HeaderBar small>
         <Breadcrumb>
-          <BreadcrumbLinkItem to="/" as={Link}>
-            Gestionnaire de dépenses
+          <BreadcrumbLinkItem to={`/${params.language}`} as={Link}>
+            <Icon icon="house-outline" />
           </BreadcrumbLinkItem>
-          <BreadcrumbItem>Recettes</BreadcrumbItem>
+          <BreadcrumbItem>{t('pages.earnings.label')}</BreadcrumbItem>
         </Breadcrumb>
       </HeaderBar>
       <HeaderBar small>
         <TabsBar>
-          <TabsBarItemLink to="/earnings/table">Liste</TabsBarItemLink>
-          <TabsBarItemLink to="/earnings/graphs">Graphiques</TabsBarItemLink>
+          <TabsBarItemLink to={getTabURL('table')}>
+            {t('pages.earnings.table.label')}
+          </TabsBarItemLink>
+          <TabsBarItemLink to={getTabURL('graphs')}>
+            {t('pages.earnings.graphs.label')}
+          </TabsBarItemLink>
         </TabsBar>
         <ExpensesActions>
           <Modal
-            title="Nouvelle recette"
+            title={t('pages.earnings.itemModal.new.title')}
             triggerElement={<IconButton icon="add" small background="grey" />}
             persistent
           >
@@ -61,19 +81,19 @@ export const Earnings: React.VoidFunctionComponent = () => {
         </ExpensesActions>
       </HeaderBar>
       <ExpensesContent>
-        <Routes>
+        <Switch>
           <Route
-            path="/table"
-            element={
+            path={join(path, 'table')}
+            render={() => (
               <EarningsTable data={earnings.data} loading={earnings.loading} />
-            }
+            )}
           />
           <Route
-            path="/graphs"
-            element={<EarningsGraphs data={earnings.data} />}
+            path={join(path, 'graphs')}
+            render={() => <EarningsGraphs data={earnings.data} />}
           />
-          <Navigate to="/earnings/table" />
-        </Routes>
+          <Redirect to={join(url, 'table')} />
+        </Switch>
       </ExpensesContent>
     </React.Fragment>
   )
