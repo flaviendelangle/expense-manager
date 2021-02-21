@@ -2,7 +2,10 @@
   "name": "expense-manager-server",
   "version": "0.1.0",
   "scripts": {
+    "copy:config": "ts-node scripts/copyConfig.ts",
     "start:dev": "nodemon --watch 'src/**/*' -e ts,tsx,json --exec ts-node src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsc && npm run copy:config",
     "migrate:dev": "DEBUG=knex:* knex migrate:latest --knexfile knexfile.ts",
     "load-profile:default": "npm run reset && ts-node ./src/utils/ProfileLoader/index.ts",
     "reset": "rimraf ./data/db.db3 && npm run migrate:dev"
@@ -25,8 +28,8 @@
     "koa-bodyparser": "^4.3.0",
     "koa-jwt": "^4.0.0",
     "objection": "^2.2.14",
+    "pg": "^8.5.1",
     "reflect-metadata": "^0.1.13",
-    "sqlite3": "^5.0.1",
     "type-graphql": "^1.1.1"
   },
   "devDependencies": {
@@ -34,9 +37,11 @@
     "@types/convict": "^5.2.2",
     "@types/jsonwebtoken": "^8.5.0",
     "@types/koa": "^2.11.7",
+    "@types/shelljs": "^0.8.8",
     "md5": "^2.3.0",
     "nodemon": "^2.0.7",
     "rimraf": "^3.0.2",
+    "shelljs": "^0.8.4",
     "ts-node": "^9.1.1"
   }
 }

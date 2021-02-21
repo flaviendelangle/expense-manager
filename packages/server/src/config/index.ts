@@ -36,6 +36,31 @@ export const config = convict({
     format: String,
     env: 'JWT_SECRET',
   },
+  database: {
+    host: {
+      default: 'localhost',
+      format: String,
+      env: 'DB_HOST',
+    },
+    port: {
+      default: '5432',
+      format: String,
+      env: 'DB_PORT',
+    },
+    database: {
+      default: 'expense_manager',
+      env: 'DB_NAME',
+    },
+    user: {
+      default: 'postgres',
+      env: 'DB_USER',
+    },
+    password: {
+      format: String,
+      default: null,
+      env: 'DB_PASSWORD',
+    },
+  },
 })
 
 config.loadFile(`${__dirname}/config.${config.get('env')}.json`)

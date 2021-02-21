@@ -1,10 +1,12 @@
 import { knexSnakeCaseMappers } from 'objection'
 
+import { config } from './src/config'
+
+const pgConnection = config.get('database')
+
 const dbConfig = {
-  client: 'sqlite3',
-  connection: {
-    filename: './data/db.db3',
-  },
+  client: 'pg',
+  connection: pgConnection,
   useNullAsDefault: true,
   ...knexSnakeCaseMappers(),
 }
