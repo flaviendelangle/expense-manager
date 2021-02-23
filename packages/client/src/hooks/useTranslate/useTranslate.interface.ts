@@ -9,6 +9,7 @@ export type messageIds =
   /*
    * NavBar
    */
+  | 'navBar.home.label'
   | 'navBar.expenses.label'
   | 'navBar.earnings.label'
   | 'navBar.admin.label'

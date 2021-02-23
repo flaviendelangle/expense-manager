@@ -65,4 +65,5 @@ export const enMessages: Record<messageIds, string> = {
   'pages.earnings.categoryModal.new.title': 'New earning source',
   'pages.earnings.categoryModal.edit.title': 'Edition of an earning source',
   'pages.earnings.categoryModal.onSuccess.notify': 'Earning source saved',
+  'navBar.home.label': 'Summary',
 }

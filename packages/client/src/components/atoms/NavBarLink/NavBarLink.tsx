@@ -8,9 +8,10 @@ import { NavBarLinkContainer } from './NavBarLink.style'
 export const NavBarLink: React.FunctionComponent<NavBarLinkProps> = ({
   to,
   bottom,
+  exact,
   ...props
 }) => {
-  const match = useRouteMatch({ path: to })
+  const match = useRouteMatch({ path: to, exact })
 
   return (
     <NavBarLinkContainer to={to} data-bottom={!!bottom}>
@@ -21,4 +22,5 @@ export const NavBarLink: React.FunctionComponent<NavBarLinkProps> = ({
 
 export interface NavBarLinkProps extends Omit<NavBarItemProps, 'active'> {
   to: string
+  exact?: boolean
 }

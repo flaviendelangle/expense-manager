@@ -55,7 +55,7 @@ export const frMessages: Record<messageIds, string> = {
   'entities.expenseCategories.fields.description.label': 'Description',
   'pages.expenses.categoryModal.onSuccess.notify':
     'Sous-pôle de dépense enregistré',
-  'pages.expenses.categoryGroups.label': 'Pôle de dépense',
+  'pages.expenses.categoryGroups.label': 'Pôles de dépense',
   'pages.expenses.categoryGroupModal.new.title': 'Nouveau pôle de dépense',
   'pages.expenses.categoryGroupModal.edit.title':
     "Édition d'un pôle de dépense",
@@ -70,4 +70,5 @@ export const frMessages: Record<messageIds, string> = {
   'pages.earnings.categoryModal.edit.title': "Édition d'une source de revenu",
   'pages.earnings.categoryModal.onSuccess.notify':
     'Source de revenu enregistrée',
+  'navBar.home.label': 'Résumé',
 }

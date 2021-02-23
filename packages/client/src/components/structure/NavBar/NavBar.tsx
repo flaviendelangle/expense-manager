@@ -39,12 +39,18 @@ export const NavBar: React.VoidFunctionComponent = () => {
   return (
     <BaseNavBar backgroundColor={palette.purpleDawn[900]}>
       <NavBarLink
-        icon={<Icon icon="list" />}
+        icon={<Icon icon="back-home-outline" />}
+        label={t('navBar.home.label')}
+        to={`/${language}`}
+        exact
+      />
+      <NavBarLink
+        icon={<Icon icon="cash-outline" />}
         label={t('navBar.expenses.label')}
         to={`/${language}/expenses`}
       />
       <NavBarLink
-        icon={<Icon icon="list" />}
+        icon={<Icon icon="dollar-sign" />}
         label={t('navBar.earnings.label')}
         to={`/${language}/earnings`}
       />
