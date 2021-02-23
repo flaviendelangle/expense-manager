@@ -17,5 +17,6 @@ export interface ExpenseCategoryBasicInformation {
   __typename: "ExpenseCategory";
   id: string;
   name: string;
+  description: string | null;
   expenseCategoryGroup: ExpenseCategoryBasicInformation_expenseCategoryGroup;
 }

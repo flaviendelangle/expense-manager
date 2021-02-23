@@ -1,0 +1,1 @@
+export { ExpenseCategoryGroupsTable } from './ExpenseCategoryGroupsTable'

@@ -19,6 +19,7 @@ export interface listExpenseCategories_expenseCategories_nodes {
   __typename: "ExpenseCategory";
   id: string;
   name: string;
+  description: string | null;
   expenseCategoryGroup: listExpenseCategories_expenseCategories_nodes_expenseCategoryGroup;
 }
 

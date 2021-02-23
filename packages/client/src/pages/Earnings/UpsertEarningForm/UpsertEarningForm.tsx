@@ -9,7 +9,7 @@ import { NumberInput } from '@components/final-form/NumberInput'
 import { SelectEarningCategory } from '@components/final-form/SelectEarningCategory'
 import { TextInput } from '@components/final-form/TextInput'
 
-import { UpsertExpensePayload } from '@globalTypes/api'
+import { UpsertEarningPayload } from '@globalTypes/api'
 import { addEarningToCache } from '@hooks/useEarnings'
 import { useTranslate } from '@hooks/useTranslate'
 
@@ -19,7 +19,7 @@ import {
 } from './types/upsertEarningForm'
 import { upsertEarningFormMutation } from './UpsertEarningForm.query'
 
-export const UpsertEarningForm: React.VoidFunctionComponent<UpsertExpenseFormProps> = ({
+export const UpsertEarningForm: React.VoidFunctionComponent<UpsertEarningFormProps> = ({
   initialValues,
   onClose,
 }) => {
@@ -41,7 +41,7 @@ export const UpsertEarningForm: React.VoidFunctionComponent<UpsertExpenseFormPro
     },
   })
 
-  const handleUpsertExpense = async (value: UpsertExpensePayload) => {
+  const handleUpsertEarning = async (value: UpsertEarningPayload) => {
     await onUpsertEarning({
       variables: {
         payload: value,
@@ -56,8 +56,8 @@ export const UpsertEarningForm: React.VoidFunctionComponent<UpsertExpenseFormPro
   const keyboardSubmitDecorator = useFormKeyboardSubmitDecorator()
 
   return (
-    <Form<UpsertExpensePayload>
-      onSubmit={handleUpsertExpense}
+    <Form<UpsertEarningPayload>
+      onSubmit={handleUpsertEarning}
       initialValues={initialValues}
       decorators={[keyboardSubmitDecorator]}
       render={({ handleSubmit, pristine, hasValidationErrors, submitting }) => (
@@ -99,7 +99,7 @@ export const UpsertEarningForm: React.VoidFunctionComponent<UpsertExpenseFormPro
   )
 }
 
-interface UpsertExpenseFormProps {
-  initialValues: UpsertExpensePayload | undefined
+interface UpsertEarningFormProps {
+  initialValues: UpsertEarningPayload | undefined
   onClose: () => void
 }

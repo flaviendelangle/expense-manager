@@ -1,15 +1,14 @@
 import styled from 'styled-components'
 
-import { Title } from '@habx/ui-core'
+import { Layout } from '@habx/ui-core'
 
-export const EarningsGraphTitle = styled(Title).attrs(() => ({
-  type: 'section',
-}))`
-  margin-bottom: 36px;
-`
+export const EarningsGraphsContent = styled(Layout)`
+  --layout-left-padding: 36px;
+  --layout-right-padding: 36px;
+  --layout-top-padding: 24px;
+  --layout-bottom-padding: 24px;
 
-export const EarningsGraph = styled.div`
-  &:not(:last-child) {
-    margin-bottom: 96px;
-  }
+  flex: 1 1 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
 `

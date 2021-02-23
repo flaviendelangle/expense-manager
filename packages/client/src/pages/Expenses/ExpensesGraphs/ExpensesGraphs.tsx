@@ -5,29 +5,28 @@ import { Toggle } from '@habx/ui-core'
 import { ExpenseCategoryPie } from '@components/graphs/ExpenseCategoryPie'
 import { ExpenseTimeline } from '@components/graphs/ExpenseTimeline'
 
-import { ExpenseBasicInformation } from '@hooks/useExpenses'
+import { useExpenses } from '@hooks/useExpenses'
 import { useTranslate } from '@hooks/useTranslate'
 
 import { ExpensesHeaderBars } from '../ExpensesHeaderBars'
 
 import { ExpenseGraphsContent, ExpensesGraph } from './ExpensesGraphs.style'
 
-export const ExpensesGraphs: React.VoidFunctionComponent<ExpensesGraphProps> = ({
-  data,
-}) => {
+export const ExpensesGraphs: React.VoidFunctionComponent = () => {
+  const expenses = useExpenses()
   const t = useTranslate()
   const [shouldRemoveRefunds, setShouldRemoveRefunds] = React.useState(false)
 
   const preProcessedData = React.useMemo(() => {
     if (!shouldRemoveRefunds) {
-      return data
+      return expenses.data
     }
 
-    return data.map((el) => ({
+    return expenses.data.map((el) => ({
       ...el,
       value: el.value - (el.refund?.value ?? 0),
     }))
-  }, [data, shouldRemoveRefunds])
+  }, [expenses.data, shouldRemoveRefunds])
 
   return (
     <React.Fragment>
@@ -58,8 +57,4 @@ export const ExpensesGraphs: React.VoidFunctionComponent<ExpensesGraphProps> = (
       </ExpenseGraphsContent>
     </React.Fragment>
   )
-}
-
-interface ExpensesGraphProps {
-  data: ExpenseBasicInformation[]
 }

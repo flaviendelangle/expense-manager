@@ -1,27 +1,28 @@
+import { ModalState } from '@delangle/use-modal'
 import { pick } from 'lodash'
 import * as React from 'react'
 import { useSortBy } from 'react-table'
 
-import { Modal } from '@habx/ui-core'
+import { IconButton, Modal, Tooltip } from '@habx/ui-core'
 import { Row, Table, useTable } from '@habx/ui-table'
 
-import { UpsertExpensePayload } from '@globalTypes/api'
-import { EarningBasicInformation } from '@hooks/useEarnings'
+import { UpsertEarningPayload } from '@globalTypes/api'
+import { EarningBasicInformation, useEarnings } from '@hooks/useEarnings'
 import { useTranslate } from '@hooks/useTranslate'
+import { EarningsHeaderBars } from '@pages/Earnings/EarningsHeaderBars'
 
 import { UpsertEarningForm } from '../UpsertEarningForm'
 
 import { useColumns } from './EarningsTable.columns'
-import { ExpensesTableContainer } from './EarningsTable.style'
+import { EarningsTableContent } from './EarningsTable.style'
 
 const getRowCharacteristics = () => ({
   isInteractive: true,
 })
 
-export const EarningsTable: React.VoidFunctionComponent<ExpensesTableProps> = ({
-  data,
-  loading,
-}) => {
+export const EarningsTable: React.VoidFunctionComponent = () => {
+  const earnings = useEarnings()
+
   const [
     selectedEarning,
     setSelectedEarning,
@@ -32,7 +33,7 @@ export const EarningsTable: React.VoidFunctionComponent<ExpensesTableProps> = ({
 
   const tableInstance = useTable(
     {
-      data,
+      data: earnings.data,
       columns,
       initialState: {
         sortBy: [{ id: 'earnedAt' }],
@@ -41,7 +42,7 @@ export const EarningsTable: React.VoidFunctionComponent<ExpensesTableProps> = ({
     useSortBy
   )
 
-  const editExpensePayload = React.useMemo<UpsertExpensePayload | null>(() => {
+  const editEarningPayload = React.useMemo<UpsertEarningPayload | null>(() => {
     if (!selectedEarning) {
       return null
     }
@@ -59,33 +60,52 @@ export const EarningsTable: React.VoidFunctionComponent<ExpensesTableProps> = ({
   )
 
   return (
-    <ExpensesTableContainer>
-      <Table
-        loading={loading}
-        instance={tableInstance}
-        style={{ striped: true, scrollable: true }}
-        getRowCharacteristics={getRowCharacteristics}
-        onRowClick={handleRowClick}
+    <React.Fragment>
+      <EarningsHeaderBars
+        actions={
+          <Modal
+            title={t('pages.earnings.itemModal.new.title')}
+            triggerElement={
+              <Tooltip title={t('pages.earnings.itemModal.new.title')}>
+                <IconButton icon="add" small background="grey" />
+              </Tooltip>
+            }
+            persistent
+          >
+            {(modal) =>
+              modal.state !== ModalState.closed && (
+                <UpsertEarningForm
+                  initialValues={undefined}
+                  onClose={modal.close}
+                />
+              )
+            }
+          </Modal>
+        }
       />
-      <Modal
-        title={t('pages.earnings.itemModal.edit.title')}
-        value={editExpensePayload}
-        open={!!editExpensePayload}
-        onClose={() => setSelectedEarning(null)}
-        persistent
-      >
-        {(modal) => (
-          <UpsertEarningForm
-            initialValues={modal.value}
-            onClose={modal.close}
-          />
-        )}
-      </Modal>
-    </ExpensesTableContainer>
+      <EarningsTableContent>
+        <Table
+          loading={earnings.loading}
+          instance={tableInstance}
+          style={{ striped: true, scrollable: true }}
+          getRowCharacteristics={getRowCharacteristics}
+          onRowClick={handleRowClick}
+        />
+        <Modal
+          title={t('pages.earnings.itemModal.edit.title')}
+          value={editEarningPayload}
+          open={!!editEarningPayload}
+          onClose={() => setSelectedEarning(null)}
+          persistent
+        >
+          {(modal) => (
+            <UpsertEarningForm
+              initialValues={modal.value}
+              onClose={modal.close}
+            />
+          )}
+        </Modal>
+      </EarningsTableContent>
+    </React.Fragment>
   )
-}
-
-interface ExpensesTableProps {
-  data: EarningBasicInformation[]
-  loading: boolean
 }

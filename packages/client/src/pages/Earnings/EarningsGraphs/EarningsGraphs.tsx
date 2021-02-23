@@ -2,19 +2,23 @@ import * as React from 'react'
 
 import { CenteredInformationMessage } from '@components/atoms/CenteredInformationMessage'
 
-import { EarningBasicInformation } from '@hooks/useEarnings'
 import { useTranslate } from '@hooks/useTranslate'
 
-export const EarningsGraphs: React.VoidFunctionComponent<ExpensesGraphProps> = () => {
+import { EarningsHeaderBars } from '../EarningsHeaderBars'
+
+import { EarningsGraphsContent } from './EarningsGraphs.style'
+
+export const EarningsGraphs: React.VoidFunctionComponent = () => {
   const t = useTranslate()
 
   return (
-    <CenteredInformationMessage>
-      {t('generic.inDevelopment')}
-    </CenteredInformationMessage>
+    <React.Fragment>
+      <EarningsHeaderBars />
+      <EarningsGraphsContent>
+        <CenteredInformationMessage>
+          {t('generic.inDevelopment')}
+        </CenteredInformationMessage>
+      </EarningsGraphsContent>
+    </React.Fragment>
   )
-}
-
-interface ExpensesGraphProps {
-  data: EarningBasicInformation[]
 }

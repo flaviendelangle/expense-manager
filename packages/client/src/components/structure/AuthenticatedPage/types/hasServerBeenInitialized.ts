@@ -9,6 +9,7 @@
 
 export interface hasServerBeenInitialized_serverStatus {
   __typename: "ServerStatus";
+  id: string;
   hasBeenInitialized: boolean;
 }
 

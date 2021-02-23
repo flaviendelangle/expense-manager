@@ -14,7 +14,7 @@
     "@habx/lib-client-intl": "^1.2.0",
     "@habx/lib-form-helper": "^7.0.2",
     "@habx/ui-core": "^5.19.0",
-    "@habx/ui-table": "^5.0.1",
+    "@habx/ui-table": "^5.1.0",
     "@nivo/bar": "^0.67.0",
     "@nivo/core": "^0.67.0",
     "@nivo/line": "^0.67.0",

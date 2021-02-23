@@ -13,6 +13,7 @@ export interface listEarningCategories_earningCategories_nodes {
   __typename: "EarningCategory";
   id: string;
   name: string;
+  description: string | null;
 }
 
 export interface listEarningCategories_earningCategories {

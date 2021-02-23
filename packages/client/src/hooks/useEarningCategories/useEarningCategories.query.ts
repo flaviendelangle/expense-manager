@@ -4,6 +4,7 @@ export const earningCategoryBasicInformationFragment = gql`
   fragment EarningCategoryBasicInformation on EarningCategory {
     id
     name
+    description
   }
 `
 

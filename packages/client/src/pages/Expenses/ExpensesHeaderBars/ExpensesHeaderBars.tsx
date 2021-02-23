@@ -1,4 +1,3 @@
-import { ModalState } from '@delangle/use-modal'
 import * as React from 'react'
 import { Link, LinkProps, useRouteMatch, generatePath } from 'react-router-dom'
 
@@ -8,8 +7,6 @@ import {
   BreadcrumbItemProps,
   HeaderBar,
   Icon,
-  IconButton,
-  Modal,
   TabsBar,
 } from '@habx/ui-core'
 
@@ -17,8 +14,7 @@ import { TabsBarItemLink } from '@components/atoms/TabsBarItemLink'
 
 import { useTranslate } from '@hooks/useTranslate'
 
-import { ExpensesActions } from '../Expenses.style'
-import { UpsertExpenseForm } from '../UpsertExpenseForm'
+import { ExpensesActions } from './ExpensesHeaderBars.style'
 
 const BreadcrumbLinkItem = BreadcrumbItem as React.ForwardRefExoticComponent<
   BreadcrumbItemProps & (LinkProps | React.HTMLProps<HTMLAnchorElement>)
@@ -44,31 +40,20 @@ export const ExpensesHeaderBars: React.VoidFunctionComponent<ExpensesHeaderBarPr
       </HeaderBar>
       <HeaderBar small>
         <TabsBar>
-          <TabsBarItemLink to={getTabURL('table')}>
-            {t('pages.expenses.table.label')}
-          </TabsBarItemLink>
           <TabsBarItemLink to={getTabURL('graphs')}>
             {t('pages.expenses.graphs.label')}
           </TabsBarItemLink>
+          <TabsBarItemLink to={getTabURL('table')}>
+            {t('pages.expenses.table.label')}
+          </TabsBarItemLink>
+          <TabsBarItemLink to={getTabURL('categoryGroups')}>
+            {t('pages.expenses.categoryGroups.label')}
+          </TabsBarItemLink>
+          <TabsBarItemLink to={getTabURL('categories')}>
+            {t('pages.expenses.categories.label')}
+          </TabsBarItemLink>
         </TabsBar>
-        <ExpensesActions>
-          {actions}
-          <Modal
-            title={t('pages.expenses.itemModal.new.title')}
-            triggerElement={<IconButton icon="add" small background="grey" />}
-            persistent
-            width="large"
-          >
-            {(modal) =>
-              modal.state !== ModalState.closed && (
-                <UpsertExpenseForm
-                  initialValues={undefined}
-                  onClose={modal.close}
-                />
-              )
-            }
-          </Modal>
-        </ExpensesActions>
+        <ExpensesActions>{actions}</ExpensesActions>
       </HeaderBar>
     </React.Fragment>
   )

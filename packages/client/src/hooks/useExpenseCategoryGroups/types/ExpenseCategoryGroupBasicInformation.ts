@@ -4,11 +4,12 @@
 // This file was automatically generated and should not be edited.
 
 // ====================================================
-// GraphQL fragment: EarningCategoryBasicInformation
+// GraphQL fragment: ExpenseCategoryGroupBasicInformation
 // ====================================================
 
-export interface EarningCategoryBasicInformation {
-  __typename: "EarningCategory";
+export interface ExpenseCategoryGroupBasicInformation {
+  __typename: "ExpenseCategoryGroup";
   id: string;
   name: string;
+  description: string | null;
 }

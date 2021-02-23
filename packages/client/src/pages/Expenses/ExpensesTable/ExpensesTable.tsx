@@ -1,12 +1,13 @@
+import { ModalState } from '@delangle/use-modal'
 import { pick } from 'lodash'
 import * as React from 'react'
 import { useSortBy, usePagination, useFilters } from 'react-table'
 
-import { Modal } from '@habx/ui-core'
+import { IconButton, Modal, Tooltip } from '@habx/ui-core'
 import { Row, Table, useTable } from '@habx/ui-table'
 
 import { UpsertExpensePayload } from '@globalTypes/api'
-import { ExpenseBasicInformation } from '@hooks/useExpenses'
+import { ExpenseBasicInformation, useExpenses } from '@hooks/useExpenses'
 import { useTranslate } from '@hooks/useTranslate'
 
 import { ExpensesHeaderBars } from '../ExpensesHeaderBars'
@@ -19,10 +20,9 @@ const getRowCharacteristics = () => ({
   isInteractive: true,
 })
 
-export const ExpensesTable: React.VoidFunctionComponent<ExpensesTableProps> = ({
-  data,
-  loading,
-}) => {
+export const ExpensesTable: React.VoidFunctionComponent = () => {
+  const expenses = useExpenses()
+
   const [
     selectedExpense,
     setSelectedExpense,
@@ -33,7 +33,7 @@ export const ExpensesTable: React.VoidFunctionComponent<ExpensesTableProps> = ({
 
   const tableInstance = useTable(
     {
-      data: data ?? [],
+      data: expenses.data,
       columns,
       initialState: {
         sortBy: [{ id: 'spentAt', desc: true }],
@@ -75,10 +75,32 @@ export const ExpensesTable: React.VoidFunctionComponent<ExpensesTableProps> = ({
 
   return (
     <React.Fragment>
-      <ExpensesHeaderBars />
+      <ExpensesHeaderBars
+        actions={
+          <Modal
+            title={t('pages.expenses.itemModal.new.title')}
+            triggerElement={
+              <Tooltip title={t('pages.expenses.itemModal.new.title')}>
+                <IconButton icon="add" small background="grey" />
+              </Tooltip>
+            }
+            persistent
+            width="large"
+          >
+            {(modal) =>
+              modal.state !== ModalState.closed && (
+                <UpsertExpenseForm
+                  initialValues={undefined}
+                  onClose={modal.close}
+                />
+              )
+            }
+          </Modal>
+        }
+      />
       <ExpensesTableContent>
         <Table
-          loading={loading}
+          loading={expenses.loading}
           instance={tableInstance}
           style={{ striped: true, scrollable: true }}
           getRowCharacteristics={getRowCharacteristics}
@@ -102,9 +124,4 @@ export const ExpensesTable: React.VoidFunctionComponent<ExpensesTableProps> = ({
       </ExpensesTableContent>
     </React.Fragment>
   )
-}
-
-interface ExpensesTableProps {
-  data: ExpenseBasicInformation[]
-  loading: boolean
 }

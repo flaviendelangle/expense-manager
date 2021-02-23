@@ -2,13 +2,7 @@ import styled from 'styled-components'
 
 import { Layout } from '@habx/ui-core'
 
-export const ExpensesActions = styled.div`
-  & > *:not(:last-child) {
-    margin-right: 12px;
-  }
-`
-
-export const ExpensesContent = styled(Layout)`
+export const ExpenseCategoryGroupsTableContent = styled(Layout)`
   --layout-left-padding: 36px;
   --layout-right-padding: 36px;
   --layout-top-padding: 24px;

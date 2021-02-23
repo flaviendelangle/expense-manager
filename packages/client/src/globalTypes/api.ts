@@ -27,6 +27,11 @@ export interface ExpenseCategoryFilters {
   ids?: string[] | null;
 }
 
+export interface ExpenseCategoryGroupFilters {
+  expenseCategoryGroupIds?: string[] | null;
+  ids?: string[] | null;
+}
+
 export interface ExpenseFilters {
   expenseCategoryIds?: string[] | null;
   ids?: string[] | null;
@@ -53,12 +58,31 @@ export interface PaginationOptions {
   offset: number;
 }
 
+export interface UpsertEarningCategoryPayload {
+  description?: string | null;
+  id?: string | null;
+  name?: string | null;
+}
+
 export interface UpsertEarningPayload {
   description?: string | null;
   earnedAt?: any | null;
   earningCategoryId?: string | null;
   id?: string | null;
   value?: number | null;
+}
+
+export interface UpsertExpenseCategoryGroupPayload {
+  description?: string | null;
+  id?: string | null;
+  name?: string | null;
+}
+
+export interface UpsertExpenseCategoryPayload {
+  description?: string | null;
+  expenseCategoryGroupId?: string | null;
+  id?: string | null;
+  name?: string | null;
 }
 
 export interface UpsertExpensePayload {

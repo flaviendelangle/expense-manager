@@ -1,4 +1,4 @@
-import { QueryHookOptions, useQuery } from '@apollo/client'
+import { ApolloCache, QueryHookOptions, useQuery } from '@apollo/client'
 
 import {
   listExpenseCategories,
@@ -7,7 +7,9 @@ import {
 } from './types/listExpenseCategories'
 import { listExpenseCategoriesQuery } from './useExpenseCategories.query'
 
-const NO_DATA: listExpenseCategories_expenseCategories_nodes[] = []
+export type ExpenseCategoryBasicInformation = listExpenseCategories_expenseCategories_nodes
+
+const NO_DATA: ExpenseCategoryBasicInformation[] = []
 
 export const useExpenseCategories = (
   options?: QueryHookOptions<
@@ -23,5 +25,29 @@ export const useExpenseCategories = (
   return {
     ...response,
     data: response.data?.expenseCategories.nodes ?? NO_DATA,
+  }
+}
+
+export const addExpenseCategoryToCache = (
+  cache: ApolloCache<any>,
+  newItem: ExpenseCategoryBasicInformation
+) => {
+  const existingExpenseCategories = cache.readQuery<listExpenseCategories>({
+    query: listExpenseCategoriesQuery,
+  })
+
+  if (existingExpenseCategories) {
+    cache.writeQuery<listExpenseCategories>({
+      query: listExpenseCategoriesQuery,
+      data: {
+        expenseCategories: {
+          __typename: 'PaginatedExpenseCategory',
+          nodes: [
+            ...existingExpenseCategories.expenseCategories.nodes,
+            newItem,
+          ],
+        },
+      },
+    })
   }
 }

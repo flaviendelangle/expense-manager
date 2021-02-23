@@ -3,7 +3,7 @@ import * as React from 'react'
 
 import { Select, SelectProps } from '@habx/ui-core'
 
-import { useEarningCategories } from '@hooks/useEarningCategory'
+import { useEarningCategories } from '@hooks/useEarningCategories'
 
 export const SelectEarningCategory: React.FunctionComponent<
   Omit<SelectProps, 'options'>

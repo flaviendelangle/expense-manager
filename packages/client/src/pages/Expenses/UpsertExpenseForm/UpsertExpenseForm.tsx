@@ -39,7 +39,7 @@ export const UpsertExpenseForm: React.VoidFunctionComponent<UpsertExpenseFormPro
       /*
        * If we did an update, Apollo is smart enough to update the cache by itself
        */
-      if (initialValues || !data?.upsertExpense) {
+      if (rawInitialValues || !data?.upsertExpense) {
         return
       }
 
