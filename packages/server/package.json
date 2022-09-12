@@ -7,8 +7,7 @@
     "start": "node dist/index.js",
     "build": "tsc && npm run copy:config",
     "migrate:dev": "DEBUG=knex:* knex migrate:latest --knexfile knexfile.ts",
-    "load-profile:default": "npm run reset && ts-node ./src/utils/ProfileLoader/index.ts",
-    "reset": "rimraf ./data/db.db3 && npm run migrate:dev"
+    "load-profile:default": "ts-node ./src/utils/ProfileLoader/index.ts"
   },
   "dependencies": {
     "@koa/cors": "^3.1.0",

@@ -48,7 +48,7 @@ export const config = convict({
       env: 'DB_PORT',
     },
     database: {
-      default: 'expense_manager',
+      default: 'expanse_manager',
       env: 'DB_NAME',
     },
     user: {
